@@ -1,0 +1,100 @@
+FRAME 432:22461  حول التطبيق  430x932
+  bg=['#F2EFE8']
+==========================================================================================
+RECTANGLE [ 25, 408 379x506] Rectangle 4254  {fill=#D9D7CB r=12.0}
+RECTANGLE [ 25, 408 379x 32] Rectangle 4255  {fill=#D2CEB3 r=[12,12,0,0]}
+TEXT   [283, 803   0x 40] Text  {fill=#000000@80%}
+  " "  [Inter 13/400 lh=20 ls=-0.1 R #000000@80%]
+BOOLEAN_OPERATION [  0,   0   0x  0] Union  {fill=#33363F}
+GROUP  [ 27,  78 377x230] Group 219
+  RECTANGLE [ 27,  78 377x230] Rectangle 120  {fill=#B9B9B9 r=17.0}
+  VECTOR [ 47, 237 336x  0] Vector 11  {stroke=#989898@0.5}
+  FRAME  [ 73, 246 283x 55] Frame 13  {gap=22 HOR}
+    FRAME  [ 73, 246  55x 55] Frame 18  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      INSTANCE [ 79, 252  43x 43] Color_Mode
+        ELLIPSE [ 87, 259  29x 29] Ellipse 55  {stroke=#3F4144@2.0490798950195312}
+        ELLIPSE [ 85, 257  32x 32] Ellipse 56  {fill=#3F4144}
+    FRAME  [150, 246  54x 54] Frame 19  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l10 gap=10 HOR}
+      FRAME  [160, 258  35x 30] Layer_1
+        VECTOR [160, 258  35x 30] Vector  {fill=#3F4144}
+    FRAME  [226, 246  54x 54] Frame 20  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      INSTANCE [232, 252  42x 42] Bell_pin_fill
+        BOOLEAN_OPERATION [239, 257  30x 24] Subtract  {fill=#3F4144}
+        ELLIPSE [248, 277  10x 10] Ellipse 45  {fill=#3F4144}
+        ELLIPSE [260, 259   7x  7] Ellipse 6  {fill=#3F4144 stroke=#3F4144@1.0245399475097656}
+    FRAME  [302, 246  54x 54] Frame 21  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      VECTOR [309, 255  42x 36] Vector  {fill=#33363F}
+  GROUP  [ 68, 147 300x 65] Group 218
+    GROUP  [116, 168 205x 44] Group
+      GROUP  [150, 183  23x 14] Group
+        VECTOR [150, 183  12x 14] Vector  {fill=#3F4144}
+        VECTOR [161, 183  12x 14] Vector  {fill=#3F4144}
+      GROUP  [266, 183  23x 14] Group
+        VECTOR [277, 183  12x 14] Vector  {fill=#3F4144}
+        VECTOR [266, 183  12x 14] Vector  {fill=#3F4144}
+      VECTOR [198, 168  44x 44] Vector  {fill=#3F4144}
+      GROUP  [310, 184  11x 10] Group
+        VECTOR [310, 184  11x  7] Vector  {fill=#3F4144}
+        VECTOR [310, 188  11x  7] Vector  {fill=#3F4144}
+      VECTOR [116, 185  14x 10] Vector  {fill=#3F4144}
+    GROUP  [ 68, 147 300x 12] Group
+      VECTOR [126, 152 242x  2] Vector  {fill=#9E9E9E}
+      VECTOR [ 68, 152  61x  2] Vector  {fill=#3F4144}
+      VECTOR [123, 147  12x 12] Vector  {fill=#3F4144}
+INSTANCE [ 39,  23 351x 22] Component 2
+  GROUP  [315,  27  75x 13] icons-right
+    GROUP  [363,  27  27x 13] battery
+      VECTOR [363,  27  25x 13] outline  {stroke=#000000@1.0550861358642578 r=4.0}
+      VECTOR [389,  32   1x  4] end  {fill=#000000}
+      VECTOR [365,  29  21x  9] charged  {fill=#000000 r=2.0}
+    BOOLEAN_OPERATION [340,  27  17x 12] wi-fi  {fill=#000000}
+      VECTOR [340,  27  17x  5] wifi-1  {fill=#DADADA}
+      VECTOR [343,  31  11x  4] wifi-2  {fill=#DADADA}
+      VECTOR [346,  35   5x  4] wifi-3  {fill=#DADADA}
+    VECTOR [315,  27  18x 12] signal  {fill=#000000}
+  GROUP  [ 39,  23  35x 22] icons-left
+    TEXT   [ 39,  23  35x 22] 9:41  {fill=#000000}
+      "9:41"  [SF Pro Text 17/600 lh=22 ls=-0.8 C #000000]
+INSTANCE [ 25,  76 381x 66] Frame 12  {fill=#2E2A32 r=20.0 pad=t8,r11,b7,l13 gap=10 VER}
+  FRAME  [ 50,  94 334x 30] Frame 11  {gap=39 HOR}
+    GROUP  [ 50,  98  29x 23] Group 8591
+      BOOLEAN_OPERATION [ 50, 102  26x 19] Subtract  {fill=#F2EFE8}
+        VECTOR [ 51, 103  24x 17] Vector  {stroke=#33363F@2.2899999618530273}
+        ELLIPSE [ 65,  98  14x 14] Ellipse 102  {stroke=#33363F@4.579999923706055}
+      ELLIPSE [ 65,  98  14x 14] Ellipse 103  {fill=#F7B161}
+    TEXT   [117, 100 165x 20] ثلاثاء 31 آذار 12 شوال، 1447 هـ  {fill=#F2EFE8}
+      "ثلاثاء 31 آذار 12 شوال، 1447 هـ"  [Inter 13/500 lh=20 ls=-0.1 R #F2EFE8]
+    FRAME  [321,  94  62x 30] Frame 10  {gap=4 HOR}
+      FRAME  [321, 109  29x  2] Frame 7  {gap=3 HOR}
+        ELLIPSE [321, 109   2x  2] Ellipse 1  {fill=#D0BB9E}
+        ELLIPSE [325, 109   2x  2] Ellipse 2  {fill=#D0BB9E}
+        ELLIPSE [329, 109   2x  2] Ellipse 3  {fill=#D0BB9E}
+        ELLIPSE [334, 109   2x  2] Ellipse 4  {fill=#D0BB9E}
+        ELLIPSE [338, 109   2x  2] Ellipse 5  {fill=#D0BB9E}
+        ELLIPSE [343, 109   2x  2] Ellipse 7  {fill=#D0BB9E}
+        ELLIPSE [347, 109   2x  2] Ellipse 6  {fill=#D0BB9E}
+      FRAME  [353,  94  30x 30] Frame 9  {stroke=#D9D7CB@1.2560679912567139 r=100.5}
+        INSTANCE [353,  94  30x 30] Video_fill
+FRAME  [221, 168 183x 50] Frame 31  {fill=#D9D7CB r=15.0 pad=t14,r22,b13,l21 gap=-13 HOR}
+  TEXT   [278, 183  69x 20] حول التطبيق  {fill=#2E2A32}
+    "حول التطبيق"  [Inter 13/600 lh=20 ls=-0.1 R #2E2A32]
+FRAME  [ 25, 168 183x 50] Frame 267  {fill=#D2CEB3 r=15.0 pad=t14,r22,b13,l21 gap=-13 HOR}
+  TEXT   [ 77, 183  79x 20] حول المؤسسة  {fill=#333037}
+    "حول المؤسسة"  [Inter 13/600 lh=20 ls=-0.1 R #333037]
+VECTOR [ 27, 224 377x  0] Vector 564  {stroke=#333037@0.5}
+VECTOR [ 43, 729 346x  0] Vector 565  {stroke=#333037@0.5}
+TEXT   [270, 414 123x 20] Text  {fill=#000000@80%}
+  "سياسة الخصوصية "  [Inter 13/700 lh=20 ls=-0.1 R #000000@80%]
+GROUP  [167, 259  96x120] Group 8655
+  GROUP  [187, 259  56x 75] Group
+    GROUP  [198, 274  35x 53] Group
+      VECTOR [198, 274  35x 53] Vector  {fill=#B8955D}
+    GROUP  [211, 291   9x 11] Group
+      VECTOR [211, 291   9x 11] Vector  {fill=#007062}
+    GROUP  [187, 259  56x 75] Group
+      VECTOR [187, 259  56x 75] Vector  {fill=#007062}
+  VECTOR [167, 342  96x 37] Union  {fill=#363636}
+GROUP  [ 25, 440 379x474] Mask group  {r=12.0}
+  RECTANGLE [ 25, 440 379x474] Rectangle 4256  {fill=#D9D7CB r=12.0}
+  TEXT   [ 37, 452 356x357] بسم الله الرحمن الرحيم روي عن النبي الأعظم(صلى الله عليه وآله وسلم) أنه قال: إذا كان يوم القيامة ينادي مناد أين زين العابدين؟ فكأني أنظر إلى ولدي علي بن الحسين بن علي بن أبي طالب يخطو بين الصفوف. انطلاقاً من الشخصية الإلهية للإمام زين العابدين(عليه السلام) ومما تركه من تراث أصيل وبتعاون مع مؤسسة الإمام زين العابدين(عليه السلام) التابعة للعتبة الحسينية المقدسة جاء هذا التطبيق ليكون الموسوعة الأولى في مجاله، حيث شمل جميع الجوانب المرتبطة بالسيرة العطرة لسيد الساجدين(عليه السلام). كما أضفنا وباقتراح من المؤسسة الكريمة بعض الأمور الجانبية .. وهي كالتالي: ١- نص القرآن الكريم مع شرح بسيط لبعض الكلمات الغامضة لكي يكون سبباً للتواصل المستمر مع ربيع القلوب. ٢ - سيرة شهداء الفتوى المباركة من الحوزة العلمية وتظهر متزامنة مع تاريخ استشهادهم وفق التاريخ الهجري. ٣ - توشح كل يوم من أيام السنة بمقولة خالدة للإمام زين العابدين(عليه السلام) تظهر على الشاشة الرئيسية للتطبيق. ٤ - تتميماً للفائدة أضفنا المناسبات المهمة للسنة، وتظهر متزامنة مع تاريخ اليوم في أعلى الشاشة الرئيسية. ٥- التاريخ الهجري الظاهر في أعلى الشاشة الرئيسية متزامن مع الثبوت الشرعي ويحدث بشكل تلقائي.  {fill=#000000}
+    "بسم الله الرحمن الرحيم روي عن النبي الأعظم(صلى الل…"  [Inter 15/400 lh=22 ls=-0.2 R #000000]

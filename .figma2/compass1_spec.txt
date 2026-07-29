@@ -1,0 +1,826 @@
+FRAME 362:6297  الشهداء  430x932
+  bg=['grad-RADIAL(#D1CA9E->#867F52)']
+==========================================================================================
+GROUP  [  0, -12 430x934] Mask group
+  RECTANGLE [  0, -12 430x934] Rectangle 4232  {fill=#D9D9D9 r=52.0}
+  GROUP  [-404,-323 1240x1247] Group
+    VECTOR [289,-198 300x393] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [210,-323   0x495] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [129,-317  64x491] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [ 49,-300 127x478] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-27,-273 188x458] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-100,-236 246x429] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-167,-190 300x393] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-227,-136 348x350] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-280, -74 391x301] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-324,  -5 426x248] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-359,  68 455x190] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-385, 146 476x128] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-400, 226 488x 65] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-404, 307 492x  0] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-398, 324 488x 65] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-381, 340 476x128] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-354, 356 455x190] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-318, 371 426x248] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-272, 384 391x301] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-218, 396 348x350] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-156, 407 300x393] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-89, 415 246x429] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [-15, 422 188x458] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [ 62, 426 127x478] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [141, 429  64x491] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [222, 429   0x495] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [239, 427  64x491] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [255, 423 127x478] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [271, 417 188x458] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [285, 409 246x429] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [299, 399 300x393] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [311, 387 348x350] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [321, 374 391x301] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [330, 359 426x248] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [336, 344 455x190] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [341, 328 476x128] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [343, 311 488x 65] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [344, 294 492x  0] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [342, 213 488x 65] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [338, 133 476x128] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [331,  56 455x190] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [323, -17 426x248] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [313, -84 391x301] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [302,-145 348x350] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [274,-243 246x429] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [259,-278 188x458] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [243,-303 127x478] Vector  {stroke=#23211F@30%@0.33479562401771545}
+    VECTOR [226,-318  64x491] Vector  {stroke=#23211F@30%@0.33479562401771545}
+FRAME  [ 49, 448 332x469] Frame 330  {gap=8 VER}
+  FRAME  [ 49, 448 332x 52] Frame 8632  {fill=#F2EFE8 r=12.8 pad=t8,r22,b8,l22 gap=12 HOR}
+    FRAME  [ 60, 461 311x 25] Frame 8633  {gap=8 HOR}
+      INSTANCE [ 60, 461  26x 25] Map_fill
+        BOOLEAN_OPERATION [ 64, 465  19x 19] Subtract  {fill=#46444A}
+          VECTOR [ 64, 465  19x 19] Rectangle 4214  {fill=#33363F r=4.6}
+          BOOLEAN_OPERATION [ 62, 467  24x 19] Union  {fill=#33363F}
+            VECTOR [ 77, 469   3x 17] Vector 427  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 62, 468  23x  2] Vector 428  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 67, 473   8x  8] Ellipse 4  {fill=#222222}
+        ELLIPSE [ 70, 476   2x  2] Ellipse 169  {fill=#46444A}
+      VECTOR [ 94, 468   0x 12] Vector 393  {stroke=#46444A@0.9887415170669556}
+      FRAME  [102, 462 114x 24] Frame 8644  {fill=#DCD0B9 r=6.0 pad=t1,r7,b1,l5 gap=10 HOR}
+        COMPONENT [112, 463  22x 22] File_dock_fill
+          BOOLEAN_OPERATION [116, 465  15x 19] Subtract  {fill=#46444A}
+            BOOLEAN_OPERATION [116, 465  15x 19] Subtract  {fill=#222222}
+              VECTOR [116, 465  15x 19] Rectangle 2  {fill=#2C2C2C}
+              VECTOR [124, 464   7x  7] Rectangle 3  {stroke=#FFFFFF@1.7103201150894165}
+            VECTOR [121, 475   6x  0] Vector 55  {stroke=#33363F@1.7103201150894165 r=1.7}
+            VECTOR [121, 478   4x  0] Vector 58  {stroke=#33363F@1.7103201150894165 r=1.7}
+        TEXT   [145, 466  59x 16] قراءة الزيارة  {fill=#000000}
+          "قراءة الزيارة"  [Inter 13/500 lh=16 R #000000]
+      TEXT   [224, 466 119x 16] اتجاه القلبة  {fill=#000000}
+        "اتجاه القلبة"  [Inter 13/600 lh=16 R #000000]
+      BOOLEAN_OPERATION [351, 465  19x 18] Subtract  {fill=#46444A}
+        BOOLEAN_OPERATION [351, 465  19x 18] Subtract
+          VECTOR [351, 465  19x 18] Vector  {fill=#212121}
+          VECTOR [354, 471  14x  3] Vector  {fill=#212121}
+  FRAME  [ 49, 508 332x 52] Frame 8633  {fill=#D9CDB6 r=12.8 pad=t8,r22,b8,l22 gap=12 HOR}
+    FRAME  [ 58, 521 313x 25] Frame 8633  {gap=8 HOR}
+      INSTANCE [ 58, 521  26x 25] Map_fill
+        BOOLEAN_OPERATION [ 63, 524  19x 19] Subtract  {fill=#46444A}
+          VECTOR [ 63, 524  19x 19] Rectangle 4214  {fill=#33363F r=4.6}
+          BOOLEAN_OPERATION [ 61, 526  24x 19] Union  {fill=#33363F}
+            VECTOR [ 75, 528   3x 17] Vector 427  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 61, 527  23x  2] Vector 428  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 66, 533   8x  8] Ellipse 4  {fill=#222222}
+        ELLIPSE [ 68, 536   2x  2] Ellipse 169  {fill=#46444A}
+      VECTOR [ 93, 527   0x 12] Vector 393  {stroke=#46444A@0.9887415170669556}
+      FRAME  [101, 521 114x 24] Frame 8644  {stroke=#F2EFE8@0.5 r=6.0 pad=t1,r7,b1,l5 gap=10 HOR}
+        INSTANCE [111, 522  22x 22] File_dock_fill
+          BOOLEAN_OPERATION [115, 524  15x 19] Subtract  {fill=#46444A}
+            BOOLEAN_OPERATION [115, 524  15x 19] Subtract  {fill=#222222}
+              VECTOR [115, 524  15x 19] Rectangle 2  {fill=#2C2C2C}
+              VECTOR [123, 523   7x  7] Rectangle 3  {stroke=#FFFFFF@1.7103201150894165}
+            VECTOR [119, 534   6x  0] Vector 55  {stroke=#33363F@1.7103201150894165 r=1.7}
+            VECTOR [119, 538   4x  0] Vector 58  {stroke=#33363F@1.7103201150894165 r=1.7}
+        TEXT   [143, 525  59x 16] قراءة الزيارة  {fill=#000000}
+          "قراءة الزيارة"  [Inter 13/500 lh=16 R #000000]
+      TEXT   [223, 525 119x 16] اتجاه المدينة المنورة  {fill=#000000}
+        "اتجاه المدينة المنورة"  [Inter 13/600 lh=16 R #000000]
+      VECTOR [350, 525  22x 18] Vector  {fill=#46444A}
+  FRAME  [ 49, 567 332x 52] Frame 8634  {fill=#D9CDB6 r=12.8 pad=t8,r22,b8,l22 gap=12 HOR}
+    FRAME  [ 58, 581 313x 25] Frame 8633  {gap=8 HOR}
+      INSTANCE [ 58, 581  26x 25] Map_fill
+        BOOLEAN_OPERATION [ 63, 584  19x 19] Subtract  {fill=#46444A}
+          VECTOR [ 63, 584  19x 19] Rectangle 4214  {fill=#33363F r=4.6}
+          BOOLEAN_OPERATION [ 61, 586  24x 19] Union  {fill=#33363F}
+            VECTOR [ 75, 588   3x 17] Vector 427  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 61, 587  23x  2] Vector 428  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 66, 593   8x  8] Ellipse 4  {fill=#222222}
+        ELLIPSE [ 68, 595   2x  2] Ellipse 169  {fill=#46444A}
+      VECTOR [ 93, 587   0x 12] Vector 393  {stroke=#46444A@0.9887415170669556}
+      FRAME  [101, 581 114x 24] Frame 8644  {stroke=#F2EFE8@0.5 r=6.0 pad=t1,r7,b1,l5 gap=10 HOR}
+        INSTANCE [111, 582  22x 22] File_dock_fill
+          BOOLEAN_OPERATION [115, 584  15x 19] Subtract  {fill=#46444A}
+            BOOLEAN_OPERATION [115, 584  15x 19] Subtract  {fill=#222222}
+              VECTOR [115, 584  15x 19] Rectangle 2  {fill=#2C2C2C}
+              VECTOR [123, 583   7x  7] Rectangle 3  {stroke=#FFFFFF@1.7103201150894165}
+            VECTOR [119, 594   6x  0] Vector 55  {stroke=#33363F@1.7103201150894165 r=1.7}
+            VECTOR [119, 598   4x  0] Vector 58  {stroke=#33363F@1.7103201150894165 r=1.7}
+        TEXT   [143, 585  59x 16] قراءة الزيارة  {fill=#000000}
+          "قراءة الزيارة"  [Inter 13/500 lh=16 R #000000]
+      TEXT   [223, 585 119x 16]  اتجــاه البقيـــــع  {fill=#000000}
+        " اتجــاه البقيـــــع"  [Inter 13/600 lh=16 R #000000]
+      VECTOR [350, 584  22x 18] Vector  {fill=#46444A}
+  FRAME  [ 49, 627 332x 52] Frame 8635  {fill=#D9CDB6 r=12.8 pad=t8,r22,b8,l22 gap=12 HOR}
+    FRAME  [ 58, 640 313x 25] Frame 8633  {gap=8 HOR}
+      INSTANCE [ 58, 640  26x 25] Map_fill
+        BOOLEAN_OPERATION [ 63, 643  19x 19] Subtract  {fill=#46444A}
+          VECTOR [ 63, 643  19x 19] Rectangle 4214  {fill=#33363F r=4.6}
+          BOOLEAN_OPERATION [ 61, 646  24x 19] Union  {fill=#33363F}
+            VECTOR [ 75, 648   3x 17] Vector 427  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 61, 647  23x  2] Vector 428  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 66, 652   8x  8] Ellipse 4  {fill=#222222}
+        ELLIPSE [ 68, 655   2x  2] Ellipse 169  {fill=#46444A}
+      VECTOR [ 93, 647   0x 12] Vector 393  {stroke=#46444A@0.9887415170669556}
+      FRAME  [101, 641 114x 24] Frame 8644  {stroke=#F2EFE8@0.5 r=6.0 pad=t1,r7,b1,l5 gap=10 HOR}
+        INSTANCE [111, 642  22x 22] File_dock_fill
+          BOOLEAN_OPERATION [115, 644  15x 19] Subtract  {fill=#46444A}
+            BOOLEAN_OPERATION [115, 644  15x 19] Subtract  {fill=#222222}
+              VECTOR [115, 644  15x 19] Rectangle 2  {fill=#2C2C2C}
+              VECTOR [123, 643   7x  7] Rectangle 3  {stroke=#FFFFFF@1.7103201150894165}
+            VECTOR [119, 654   6x  0] Vector 55  {stroke=#33363F@1.7103201150894165 r=1.7}
+            VECTOR [119, 657   4x  0] Vector 58  {stroke=#33363F@1.7103201150894165 r=1.7}
+        TEXT   [143, 645  59x 16] قراءة الزيارة  {fill=#000000}
+          "قراءة الزيارة"  [Inter 13/500 lh=16 R #000000]
+      TEXT   [223, 645 119x 16]  اتجــاه النجـــف  {fill=#000000}
+        " اتجــاه النجـــف"  [Inter 13/600 lh=16 R #000000]
+      VECTOR [350, 644  22x 18] Vector  {fill=#46444A}
+  FRAME  [ 49, 687 332x 52] Frame 8636  {fill=#D9CDB6 r=12.8 pad=t8,r22,b8,l22 gap=12 HOR}
+    FRAME  [ 58, 700 313x 25] Frame 8633  {gap=8 HOR}
+      INSTANCE [ 58, 700  26x 25] Map_fill
+        BOOLEAN_OPERATION [ 63, 703  19x 19] Subtract  {fill=#46444A}
+          VECTOR [ 63, 703  19x 19] Rectangle 4214  {fill=#33363F r=4.6}
+          BOOLEAN_OPERATION [ 61, 705  24x 19] Union  {fill=#33363F}
+            VECTOR [ 75, 707   3x 17] Vector 427  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 61, 706  23x  2] Vector 428  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 66, 712   8x  8] Ellipse 4  {fill=#222222}
+        ELLIPSE [ 68, 715   2x  2] Ellipse 169  {fill=#46444A}
+      VECTOR [ 93, 706   0x 12] Vector 393  {stroke=#46444A@0.9887415170669556}
+      FRAME  [101, 700 114x 24] Frame 8644  {stroke=#F2EFE8@0.5 r=6.0 pad=t1,r7,b1,l5 gap=10 HOR}
+        INSTANCE [111, 701  22x 22] File_dock_fill
+          BOOLEAN_OPERATION [115, 703  15x 19] Subtract  {fill=#46444A}
+            BOOLEAN_OPERATION [115, 703  15x 19] Subtract  {fill=#222222}
+              VECTOR [115, 703  15x 19] Rectangle 2  {fill=#2C2C2C}
+              VECTOR [123, 702   7x  7] Rectangle 3  {stroke=#FFFFFF@1.7103201150894165}
+            VECTOR [119, 713   6x  0] Vector 55  {stroke=#33363F@1.7103201150894165 r=1.7}
+            VECTOR [119, 717   4x  0] Vector 58  {stroke=#33363F@1.7103201150894165 r=1.7}
+        TEXT   [143, 704  59x 16] قراءة الزيارة  {fill=#000000}
+          "قراءة الزيارة"  [Inter 13/500 lh=16 R #000000]
+      TEXT   [223, 704 119x 16]  اتجــاه الامام الحسين  {fill=#000000}
+        " اتجــاه الامام الحسين"  [Inter 13/600 lh=16 R #000000]
+      VECTOR [350, 704  22x 18] Vector  {fill=#46444A}
+  FRAME  [ 49, 746 332x 52] Frame 8639  {fill=#D9CDB6 r=12.8 pad=t8,r22,b8,l22 gap=12 HOR}
+    FRAME  [ 58, 760 313x 25] Frame 8633  {gap=8 HOR}
+      INSTANCE [ 58, 760  26x 25] Map_fill
+        BOOLEAN_OPERATION [ 63, 763  19x 19] Subtract  {fill=#46444A}
+          VECTOR [ 63, 763  19x 19] Rectangle 4214  {fill=#33363F r=4.6}
+          BOOLEAN_OPERATION [ 61, 765  24x 19] Union  {fill=#33363F}
+            VECTOR [ 75, 767   3x 17] Vector 427  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 61, 766  23x  2] Vector 428  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 66, 772   8x  8] Ellipse 4  {fill=#222222}
+        ELLIPSE [ 68, 774   2x  2] Ellipse 169  {fill=#46444A}
+      VECTOR [ 93, 766   0x 12] Vector 393  {stroke=#46444A@0.9887415170669556}
+      FRAME  [101, 760 114x 24] Frame 8644  {stroke=#F2EFE8@0.5 r=6.0 pad=t1,r7,b1,l5 gap=10 HOR}
+        INSTANCE [111, 761  22x 22] File_dock_fill
+          BOOLEAN_OPERATION [115, 763  15x 19] Subtract  {fill=#46444A}
+            BOOLEAN_OPERATION [115, 763  15x 19] Subtract  {fill=#222222}
+              VECTOR [115, 763  15x 19] Rectangle 2  {fill=#2C2C2C}
+              VECTOR [123, 762   7x  7] Rectangle 3  {stroke=#FFFFFF@1.7103201150894165}
+            VECTOR [119, 773   6x  0] Vector 55  {stroke=#33363F@1.7103201150894165 r=1.7}
+            VECTOR [119, 777   4x  0] Vector 58  {stroke=#33363F@1.7103201150894165 r=1.7}
+        TEXT   [143, 764  59x 16] قراءة الزيارة  {fill=#000000}
+          "قراءة الزيارة"  [Inter 13/500 lh=16 R #000000]
+      TEXT   [223, 764 119x 16]  اتجــاه الامام العباس  {fill=#000000}
+        " اتجــاه الامام العباس"  [Inter 13/600 lh=16 R #000000]
+      VECTOR [350, 763  22x 18] Vector  {fill=#46444A}
+  FRAME  [ 49, 806 332x 52] Frame 8637  {fill=#D9CDB6 r=12.8 pad=t8,r22,b8,l22 gap=12 HOR}
+    FRAME  [ 58, 819 313x 25] Frame 8633  {gap=8 HOR}
+      INSTANCE [ 58, 819  26x 25] Map_fill
+        BOOLEAN_OPERATION [ 63, 822  19x 19] Subtract  {fill=#46444A}
+          VECTOR [ 63, 822  19x 19] Rectangle 4214  {fill=#33363F r=4.6}
+          BOOLEAN_OPERATION [ 61, 825  24x 19] Union  {fill=#33363F}
+            VECTOR [ 75, 827   3x 17] Vector 427  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 61, 826  23x  2] Vector 428  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 66, 831   8x  8] Ellipse 4  {fill=#222222}
+        ELLIPSE [ 68, 834   2x  2] Ellipse 169  {fill=#46444A}
+      VECTOR [ 93, 826   0x 12] Vector 393  {stroke=#46444A@0.9887415170669556}
+      FRAME  [101, 820 114x 24] Frame 8644  {stroke=#F2EFE8@0.5 r=6.0 pad=t1,r7,b1,l5 gap=10 HOR}
+        INSTANCE [111, 821  22x 22] File_dock_fill
+          BOOLEAN_OPERATION [115, 822  15x 19] Subtract  {fill=#46444A}
+            BOOLEAN_OPERATION [115, 822  15x 19] Subtract  {fill=#222222}
+              VECTOR [115, 822  15x 19] Rectangle 2  {fill=#2C2C2C}
+              VECTOR [123, 822   7x  7] Rectangle 3  {stroke=#FFFFFF@1.7103201150894165}
+            VECTOR [119, 833   6x  0] Vector 55  {stroke=#33363F@1.7103201150894165 r=1.7}
+            VECTOR [119, 836   4x  0] Vector 58  {stroke=#33363F@1.7103201150894165 r=1.7}
+        TEXT   [143, 824  59x 16] قراءة الزيارة  {fill=#000000}
+          "قراءة الزيارة"  [Inter 13/500 lh=16 R #000000]
+      TEXT   [223, 824 119x 16]  اتجــاه الكاظميــة  {fill=#000000}
+        " اتجــاه الكاظميــة"  [Inter 13/600 lh=16 R #000000]
+      VECTOR [350, 823  22x 18] Vector  {fill=#46444A}
+  FRAME  [ 49, 866 332x 52] Frame 8638  {fill=#D9CDB6 r=12.8 pad=t8,r22,b8,l22 gap=12 HOR}
+    FRAME  [ 58, 879 313x 25] Frame 8633  {gap=8 HOR}
+      INSTANCE [ 58, 879  26x 25] Map_fill
+        BOOLEAN_OPERATION [ 63, 882  19x 19] Subtract  {fill=#46444A}
+          VECTOR [ 63, 882  19x 19] Rectangle 4214  {fill=#33363F r=4.6}
+          BOOLEAN_OPERATION [ 61, 884  24x 19] Union  {fill=#33363F}
+            VECTOR [ 75, 886   3x 17] Vector 427  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 61, 885  23x  2] Vector 428  {stroke=#33363F@2.1225271224975586 r=0.1}
+            VECTOR [ 66, 891   8x  8] Ellipse 4  {fill=#222222}
+        ELLIPSE [ 68, 893   2x  2] Ellipse 169  {fill=#46444A}
+      VECTOR [ 93, 885   0x 12] Vector 393  {stroke=#46444A@0.9887415170669556}
+      FRAME  [101, 879 114x 24] Frame 8644  {stroke=#F2EFE8@0.5 r=6.0 pad=t1,r7,b1,l5 gap=10 HOR}
+        INSTANCE [111, 880  22x 22] File_dock_fill
+          BOOLEAN_OPERATION [115, 882  15x 19] Subtract  {fill=#46444A}
+            BOOLEAN_OPERATION [115, 882  15x 19] Subtract  {fill=#222222}
+              VECTOR [115, 882  15x 19] Rectangle 2  {fill=#2C2C2C}
+              VECTOR [123, 881   7x  7] Rectangle 3  {stroke=#FFFFFF@1.7103201150894165}
+            VECTOR [119, 892   6x  0] Vector 55  {stroke=#33363F@1.7103201150894165 r=1.7}
+            VECTOR [119, 896   4x  0] Vector 58  {stroke=#33363F@1.7103201150894165 r=1.7}
+        TEXT   [143, 883  59x 16] قراءة الزيارة  {fill=#000000}
+          "قراءة الزيارة"  [Inter 13/500 lh=16 R #000000]
+      TEXT   [223, 883 119x 16]  اتجاه العسكريين  {fill=#000000}
+        " اتجاه العسكريين"  [Inter 13/500 lh=16 R #000000]
+      VECTOR [350, 883  22x 18] Vector  {fill=#46444A}
+TEXT   [283, 803   0x 40] Text  {fill=#000000@80%}
+  " "  [Inter 13/400 lh=20 ls=-0.1 R #000000@80%]
+BOOLEAN_OPERATION [  0,   0   0x  0] Union  {fill=#33363F}
+GROUP  [ 27,  78 377x230] Group 219
+  RECTANGLE [ 27,  78 377x230] Rectangle 120  {fill=#B9B9B9 r=17.0}
+  VECTOR [ 47, 237 336x  0] Vector 11  {stroke=#989898@0.5}
+  FRAME  [ 73, 246 283x 55] Frame 13  {gap=22 HOR}
+    FRAME  [ 73, 246  55x 55] Frame 18  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      INSTANCE [ 79, 252  43x 43] Color_Mode
+        ELLIPSE [ 87, 259  29x 29] Ellipse 55  {stroke=#3F4144@2.0490798950195312}
+        ELLIPSE [ 85, 257  32x 32] Ellipse 56  {fill=#3F4144}
+    FRAME  [150, 246  54x 54] Frame 19  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l10 gap=10 HOR}
+      FRAME  [160, 258  35x 30] Layer_1
+        VECTOR [160, 258  35x 30] Vector  {fill=#3F4144}
+    FRAME  [226, 246  54x 54] Frame 20  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      INSTANCE [232, 252  42x 42] Bell_pin_fill
+        BOOLEAN_OPERATION [239, 257  30x 24] Subtract  {fill=#3F4144}
+          VECTOR [238, 257  31x 24] Rectangle 1  {fill=#33363F r=[8,8,1,1]}
+          ELLIPSE [260, 259   7x  7] Ellipse 46  {stroke=#33363F@3.0736196041107178}
+        ELLIPSE [248, 277  10x 10] Ellipse 45  {fill=#3F4144}
+        ELLIPSE [260, 259   7x  7] Ellipse 6  {fill=#3F4144 stroke=#3F4144@1.0245399475097656}
+    FRAME  [302, 246  54x 54] Frame 21  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      VECTOR [309, 255  42x 36] Vector  {fill=#33363F}
+  GROUP  [ 68, 147 300x 65] Group 218
+    GROUP  [116, 168 205x 44] Group
+      GROUP  [150, 183  23x 14] Group
+        VECTOR [150, 183  12x 14] Vector  {fill=#3F4144}
+        VECTOR [161, 183  12x 14] Vector  {fill=#3F4144}
+      GROUP  [266, 183  23x 14] Group
+        VECTOR [277, 183  12x 14] Vector  {fill=#3F4144}
+        VECTOR [266, 183  12x 14] Vector  {fill=#3F4144}
+      VECTOR [198, 168  44x 44] Vector  {fill=#3F4144}
+      GROUP  [310, 184  11x 10] Group
+        VECTOR [310, 184  11x  7] Vector  {fill=#3F4144}
+        VECTOR [310, 188  11x  7] Vector  {fill=#3F4144}
+      VECTOR [116, 185  14x 10] Vector  {fill=#3F4144}
+    GROUP  [ 68, 147 300x 12] Group
+      VECTOR [126, 152 242x  2] Vector  {fill=#9E9E9E}
+      VECTOR [ 68, 152  61x  2] Vector  {fill=#3F4144}
+      VECTOR [123, 147  12x 12] Vector  {fill=#3F4144}
+FRAME  [ 27,  76 377x 66] Frame 266  {gap=12 VER}
+  INSTANCE [ 25,  76 381x 66] Frame 12  {fill=#2E2A32 r=20.0 pad=t8,r11,b7,l13 gap=10 VER}
+    FRAME  [ 50,  94 334x 30] Frame 11  {gap=39 HOR}
+      GROUP  [ 50,  98  29x 23] Group 8591
+        BOOLEAN_OPERATION [ 50, 102  26x 19] Subtract  {fill=#F2EFE8}
+          VECTOR [ 51, 103  24x 17] Vector  {stroke=#33363F@2.2899999618530273}
+          ELLIPSE [ 65,  98  14x 14] Ellipse 102  {stroke=#33363F@4.579999923706055}
+        ELLIPSE [ 65,  98  14x 14] Ellipse 103  {fill=#F7B161}
+      TEXT   [117, 100 165x 20] ثلاثاء 31 آذار 12 شوال، 1447 هـ  {fill=#F2EFE8}
+        "ثلاثاء 31 آذار 12 شوال، 1447 هـ"  [Inter 13/500 lh=20 ls=-0.1 R #F2EFE8]
+      FRAME  [321,  94  62x 30] Frame 10  {gap=4 HOR}
+        FRAME  [321, 109  29x  2] Frame 7  {gap=3 HOR}
+          ELLIPSE [321, 109   2x  2] Ellipse 1  {fill=#D0BB9E}
+          ELLIPSE [325, 109   2x  2] Ellipse 2  {fill=#D0BB9E}
+          ELLIPSE [329, 109   2x  2] Ellipse 3  {fill=#D0BB9E}
+          ELLIPSE [334, 109   2x  2] Ellipse 4  {fill=#D0BB9E}
+          ELLIPSE [338, 109   2x  2] Ellipse 5  {fill=#D0BB9E}
+          ELLIPSE [343, 109   2x  2] Ellipse 7  {fill=#D0BB9E}
+          ELLIPSE [347, 109   2x  2] Ellipse 6  {fill=#D0BB9E}
+        FRAME  [353,  94  30x 30] Frame 9  {stroke=#D9D7CB@1.2560679912567139 r=100.5}
+          INSTANCE [353,  94  30x 30] Video_fill
+            BOOLEAN_OPERATION [357,  98  23x 23] Subtract  {fill=#A79A6D}
+              ELLIPSE [357,  98  23x 23] Ellipse 47
+              VECTOR [364, 103  11x 13] Vector 10  {fill=#33363F}
+GROUP  [ 86, 169 260x261] Group 282
+  VECTOR [ 86, 169 260x261] Vector  {fill=#46444A}
+  ELLIPSE [ 95, 178 242x243] Ellipse 233  {fill=#E9D6AC}
+  ELLIPSE [109, 192 215x215] Ellipse 234  {fill=#F0E3D3}
+  GROUP  [111, 193 209x214] Group 275
+    TEXT   [209, 193  19x 22] 0。  {fill=#21211F}
+      "0。"  [Inter 8/500 lh=10 C #21211F]
+    TEXT   [153, 197  35x 32] 330。  {fill=#21211F}
+      "330。"  [Inter 7/400 lh=8 C #21211F]
+    TEXT   [254, 204  28x 28] 30。  {fill=#21211F}
+      "30。"  [Inter 7/500 lh=8 C #21211F]
+    TEXT   [286, 240  27x 29] 60。  {fill=#21211F}
+      "60。"  [Inter 7/400 lh=8 C #21211F]
+    TEXT   [118, 228  31x 36] 300。  {fill=#21211F}
+      "300。"  [Inter 7/400 lh=8 C #21211F]
+    TEXT   [115, 327  30x 33] 240。  {fill=#21211F}
+      "240。"  [Inter 7/400 lh=8 C #21211F]
+    TEXT   [281, 334  30x 33] 120。  {fill=#21211F}
+      "120。"  [Inter 7/400 lh=8 C #21211F]
+    TEXT   [147, 364  33x 31] 210。  {fill=#21211F}
+      "210。"  [Inter 7/400 lh=8 C #21211F]
+    TEXT   [241, 370  33x 31] 150。  {fill=#21211F}
+      "150。"  [Inter 7/400 lh=8 C #21211F]
+    TEXT   [190, 384  33x 22] 180。  {fill=#21211F}
+      "180。"  [Inter 8/500 lh=10 C #21211F]
+    TEXT   [111, 276  22x 33] 270。  {fill=#21211F}
+      "270。"  [Inter 8/500 lh=10 C #21211F]
+    TEXT   [298, 290  22x 27] 90。  {fill=#21211F}
+      "90。"  [Inter 8/500 lh=10 C #21211F]
+  GROUP  [138, 218 155x162] Group 206
+    BOOLEAN_OPERATION [213, 218   1x162] Union  {fill=#21211F}
+      RECTANGLE [213, 218   1x 11] Rectangle 118  {fill=#FFFFFF}
+      RECTANGLE [213, 370   1x 11] Rectangle 119  {fill=#FFFFFF}
+    BOOLEAN_OPERATION [  0,   0   0x  0] Union  {fill=#21211F}
+    BOOLEAN_OPERATION [146, 258 140x 82] Union  {fill=#21211F}
+      RECTANGLE [146, 334  10x  6] Rectangle 118  {fill=#FFFFFF}
+      RECTANGLE [276, 258  10x  6] Rectangle 119  {fill=#FFFFFF}
+    BOOLEAN_OPERATION [  0,   0   0x  0] Union  {fill=#21211F}
+    BOOLEAN_OPERATION [  0,   0   0x  0] Union  {fill=#21211F}
+    BOOLEAN_OPERATION [146, 258 140x 82] Union  {fill=#21211F}
+      RECTANGLE [276, 334  10x  6] Rectangle 118  {fill=#FFFFFF}
+      RECTANGLE [146, 258  10x  6] Rectangle 119  {fill=#FFFFFF}
+    BOOLEAN_OPERATION [138, 278 155x 43] Union  {fill=#21211F}
+      RECTANGLE [138, 319   4x  2] Rectangle 118  {fill=#FFFFFF}
+      RECTANGLE [289, 278   4x  2] Rectangle 119  {fill=#FFFFFF}
+    BOOLEAN_OPERATION [158, 241 114x115] Union  {fill=#21211F}
+      RECTANGLE [158, 354   3x  3] Rectangle 118  {fill=#FFFFFF}
+      RECTANGLE [269, 241   4x  4] Rectangle 119  {fill=#FFFFFF}
+    BOOLEAN_OPERATION [194, 221  42x157] Union  {fill=#21211F}
+      RECTANGLE [194, 374   2x  4] Rectangle 118  {fill=#FFFFFF}
+      RECTANGLE [235, 221   2x  4] Rectangle 119  {fill=#FFFFFF}
+    BOOLEAN_OPERATION [194, 221  42x157] Union  {fill=#21211F}
+      RECTANGLE [235, 374   2x  4] Rectangle 118  {fill=#FFFFFF}
+      RECTANGLE [194, 221   2x  4] Rectangle 119  {fill=#FFFFFF}
+    BOOLEAN_OPERATION [158, 242 114x115] Union  {fill=#21211F}
+      RECTANGLE [269, 354   3x  3] Rectangle 118  {fill=#FFFFFF}
+      RECTANGLE [158, 242   3x  3] Rectangle 119  {fill=#FFFFFF}
+    BOOLEAN_OPERATION [138, 278 155x 43] Union  {fill=#21211F}
+      RECTANGLE [289, 319   4x  2] Rectangle 118  {fill=#FFFFFF}
+      RECTANGLE [138, 278   4x  2] Rectangle 119  {fill=#FFFFFF}
+  GROUP  [ 97, 181 237x238] Group
+    VECTOR [ 98, 181 236x237] Vector  {stroke=#23211F@0.6695912480354309}
+    GROUP  [ 97, 181 237x238] Group
+      GROUP  [ 97, 181 237x238] Group
+        VECTOR [228, 182   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [213, 181   0x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [198, 182   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [182, 186   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [168, 191   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [154, 198   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [142, 207   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [130, 218   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [120, 230   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [112, 243   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [105, 257   7x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [101, 272   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 98, 287   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 97, 303   7x  0] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 99, 317   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [102, 332   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [107, 345   7x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [115, 358   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [124, 370   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [134, 381   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [146, 391   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [159, 398   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [173, 405   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [188, 409   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [203, 411   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [218, 412   0x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [233, 411   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [247, 408   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [261, 403   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [274, 396   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [286, 387   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [296, 377   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [306, 366   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [314, 354   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [320, 340   7x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [324, 326   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [327, 312   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [327, 297   7x  0] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [326, 282   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [323, 267   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [318, 252   7x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [311, 238   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [303, 225   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [293, 214   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [282, 204   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [269, 195   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [256, 189   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [242, 184   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+      GROUP  [ 98, 181 237x238] Group
+        VECTOR [222, 181   0x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [207, 181   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [192, 183   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [177, 188   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [162, 194   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [149, 202   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [137, 211   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [126, 222   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [117, 235   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [109, 248   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [103, 263   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 99, 278   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 98, 294   7x  0] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 98, 309   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [100, 323   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [104, 337   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [110, 351   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [118, 363   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [128, 375   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [139, 385   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [151, 394   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [165, 401   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [179, 407   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [194, 410   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [209, 412   0x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [224, 412   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [239, 410   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [253, 406   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [266, 400   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [279, 393   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [290, 384   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [300, 373   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [309, 361   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [316, 349   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [322, 335   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [325, 321   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [327, 306   7x  0] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [327, 291   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [325, 276   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [321, 261   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [315, 246   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [308, 233   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [299, 221   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [288, 210   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [277, 200   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [264, 193   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [251, 187   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [236, 183   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+      GROUP  [ 97, 181 237x238] Group
+        VECTOR [216, 181   0x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [201, 182   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [185, 185   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [171, 190   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [157, 197   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [144, 205   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [132, 216   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [122, 227   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [113, 240   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [107, 254   7x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [101, 269   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 98, 284   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 97, 300   7x  0] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 98, 314   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [101, 329   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [106, 343   7x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [113, 356   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [122, 368   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [132, 379   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [143, 389   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [156, 397   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [170, 403   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [185, 408   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [200, 411   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [216, 412   0x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [230, 411   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [244, 408   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [258, 404   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [271, 397   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [283, 389   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [294, 379   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [304, 369   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [312, 356   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [319, 343   7x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [323, 329   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [326, 315   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [327, 300   7x  0] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [326, 285   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [324, 270   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [319, 255   7x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [312, 241   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [304, 228   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [295, 216   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [284, 206   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [272, 197   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [259, 190   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [245, 185   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [231, 182   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+      GROUP  [ 98, 181 237x238] Group
+        VECTOR [210, 181   0x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [195, 183   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [180, 187   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [165, 192   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [152, 200   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [139, 209   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [128, 220   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [118, 232   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [110, 246   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [104, 260   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [100, 275   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 98, 290   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 98, 306   7x  0] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 99, 320   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [103, 334   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [109, 348   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [116, 361   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [126, 373   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [136, 383   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [149, 392   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [162, 400   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [176, 406   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [191, 410   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [206, 412   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [221, 412   0x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [236, 410   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [250, 407   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [264, 401   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [276, 394   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [288, 385   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [298, 375   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [307, 364   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [315, 351   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [321, 338   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [325, 324   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [327, 309   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [327, 294   7x  0] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [325, 279   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [322, 264   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [317, 249   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [309, 235   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [301, 223   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [291, 212   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [279, 202   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [267, 194   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [253, 188   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [239, 184   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [225, 181   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+      GROUP  [ 97, 181 237x238] Group
+        VECTOR [204, 182   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [189, 184   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [174, 189   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [160, 195   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [146, 203   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [135, 213   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [124, 225   6x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [115, 238   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [108, 251   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [102, 266   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 99, 281   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 97, 297   7x  0] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [ 98, 311   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [101, 326   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [105, 340   7x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [112, 353   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [120, 366   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [130, 377   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [141, 387   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [154, 395   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [167, 402   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [182, 407   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [197, 411   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [212, 412   0x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [227, 412   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [242, 409   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [256, 405   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [269, 399   3x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [281, 391   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [292, 382   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [302, 371   6x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [311, 359   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [318, 346   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [323, 332   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [326, 318   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [327, 303   7x  0] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [327, 288   7x  1] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [324, 273   7x  2] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [320, 258   7x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [314, 243   6x  3] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [306, 230   6x  4] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [297, 218   5x  5] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [286, 208   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [274, 199   4x  6] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [261, 191   3x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [248, 186   2x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [234, 182   1x  7] Vector  {stroke=#23211F@0.6695912480354309}
+        VECTOR [219, 181   0x  7] Vector  {stroke=#23211F@0.6695912480354309}
+    GROUP  [104, 188 223x224] Group
+      VECTOR [104, 188 223x224] Vector  {stroke=#23211F@0.6695912480354309}
+      VECTOR [107, 191 218x219] Vector  {stroke=#23211F@0.6695912480354309}
+  GROUP  [126, 209 180x181] Group
+    GROUP  [127, 210 179x180] Group
+      VECTOR [127, 210 179x180] Vector  {stroke=#23211F@0.6695912480354309}
+      VECTOR [147, 230 139x140] Vector  {stroke=#23211F@0.6695912480354309}
+    VECTOR [126, 209 180x181] Vector  {stroke=#23211F@0.6695912480354309}
+  GROUP  [137, 231 157x137] Group
+    VECTOR [177, 231  39x 61] Vector  {stroke=#000000@0.401754766702652}
+    VECTOR [137, 292  65x 16] Vector  {stroke=#000000@0.401754766702652}
+    VECTOR [177, 307  40x 61] Vector  {stroke=#000000@0.401754766702652}
+    VECTOR [216, 307  39x 61] Vector  {stroke=#000000@0.401754766702652}
+    VECTOR [229, 292  65x 16] Vector  {stroke=#000000@0.401754766702652}
+    VECTOR [216, 231  40x 61] Vector  {stroke=#000000@0.401754766702652}
+  GROUP  [123, 233 184x167] Group
+    TEXT   [123, 290  14x 21] W  {fill=#000000}
+      "W"  [Martel 12/700 lh=21 L #000000]
+    TEXT   [298, 290   9x 21] E  {fill=#000000}
+      "E"  [Martel 12/700 lh=21 L #000000]
+    TEXT   [209, 379   8x 21] S  {fill=#000000}
+      "S"  [Martel 12/700 lh=21 L #000000]
+    GROUP  [286, 233   2x  2] Group
+      GROUP  [286, 233   2x  2] Group
+        VECTOR [286, 233   2x  2] Vector  {fill=#000000}
+    GROUP  [149, 369   1x  1] Group
+      VECTOR [149, 369   1x  1] Vector  {fill=#000000}
+    GROUP  [284, 367   1x  2] Group
+      VECTOR [284, 367   1x  2] Vector  {fill=#000000}
+    GROUP  [150, 235   2x  2] Group
+      VECTOR [150, 235   2x  2] Vector  {fill=#000000}
+  VECTOR [204, 288  23x 24] Vector  {fill=#513D32}
+  VECTOR [163, 247 105x106] Vector  {fill=#F0E3D3 stroke=#21211F@1.3391824960708618}
+  VECTOR [137, 221 158x158] Vector  {stroke=#23211F@1.3391824960708618}
+  GROUP  [169, 253  94x 95] Group
+    VECTOR [221, 262  23x 30] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [215, 253   0x 38] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [209, 253   5x 37] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [203, 254  10x 36] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [197, 256  14x 35] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [192, 259  19x 33] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [187, 263  23x 30] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [182, 267  26x 27] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [178, 272  30x 23] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [175, 277  32x 19] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [172, 282  35x 14] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [170, 288  36x 10] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [169, 294  37x  5] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [169, 301  37x  0] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [169, 302  37x  5] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [170, 303  36x 10] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [172, 304  35x 14] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [175, 305  32x 19] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [179, 306  30x 23] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [183, 307  26x 27] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [187, 308  23x 30] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [193, 309  19x 33] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [198, 309  14x 35] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [204, 310  10x 36] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [210, 310   5x 37] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [216, 310   0x 38] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [217, 310   5x 37] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [219, 309  10x 36] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [220, 309  14x 35] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [221, 308  19x 33] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [222, 308  23x 30] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [223, 307  26x 27] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [224, 306  30x 23] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [224, 305  32x 19] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [225, 303  35x 14] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [225, 302  36x 10] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [225, 301  37x  5] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [225, 300  37x  0] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [225, 293  37x  5] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [225, 287  36x 10] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [224, 281  35x 14] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [224, 276  32x 19] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [223, 271  30x 23] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [222, 266  26x 27] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [220, 259  19x 33] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [219, 256  14x 35] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [218, 254  10x 36] Vector  {stroke=#23211F@0.33479562401771545}
+    VECTOR [216, 253   5x 37] Vector  {stroke=#23211F@0.33479562401771545}
+  VECTOR [176, 260  79x 79] Vector  {fill=#21211F}
+  VECTOR [196, 203  41x 36] Vector  {fill=#46444A stroke=#F0E3D3@1.3391824960708618}
+  ELLIPSE [176, 260  80x 80] Ellipse 83  {fill=grad-LINEAR(#46444A->#3E3E39) stroke=grad-LINEAR(#5C5C4A->#4F4839)@2.1832966804504395 shadow(#000000@31% 0,2 b6) inner(#000000@51% 0,2 b7)}
+  BOOLEAN_OPERATION [196, 278  40x 43] Union  {fill=#F0E3D3}
+    VECTOR [220, 302   7x  5] Vector  {fill=#000000}
+    VECTOR [228, 299   7x  5] Vector  {fill=#000000}
+    VECTOR [206, 302   7x  5] Vector  {fill=#000000}
+    VECTOR [198, 299   7x  5] Vector  {fill=#000000}
+    VECTOR [196, 299  40x 22] Vector  {fill=#000000}
+    VECTOR [196, 278  40x 22] Vector  {fill=#000000}
+INSTANCE [ 39,  23 351x 22] Component 2
+  GROUP  [315,  27  75x 13] icons-right
+    GROUP  [363,  27  27x 13] battery
+      VECTOR [363,  27  25x 13] outline  {stroke=#000000@1.0550861358642578 r=4.0}
+      VECTOR [389,  32   1x  4] end  {fill=#000000}
+      VECTOR [365,  29  21x  9] charged  {fill=#000000 r=2.0}
+    BOOLEAN_OPERATION [340,  27  17x 12] wi-fi  {fill=#000000}
+      VECTOR [340,  27  17x  5] wifi-1  {fill=#DADADA}
+      VECTOR [343,  31  11x  4] wifi-2  {fill=#DADADA}
+      VECTOR [346,  35   5x  4] wifi-3  {fill=#DADADA}
+    VECTOR [315,  27  18x 12] signal  {fill=#000000}
+  GROUP  [ 39,  23  35x 22] icons-left
+    TEXT   [ 39,  23  35x 22] 9:41  {fill=#000000}
+      "9:41"  [SF Pro Text 17/600 lh=22 ls=-0.8 C #000000]
+INSTANCE [  0, 792 430x350] Group 8628
+  GROUP  [  0, 784 430x410] Group 208
+    RECTANGLE [  0, 792 430x402] Rectangle 7  {fill=#333037 r=40.0}
+    FRAME  [166, 784  98x 40] Frame 8639  {pad=t10,r10,b10,l10 gap=10 VER}
+      VECTOR [187, 804  56x  0] Vector 1  {stroke=grad-LINEAR(#F0DA8F->#A79A6D)@4.0}
+  FRAME  [ 28, 826 375x291] Frame 1  {GRI}
+    GROUP  [129, 936  72x 90] Group 209
+      RECTANGLE [129, 936  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=14.3}
+      TEXT   [134,1009  64x 17] حول المؤسسة  {fill=#FFFFFF@80%}
+        "حول المؤسسة"  [Inter 11/400 lh=17 ls=-0.1 C #FFFFFF@80%]
+      INSTANCE [147, 954  36x 36] Folders_line_fill
+        VECTOR [155, 958   9x 23] Vector  {stroke=#3F4144@0.9905195832252502}
+        VECTOR [163, 961  12x 10] Rectangle 4019  {fill=#3F4144 r=1.0}
+        VECTOR [163, 976  12x 10] Rectangle 4020  {fill=#3F4144 r=1.0}
+    GROUP  [230, 936  72x 91] Group 213
+      RECTANGLE [230, 936  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=14.3}
+      INSTANCE [247, 953  38x 38] group_share
+        BOOLEAN_OPERATION [261, 957   9x  9] Union  {fill=#3F4144}
+          BOOLEAN_OPERATION [261, 957   9x  9] Union  {fill=#41485C}
+            VECTOR [261, 957   9x  9] Ellipse 48
+        BOOLEAN_OPERATION [251, 974   9x  9] Union  {fill=#3F4144}
+          VECTOR [251, 974   9x  9] Ellipse 49
+        BOOLEAN_OPERATION [270, 974   9x  9] Union  {fill=#3F4144}
+          VECTOR [270, 974   9x  9] Ellipse 49
+        BOOLEAN_OPERATION [252, 960  27x 26] Subtract  {fill=#3F4144}
+          ELLIPSE [253, 960  25x 25] Ellipse 47  {stroke=#33363F@1.876773715019226}
+          VECTOR [251, 957  28x 26] Vector
+      TEXT   [236,1009  62x 18] حول التطبيق  {fill=#FFFFFF@80%}
+        "حول التطبيق"  [Inter 12/400 lh=18 ls=-0.1 C #FFFFFF@80%]
+    GROUP  [331, 936  72x 90] Group 214
+      RECTANGLE [331, 936  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=14.3}
+      TEXT   [351,1009  34x 17] البوصلة  {fill=#FFFFFF@80%}
+        "البوصلة"  [Inter 11/400 lh=17 ls=-0.1 C #FFFFFF@80%]
+      INSTANCE [353, 957  29x 29] Compass_alt_fill
+        BOOLEAN_OPERATION [353, 957  29x 29] Union  {fill=#3F4144}
+          BOOLEAN_OPERATION [356, 961  22x 22] Subtract  {fill=#33363F}
+            ELLIPSE [356, 961  22x 22] Ellipse 47  {fill=#222222}
+            BOOLEAN_OPERATION [362, 967  10x 10] Union  {fill=#222222}
+              VECTOR [363, 968   9x  9] Vector 359  {stroke=#222222@1.7630298137664795 r=0.0}
+              VECTOR [365, 970   4x  4] Vector 360  {stroke=#222222@1.7630298137664795}
+          ELLIPSE [353, 957  29x 29] Ellipse 86  {stroke=#33363F@1.7630298137664795}
+    GROUP  [230, 826  72x 91] Group 210
+      FRAME  [230, 826  72x 72] Frame 14
+        RECTANGLE [230, 826  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=18.0}
+        INSTANCE [246, 842  39x 39] Video_fill
+          BOOLEAN_OPERATION [251, 847  30x 30] Subtract  {fill=#3F4144}
+            ELLIPSE [251, 847  30x 30] Ellipse 47  {fill=#33363F}
+            VECTOR [261, 854  15x 16] Vector 10  {fill=#33363F}
+      TEXT   [248, 899  38x 18] الوسائط  {fill=#FFFFFF@80%}
+        "الوسائط"  [Inter 12/400 lh=18 ls=-0.1 C #FFFFFF@80%]
+    GROUP  [129, 826  72x 91] Group 211
+      RECTANGLE [129, 826  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=18.0}
+      INSTANCE [143, 840  43x 43] Book_open_duotone
+        VECTOR [167, 848  16x 29] Vector 59  {fill=#3F4144}
+        BOOLEAN_OPERATION [149, 848  16x 29] Subtract  {fill=#3F4144}
+          VECTOR [149, 848  16x 29] Vector 58  {fill=#3F4144}
+          VECTOR [152, 844   5x 13] Rectangle 4137  {fill=#222222}
+      TEXT   [140, 899  52x 18] تراث الامام  {fill=#FFFFFF@80%}
+        "تراث الامام"  [Inter 12/400 lh=18 ls=-0.1 C #FFFFFF@80%]
+    GROUP  [ 28, 936  72x 90] Group 215
+      RECTANGLE [ 28, 936  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=14.3}
+      TEXT   [ 38,1009  54x 17] القرآن الكريم  {fill=#FFFFFF@80%}
+        "القرآن الكريم"  [Inter 11/400 lh=17 ls=-0.1 C #FFFFFF@80%]
+      INSTANCE [ 45, 952  40x 40] Book_open_alt_duotone
+        VECTOR [ 50, 958  15x 25] Vector  {fill=#6E6E6E@25% stroke=#3F4144@0.938386857509613}
+        GROUP  [ 50, 958  15x 25] Mask group
+          VECTOR [ 50, 958  15x 25] Vector  {fill=#33363F}
+          VECTOR [ 53, 958   5x  8] Rectangle 4137  {fill=#3F4144}
+        VECTOR [ 67, 958  13x 25] Vector  {fill=#3F4144}
+    GROUP  [ 28,1045  72x 90] Group 216
+      RECTANGLE [ 28,1045  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=14.3}
+      TEXT   [ 46,1118  39x 17] الخدمات  {fill=#FFFFFF@80%}
+        "الخدمات"  [Inter 11/400 lh=17 ls=-0.1 C #FFFFFF@80%]
+      INSTANCE [ 48,1066  32x 32] Widget_add
+        RECTANGLE [ 52,1070   9x  9] Rectangle 4006  {fill=#3F4144 stroke=#3F4144@2.6587626934051514 r=1.3}
+        RECTANGLE [ 52,1084   9x  9] Rectangle 4008  {fill=#3F4144 stroke=#3F4144@2.6587626934051514 r=1.3}
+        RECTANGLE [ 66,1070   9x  9] Rectangle 4007  {fill=#3F4144 stroke=#3F4144@2.6587626934051514 r=1.3}
+        VECTOR [ 71,1084   0x  9] Vector 217  {stroke=#3F4144@2.6587626934051514 r=1.3}
+        VECTOR [ 66,1089   9x  0] Vector 218  {stroke=#3F4144@2.6587626934051514 r=1.3}
+    GROUP  [ 28, 826  72x 91] Group 212
+      GROUP  [ 28, 826  72x 72] Group 220
+        RECTANGLE [ 28, 826  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=18.0}
+        FRAME  [ 47, 845  35x 35] library-svgrepo-com 1
+          VECTOR [ 55, 848  19x  2] Vector  {fill=#3F4144}
+          VECTOR [ 52, 852  25x  3] Vector  {fill=#3F4144}
+          VECTOR [ 50, 856  29x 21] Vector  {fill=#3F4144}
+      TEXT   [ 48, 899  34x 18] المكتبة  {fill=#FFFFFF@80%}
+        "المكتبة"  [Inter 12/400 lh=18 ls=-0.1 C #FFFFFF@80%]
+    GROUP  [331, 826  72x 91] Group 218
+      FRAME  [331, 826  72x 72] Frame 14
+        RECTANGLE [331, 826  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=18.0}
+        INSTANCE [346, 838  42x 42] Home_fill
+          BOOLEAN_OPERATION [354, 847  25x 28] Subtract  {fill=#3F4144}
+            VECTOR [354, 847  25x 28] Rectangle 1  {fill=#3F4144}
+            VECTOR [362, 864   9x 11] Vector 4  {stroke=#273B4A@2.3444018363952637 r=1.2}
+      TEXT   [347, 899  39x 18] الرئيسية  {fill=#FFFFFF@80%}
+        "الرئيسية"  [Inter 12/400 lh=18 ls=-0.1 C #FFFFFF@80%]

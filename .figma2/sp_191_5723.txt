@@ -1,0 +1,173 @@
+FRAME 191:5723  الصحيفة السجادية + قرائة  430x932
+  bg=['#F2EFE8']
+==========================================================================================
+GROUP  [ 13, 253 404x776] Group 319
+  RECTANGLE [ 13, 253 404x723] Rectangle 4148  {fill=#FFFFFF stroke=#46444A@0.5 r=24.0}
+  TEXT   [ 28, 329 374x468] بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ : إِلَهِي أَذْهَلَنِي عَنْ إقَامَةِ شُكْرِكَ تَتَابُعُ طَوْلِكَ ، وَأَعْجَزَنِي عَنْ إحْصَاءِ ثَنَائِكَ فَيْضُ فَضْلِكَ ، وَشَغَلَنِي عَنْ ذِكْرِ مَحَامِدِكَ تَرَادُفُ عَوَائِدِكَ ، وَأَعْيَانِي عَن نَّشْرِ عَوَارِفِكَ تَوَالِي أَيَادِيكَ ، وَهذا مَقامُ مَنِ اعْتَرَفَ بِسُبُوغِ النَّعْمَاءِ وَقَابَلَهَا بِالتَّقْصِيرِ ، وَشَهِدَ عَلَى نَفْسِهِ بِالإِهْمَالِ وَالتَّضْيِيعِ ، وَأنْتَ الرَّؤُوفُ الرَّحِيمُ الْبَرُّ الْكَرِيمُ ، الَّذِي لا يُخَيِّبُ قَاصِدِيهِ ، وَلا يَطْرُدُ عَنْ فِنَائِهِ آمِلِيهِ ، بِسَاحَتِكَ تَحُطُّ رِحَالُ الرَّاجِينَ ، وَبِعَرْصَتِكَ تَقِفُ آمَالُ الْمُسْتَرْفِدِينَ ، فَلا تُقَابِلْ آمَالَنَا بِالتَّخْيِيبِ وَالإِيئَاسِ ، ولا تُلْبِسْنا سِرْبَالَ الْقُنُوطِ وَالإبْلاسِ ، إِلَهِي تَصَاغَرَ عِنْدَ تَعَاظُمِ آلائِكَ شُكْرِي ، وَتَضَاءَلَ فِي جَنْبِ إكْرَامِكَ إيَّايَ ثَنَائِي وَنَشْرِي ، جَلَّلَتْنِي نِعَمُكَ مِنْ أَنْوَارِ الإِيمَانِ حُلَلاً ، وَضَرَبَتْ عَلَيَّ لَطَائِفُ بِرِّكَ مِنَ الْعِزِّ كِلَلاً ، وَقَلَّدَتْنِي مِنَنُكَ قَلائِدَ لاتُحَلُّ ، وَطَوَّقَتْنِي أَطْوَاقاً لا تُفَلُّ ، فَآلاؤُكَ جَمَّةٌ ضَعُفَ لِسَانِي عَنْ إحْصَائِهَا ، وَنَعْمَاؤُكَ كَثِيرةٌ قَصُرَ فَهْمِي عَنْ إدْرَاكِهَا ، فَضْلاً عَنِ اسْتِقْصَائِهَا ، فَكَيْفَ لِي بِتَحْصِيلِ الشُّكْرِ وَشُكْرِي إِيَّاكَ يَفْتَقِرُ إِلَى شُكْرٍ ؟ فَكُلَّما قُلْتُ : لَكَ الحَمْدُ وَجَبَ عَلَيَّ لِذَلِكَ أَنْ أَقُولَ: لَكَ الحَمْدُ . إِلَهِي فَكَمَا غَذَّيْتَنَا بِلُطْفِكَ وَرَبَّيْتَنَا بِصُنْعِكَ ، فَتَمِّمْ عَلَيْنَا سَوَابِغَ النِّعَمِ وَادْفَعْ عَنَّا مَكَارِهَ النِّقَمِ ، وَآتِنَا مِنْ حُظُوظِ الدَّارَيْنِ أَرْفَعَهَا وَأَجَلَّهَا عَاجِلاً وَآجِلاً ، وَلَكَ الحَمْدُ عَلَى حُسْنِ بَلائِكَ وَسُبُوغِ نَعْمَائِكَ ، حَمْداً يُّوافِقُ رِضَاكَ وَيَمْتَرِي الْعَظِيمَ مِنْ بِرِّكَ وَنَدَاكَ ، يَا عَظِيمُ يَا كَرِيمُ بِرَحْمَتِكَ يَا أَرْحَمَ الرَّاحِمِينَ .  {fill=#000000}
+    "بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ :  إِلَهِي أَذ…"  [Inter 14/400 lh=21 ls=-0.2 C #000000]
+  FRAME  [ 27, 262 377x 50] Frame 40  {gap=9 VER}
+    FRAME  [ 27, 262 377x 50] Frame 78  {gap=9 VER}
+      FRAME  [ 27, 262 377x 50] Frame 37  {fill=#D9D7CB r=25.0 pad=t5,r15,b4,l15 gap=67 HOR}
+        FRAME  [ 42, 278 346x 20] Frame 60  {gap=13 HOR}
+  FRAME  [ 22, 597 387x432] Frame 50  {fill=#F2EFE8 stroke=#333037@0.49076515436172485 r=19.6 pad=t68,r9,b193,l8 gap=27 VER}
+    FRAME  [ 29, 597 371x202] Frame 322  {gap=5 VER}
+      FRAME  [170, 597  90x 22] Frame 323  {pad=t11,r17,b11,l17 gap=10 VER}
+        VECTOR [187, 608  56x  0] Vector 402  {stroke=#46444A@4.0}
+      GROUP  [ 29, 624 371x 48] Group 283
+        FRAME  [262, 624 139x 39] Frame 41  {fill=#F0E3D3 r=24.5}
+        TEXT   [183, 631  65x 27] كثْرَةُ النِّعَمِ  {fill=#000000}
+          "كثْرَةُ النِّعَمِ"  [Inter 18/400 lh=27 ls=-0.2 R #000000]
+        VECTOR [ 29, 672 371x  0] Vector 113  {stroke=#333037@0.49076515436172485}
+      GROUP  [ 32, 677 367x 40] Group 284
+        FRAME  [ 32, 677 367x 40] Frame 260  {gap=7 HOR}
+      VECTOR [ 30, 722 371x  0] Vector 114  {stroke=#333037@0.49076515436172485}
+      TEXT   [ 31, 727 367x 83] تعني بِسَعَةِ النِّعَمِ، وكَمالِها، وفَيضِها، وإتمامِها. السُّبُوغُ يعني الإتمامُ والكمالُ، والنَّعماءُ جمعُ نَعمة، وهي إشارةٌ إلى إحاطةِ نعم الله وتوسعتِها على العبد، وهي عبارةٌ مأثورةٌ في الدّعاء والمناجاة (مثل مناجاة الشاكرين) للاعتراف بفضل الله العظيم وتقصيرِ العبدِ في شكره.  {fill=#000000}
+        "تعني بِسَعَةِ النِّعَمِ، وكَمالِها، وفَيضِها، وإتم…"  [Inter 14/400 lh=21 ls=-0.2 R #000000]
+    VECTOR [ 30, 826 371x  0] Vector 114  {stroke=#333037@0.49076515436172485}
+    GROUP  [ 67, 853 296x 50] Group 234
+      FRAME  [108, 885 215x 18] Frame 48  {gap=37 HOR}
+        INSTANCE [109, 877  34x 34] Play_duotone  {stroke=#A6A6A6@0.5889182090759277 r=21.6}
+        INSTANCE [181, 882  24x 24] sound_max_fill
+        INSTANCE [242, 882  24x 24] Sun_fill
+        GROUP  [303, 887  19x 16] Group 317
+      GROUP  [ 67, 853 296x  5] Group 314
+        VECTOR [ 67, 856 296x  0] Vector 112  {stroke=#333037@0.49076515436172485}
+        VECTOR [ 67, 856 141x  0] Vector 113  {stroke=#333037@1.9630606174468994}
+        ELLIPSE [206, 853   5x  5] Ellipse 235  {fill=#333037}
+FRAME  [ 22, 936 387x432] Frame 50  {fill=#F2EFE8 stroke=#333037@0.49076515436172485 r=19.6 pad=t68,r9,b193,l8 gap=27 VER}
+  FRAME  [ 29, 936 371x202] Frame 322  {gap=5 VER}
+    FRAME  [170, 936  90x 22] Frame 323  {pad=t11,r17,b11,l17 gap=10 VER}
+      VECTOR [187, 947  56x  0] Vector 402  {stroke=#46444A@4.0}
+    GROUP  [ 29, 963 371x 48] Group 283
+      FRAME  [262, 963 139x 39] Frame 41  {fill=#F0E3D3 r=24.5}
+        TEXT   [277, 970 107x 27] "بِسُبُوغِ النَّعْمَاءِ"  {fill=#000000}
+          ""بِسُبُوغِ النَّعْمَاءِ""  [Inter 18/400 lh=27 ls=-0.2 R #000000]
+      VECTOR [ 29,1011 371x  0] Vector 113  {stroke=#333037@0.49076515436172485}
+    GROUP  [ 41,1016 347x 39] Group 284
+      FRAME  [ 41,1016 347x 39] Frame 260  {gap=7 HOR}
+        FRAME  [ 41,1016  81x 39] Frame 43  {fill=#F0E3D3 r=24.5 pad=t5,r14,b4,l14 gap=277 HOR}
+        FRAME  [130,1016  82x 39] Frame 41  {fill=#F0E3D3 r=24.5 pad=t5,r14,b4,l14 gap=277 HOR}
+        FRAME  [219,1016  81x 39] Frame 44  {fill=#F0E3D3 r=24.5 pad=t5,r14,b4,l14 gap=277 HOR}
+        FRAME  [307,1016  81x 39] Frame 45  {fill=#46444A r=24.5 pad=t5,r14,b4,l14 gap=277 HOR}
+    VECTOR [ 30,1061 371x  0] Vector 114  {stroke=#333037@0.49076515436172485}
+    TEXT   [ 31,1066 367x 83] تعني بِسَعَةِ النِّعَمِ، وكَمالِها، وفَيضِها، وإتمامِها. السُّبُوغُ يعني الإتمامُ والكمالُ، والنَّعماءُ جمعُ نَعمة، وهي إشارةٌ إلى إحاطةِ نعم الله وتوسعتِها على العبد، وهي عبارةٌ مأثورةٌ في الدّعاء والمناجاة (مثل مناجاة الشاكرين) للاعتراف بفضل الله العظيم وتقصيرِ العبدِ في شكره.  {fill=#000000}
+      "تعني بِسَعَةِ النِّعَمِ، وكَمالِها، وفَيضِها، وإتم…"  [Inter 14/400 lh=21 ls=-0.2 R #000000]
+  VECTOR [ 30,1165 371x  0] Vector 114  {stroke=#333037@0.49076515436172485}
+  GROUP  [ 67,1192 296x 50] Group 234
+    FRAME  [108,1224 215x 18] Frame 48  {gap=37 HOR}
+      INSTANCE [109,1216  34x 34] Play_duotone  {stroke=#A6A6A6@0.5889182090759277 r=21.6}
+        ELLIPSE [113,1220  26x 26] Ellipse 231  {fill=#2A4157@24%}
+        VECTOR [122,1228  11x 11] Vector 10  {fill=#3F4144}
+      INSTANCE [181,1221  24x 24] sound_max_fill
+        VECTOR [184,1224   9x 18] Rectangle 1  {fill=#3F4144}
+        ELLIPSE [187,1228  10x 10] Ellipse 28  {fill=#3F4144 stroke=#3F4144@1.9630606174468994}
+        ELLIPSE [186,1225  16x 16] Ellipse 29  {fill=#3F4144 stroke=#3F4144@1.9630606174468994}
+      INSTANCE [242,1221  24x 24] Sun_fill
+        ELLIPSE [250,1229   8x  8] Ellipse 108  {fill=#3F4144}
+        VECTOR [253,1224   0x  2] Vector 168  {stroke=#3F4144@1.9630606174468994 r=2.9}
+        VECTOR [253,1240   0x  2] Vector 169  {stroke=#3F4144@1.9630606174468994 r=2.9}
+        VECTOR [258,1227   1x  1] Vector 170  {stroke=#3F4144@1.9630606174468994 r=2.9}
+        VECTOR [247,1238   1x  1] Vector 171  {stroke=#3F4144@1.9630606174468994 r=2.9}
+        VECTOR [260,1233   2x  0] Vector 172  {stroke=#3F4144@1.9630606174468994 r=2.9}
+        VECTOR [245,1233   2x  0] Vector 173  {stroke=#3F4144@1.9630606174468994 r=2.9}
+        VECTOR [258,1238   1x  1] Vector 166  {stroke=#3F4144@1.9630606174468994 r=2.9}
+        VECTOR [247,1227   1x  1] Vector 167  {stroke=#3F4144@1.9630606174468994 r=2.9}
+      GROUP  [303,1226  19x 16] Group 317
+        VECTOR [303,1226  13x 16] A  {fill=#3F4144}
+        GROUP  [315,1227   7x  7] Group 316  {r=0.8}
+    GROUP  [ 67,1192 296x  5] Group 314
+      VECTOR [ 67,1195 296x  0] Vector 112  {stroke=#333037@0.49076515436172485}
+      VECTOR [ 67,1195 141x  0] Vector 113  {stroke=#333037@1.9630606174468994}
+      ELLIPSE [206,1192   5x  5] Ellipse 235  {fill=#333037}
+TEXT   [283, 803   0x 40] Text  {fill=#000000@80%}
+  " "  [Inter 13/400 lh=20 ls=-0.1 R #000000@80%]
+BOOLEAN_OPERATION [  0,   0   0x  0] Union  {fill=#33363F}
+GROUP  [ 27,  78 377x230] Group 219
+  RECTANGLE [ 27,  78 377x230] Rectangle 120  {fill=#B9B9B9 r=17.0}
+  VECTOR [ 47, 237 336x  0] Vector 11  {stroke=#989898@0.5}
+  FRAME  [ 73, 246 283x 55] Frame 13  {gap=22 HOR}
+    FRAME  [ 73, 246  55x 55] Frame 18  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      INSTANCE [ 79, 252  43x 43] Color_Mode
+        ELLIPSE [ 87, 259  29x 29] Ellipse 55  {stroke=#3F4144@2.0490798950195312}
+        ELLIPSE [ 85, 257  32x 32] Ellipse 56  {fill=#3F4144}
+    FRAME  [150, 246  54x 54] Frame 19  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l10 gap=10 HOR}
+      FRAME  [160, 258  35x 30] Layer_1
+        VECTOR [160, 258  35x 30] Vector  {fill=#3F4144}
+    FRAME  [226, 246  54x 54] Frame 20  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      INSTANCE [232, 252  42x 42] Bell_pin_fill
+        BOOLEAN_OPERATION [239, 257  30x 24] Subtract  {fill=#3F4144}
+        ELLIPSE [248, 277  10x 10] Ellipse 45  {fill=#3F4144}
+        ELLIPSE [260, 259   7x  7] Ellipse 6  {fill=#3F4144 stroke=#3F4144@1.0245399475097656}
+    FRAME  [302, 246  54x 54] Frame 21  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      VECTOR [309, 255  42x 36] Vector  {fill=#33363F}
+  GROUP  [ 68, 147 300x 65] Group 218
+    GROUP  [116, 168 205x 44] Group
+      GROUP  [150, 183  23x 14] Group
+        VECTOR [150, 183  12x 14] Vector  {fill=#3F4144}
+        VECTOR [161, 183  12x 14] Vector  {fill=#3F4144}
+      GROUP  [266, 183  23x 14] Group
+        VECTOR [277, 183  12x 14] Vector  {fill=#3F4144}
+        VECTOR [266, 183  12x 14] Vector  {fill=#3F4144}
+      VECTOR [198, 168  44x 44] Vector  {fill=#3F4144}
+      GROUP  [310, 184  11x 10] Group
+        VECTOR [310, 184  11x  7] Vector  {fill=#3F4144}
+        VECTOR [310, 188  11x  7] Vector  {fill=#3F4144}
+      VECTOR [116, 185  14x 10] Vector  {fill=#3F4144}
+    GROUP  [ 68, 147 300x 12] Group
+      VECTOR [126, 152 242x  2] Vector  {fill=#9E9E9E}
+      VECTOR [ 68, 152  61x  2] Vector  {fill=#3F4144}
+      VECTOR [123, 147  12x 12] Vector  {fill=#3F4144}
+TEXT   [269, 150 135x 24] شــــروح الصحيفــــة  {fill=#333037}
+  "شــــروح الصحيفــــة"  [Inter 16/600 lh=24 ls=-0.2 R #333037]
+FRAME  [ 27, 191 390x 45] Frame 44  {gap=8 HOR}
+  FRAME  [ 27, 191  69x 45] Frame 41  {fill=#D2CEB3 r=25.0}
+    INSTANCE [ 50, 202  24x 24] Favorite_fill
+      VECTOR [ 54, 206  16x 14] Vector 15  {fill=#3F4144}
+  FRAME  [104, 191 257x 45] Frame 38  {fill=#F7F7F7 stroke=#A7A7A7@1.0 r=25.0 pad=t5,r15,b4,l10 gap=305 HOR}
+    INSTANCE [114, 202  24x 24] Search_alt
+      ELLIPSE [118, 206  14x 14] Ellipse 65  {stroke=#33363F@2.0}
+      ELLIPSE [122, 210   6x  6] Ellipse 66  {stroke=#33363F@2.0}
+      VECTOR [131, 219   3x  3] Vector 109  {stroke=#33363F@2.0}
+    TEXT   [320, 204  26x 20] بحث  {fill=#000000}
+      "بحث"  [Inter 13/400 lh=20 ls=-0.1 R #000000]
+  FRAME  [369, 198  48x 31] Frame 261  {gap=6 HOR}
+    VECTOR [369, 202   0x 22] Vector 394  {stroke=#46444A@1.0}
+    VECTOR [375, 204  28x 19] Vector 9  {stroke=#46444A@2.9100000858306885}
+VECTOR [ 27, 182 377x  0] Vector 564  {stroke=#333037@0.5}
+INSTANCE [ 25,  76 381x 66] Frame 12  {fill=#2E2A32 r=20.0 pad=t8,r11,b7,l13 gap=10 VER}
+  FRAME  [ 50,  94 334x 30] Frame 11  {gap=39 HOR}
+    GROUP  [ 50,  98  29x 23] Group 8591
+      BOOLEAN_OPERATION [ 50, 102  26x 19] Subtract  {fill=#F2EFE8}
+        VECTOR [ 51, 103  24x 17] Vector  {stroke=#33363F@2.2899999618530273}
+        ELLIPSE [ 65,  98  14x 14] Ellipse 102  {stroke=#33363F@4.579999923706055}
+      ELLIPSE [ 65,  98  14x 14] Ellipse 103  {fill=#F7B161}
+    TEXT   [117, 100 165x 20] ثلاثاء 31 آذار 12 شوال، 1447 هـ  {fill=#F2EFE8}
+      "ثلاثاء 31 آذار 12 شوال، 1447 هـ"  [Inter 13/500 lh=20 ls=-0.1 R #F2EFE8]
+    FRAME  [321,  94  62x 30] Frame 10  {gap=4 HOR}
+      FRAME  [321, 109  29x  2] Frame 7  {gap=3 HOR}
+        ELLIPSE [321, 109   2x  2] Ellipse 1  {fill=#D0BB9E}
+        ELLIPSE [325, 109   2x  2] Ellipse 2  {fill=#D0BB9E}
+        ELLIPSE [329, 109   2x  2] Ellipse 3  {fill=#D0BB9E}
+        ELLIPSE [334, 109   2x  2] Ellipse 4  {fill=#D0BB9E}
+        ELLIPSE [338, 109   2x  2] Ellipse 5  {fill=#D0BB9E}
+        ELLIPSE [343, 109   2x  2] Ellipse 7  {fill=#D0BB9E}
+        ELLIPSE [347, 109   2x  2] Ellipse 6  {fill=#D0BB9E}
+      FRAME  [353,  94  30x 30] Frame 9  {stroke=#D9D7CB@1.2560679912567139 r=100.5}
+        INSTANCE [353,  94  30x 30] Video_fill
+INSTANCE [ 39,  23 351x 22] Component 2
+  GROUP  [315,  27  75x 13] icons-right
+    GROUP  [363,  27  27x 13] battery
+      VECTOR [363,  27  25x 13] outline  {stroke=#000000@1.0550861358642578 r=4.0}
+      VECTOR [389,  32   1x  4] end  {fill=#000000}
+      VECTOR [365,  29  21x  9] charged  {fill=#000000 r=2.0}
+    BOOLEAN_OPERATION [340,  27  17x 12] wi-fi  {fill=#000000}
+      VECTOR [340,  27  17x  5] wifi-1  {fill=#DADADA}
+      VECTOR [343,  31  11x  4] wifi-2  {fill=#DADADA}
+      VECTOR [346,  35   5x  4] wifi-3  {fill=#DADADA}
+    VECTOR [315,  27  18x 12] signal  {fill=#000000}
+  GROUP  [ 39,  23  35x 22] icons-left
+    TEXT   [ 39,  23  35x 22] 9:41  {fill=#000000}
+      "9:41"  [SF Pro Text 17/600 lh=22 ls=-0.8 C #000000]
+FRAME  [ 37, 403  94x 41] Frame 8636  {pad=t10,r10,b10,l10 gap=10 HOR}
+  TEXT   [ 47, 413  74x 21] بِسُبُوغِ النَّعْمَاءِ  {fill=#000000}
+    "بِسُبُوغِ النَّعْمَاءِ "  [Inter 14/400 lh=21 ls=-0.2 C #000000]

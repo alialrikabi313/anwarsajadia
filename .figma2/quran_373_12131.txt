@@ -1,0 +1,216 @@
+FRAME 373:12131  القرآن  430x932
+  bg=['#F2EFE8']
+==========================================================================================
+RECTANGLE [ 26, 197 382x531] ‏لقطة الشاشة 2026-04-29 في 1.17.38 م 1  {fill=IMG r=24.0}
+GROUP  [419, 142 290x784] Group 8626
+  RECTANGLE [419, 142 290x784] Rectangle 4234  {fill=#D2CEB3 stroke=#847B7B@1.0 r=19.0}
+  FRAME  [435, 231 223x 31] Frame 8628  {fill=#FFFFFF r=8.0 pad=t10,r10,b10,l10 gap=10 HOR}
+    TEXT   [450, 239 198x 15] بحث  {fill=#A7A2A2}
+      "بحث"  [Inter 15/400 lh=10 ls=-0.2 R #A7A2A2]
+  FRAME  [435, 193 223x 31] Frame 8630  {gap=8 HOR}
+    FRAME  [435, 193 108x 31] Frame 8629  {fill=#FFFFFF r=8.0 pad=t10,r10,b10,l10 gap=10 HOR}
+      TEXT   [463, 201  51x 15] جـــــــزء  {fill=#000000}
+        "جـــــــزء"  [Inter 15/400 lh=10 ls=-0.2 R #000000]
+    FRAME  [550, 193 108x 31] Frame 8628  {fill=#FFFFFF r=8.0 pad=t10,r10,b10,l10 gap=10 HOR}
+      TEXT   [579, 201  51x 15] ســـــورة  {fill=#000000}
+        "ســـــورة"  [Inter 15/400 lh=10 ls=-0.2 R #000000]
+  RECTANGLE [435, 272 223x 34] Rectangle 4235  {fill=#FFFFFF@58% r=8.0}
+  TEXT   [563, 283 100x491] الفاتحة البقرة آل عمران النساء المائدة الأنعام الأعراف الأنفال التوبة يونس هود يوسف الرعد ابراهيم الحجر النحل  {fill=#000000}
+    "   الفاتحة    البقرة    آل عمران    النساء    الما…"  [Inter 15/500 lh=25 R #000000]
+  VECTOR [671, 274   0x 80] Vector 571  {stroke=#3F4144@3.0}
+COMPONENT [ 11, 696 408x350] Group 8625
+  RECTANGLE [ 11, 696 408x350] Rectangle 4233  {fill=#F2EFE8 stroke=#847B7B@1.0 r=29.0}
+  GROUP  [151, 715 128x 47] Group 8624
+    FRAME  [151, 715 128x 47] Frame 335  {gap=10 HOR}
+      FRAME  [151, 730  30x 17] Frame 325  {gap=1 HOR}
+        VECTOR [167, 730  15x 17] Vector  {fill=#3F4144}
+        VECTOR [151, 730  15x 17] Vector  {fill=#3F4144}
+      INSTANCE [191, 715  47x 47] Stop_fill
+        RECTANGLE [203, 725   8x 28] Rectangle 3921  {fill=#3F4144 r=2.0}
+        RECTANGLE [219, 725   8x 28] Rectangle 3922  {fill=#3F4144 r=2.0}
+      FRAME  [249, 730  30x 17] Frame 324  {gap=1 HOR}
+        VECTOR [249, 730  15x 17] Vector  {fill=#3F4144}
+        VECTOR [264, 730  15x 17] Vector  {fill=#3F4144}
+  GROUP  [ 32, 775 363x110] Group 8624
+    GROUP  [ 39, 775 352x 37] Group 8621
+      GROUP  [ 39, 775 352x 37] Group 8620
+        GROUP  [ 39, 775 352x 37] Group 8619
+    FRAME  [ 32, 824 363x 61] Frame 8627  {gap=14 HOR}
+      FRAME  [ 35, 829  50x 50] Frame 8623  {stroke=#7D7D7D@0.5350877046585083 r=10.7 VER}
+        GROUP  [ 47, 834  25x 25] Group 8622
+        GROUP  [ 44, 859  32x 16] Group 8622
+      FRAME  [ 99, 829  50x 50] Frame 8624  {stroke=#7D7D7D@0.5350877046585083 r=10.7 VER}
+        INSTANCE [111, 834  25x 25] Sun_fill
+        GROUP  [107, 859  34x 16] Group 8622
+      FRAME  [163, 829  50x 50] Frame 8624  {stroke=#7D7D7D@0.5350877046585083 r=10.7 VER}
+        GROUP  [176, 835  24x 24] Group 8622
+        GROUP  [175, 858  26x 16] Group 8622
+      FRAME  [227, 829  50x 50] Frame 8625  {stroke=#7D7D7D@0.5350877046585083 r=10.7 gap=-3 VER}
+        GROUP  [239, 832  25x 33] Group 8622
+        GROUP  [237, 861  30x 16] Group 8622
+      FRAME  [291, 829 102x 50] Frame 8625  {stroke=#7D7D7D@0.5350877046585083 r=10.7 VER}
+        FRAME  [303, 846  77x 17] Frame 334  {gap=34 HOR}
+TEXT   [283, 803   0x 40] Text  {fill=#000000@80%}
+  " "  [Inter 13/400 lh=20 ls=-0.1 R #000000@80%]
+BOOLEAN_OPERATION [  0,   0   0x  0] Union  {fill=#33363F}
+GROUP  [ 27,  78 377x230] Group 219
+  RECTANGLE [ 27,  78 377x230] Rectangle 120  {fill=#B9B9B9 r=17.0}
+  VECTOR [ 47, 237 336x  0] Vector 11  {stroke=#989898@0.5}
+  FRAME  [ 73, 246 283x 55] Frame 13  {gap=22 HOR}
+    FRAME  [ 73, 246  55x 55] Frame 18  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      INSTANCE [ 79, 252  43x 43] Color_Mode
+        ELLIPSE [ 87, 259  29x 29] Ellipse 55  {stroke=#3F4144@2.0490798950195312}
+        ELLIPSE [ 85, 257  32x 32] Ellipse 56  {fill=#3F4144}
+    FRAME  [150, 246  54x 54] Frame 19  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l10 gap=10 HOR}
+      FRAME  [160, 258  35x 30] Layer_1
+        VECTOR [160, 258  35x 30] Vector  {fill=#3F4144}
+    FRAME  [226, 246  54x 54] Frame 20  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      INSTANCE [232, 252  42x 42] Bell_pin_fill
+        BOOLEAN_OPERATION [239, 257  30x 24] Subtract  {fill=#3F4144}
+        ELLIPSE [248, 277  10x 10] Ellipse 45  {fill=#3F4144}
+        ELLIPSE [260, 259   7x  7] Ellipse 6  {fill=#3F4144 stroke=#3F4144@1.0245399475097656}
+    FRAME  [302, 246  54x 54] Frame 21  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      VECTOR [309, 255  42x 36] Vector  {fill=#33363F}
+  GROUP  [ 68, 147 300x 65] Group 218
+    GROUP  [116, 168 205x 44] Group
+      GROUP  [150, 183  23x 14] Group
+        VECTOR [150, 183  12x 14] Vector  {fill=#3F4144}
+        VECTOR [161, 183  12x 14] Vector  {fill=#3F4144}
+      GROUP  [266, 183  23x 14] Group
+        VECTOR [277, 183  12x 14] Vector  {fill=#3F4144}
+        VECTOR [266, 183  12x 14] Vector  {fill=#3F4144}
+      VECTOR [198, 168  44x 44] Vector  {fill=#3F4144}
+      GROUP  [310, 184  11x 10] Group
+        VECTOR [310, 184  11x  7] Vector  {fill=#3F4144}
+        VECTOR [310, 188  11x  7] Vector  {fill=#3F4144}
+      VECTOR [116, 185  14x 10] Vector  {fill=#3F4144}
+    GROUP  [ 68, 147 300x 12] Group
+      VECTOR [126, 152 242x  2] Vector  {fill=#9E9E9E}
+      VECTOR [ 68, 152  61x  2] Vector  {fill=#3F4144}
+      VECTOR [123, 147  12x 12] Vector  {fill=#3F4144}
+INSTANCE [ 25,  69 381x 66] Frame 12  {fill=#2E2A32 r=20.0 pad=t8,r11,b7,l13 gap=10 VER}
+  FRAME  [ 50,  87 334x 30] Frame 11  {gap=39 HOR}
+    GROUP  [ 50,  91  29x 23] Group 8591
+      BOOLEAN_OPERATION [ 50,  95  26x 19] Subtract  {fill=#F2EFE8}
+        VECTOR [ 51,  96  24x 17] Vector  {stroke=#33363F@2.2899999618530273}
+        ELLIPSE [ 65,  91  14x 14] Ellipse 102  {stroke=#33363F@4.579999923706055}
+      ELLIPSE [ 65,  91  14x 14] Ellipse 103  {fill=#F7B161}
+    TEXT   [117,  92 165x 20] ثلاثاء 31 آذار 12 شوال، 1447 هـ  {fill=#F2EFE8}
+      "ثلاثاء 31 آذار 12 شوال، 1447 هـ"  [Inter 13/500 lh=20 ls=-0.1 R #F2EFE8]
+    FRAME  [321,  87  62x 30] Frame 10  {gap=4 HOR}
+      FRAME  [321, 102  29x  2] Frame 7  {gap=3 HOR}
+        ELLIPSE [321, 102   2x  2] Ellipse 1  {fill=#D0BB9E}
+        ELLIPSE [325, 102   2x  2] Ellipse 2  {fill=#D0BB9E}
+        ELLIPSE [329, 102   2x  2] Ellipse 3  {fill=#D0BB9E}
+        ELLIPSE [334, 102   2x  2] Ellipse 4  {fill=#D0BB9E}
+        ELLIPSE [338, 102   2x  2] Ellipse 5  {fill=#D0BB9E}
+        ELLIPSE [343, 102   2x  2] Ellipse 7  {fill=#D0BB9E}
+        ELLIPSE [347, 102   2x  2] Ellipse 6  {fill=#D0BB9E}
+      FRAME  [353,  87  30x 30] Frame 9  {stroke=#D9D7CB@1.2560679912567139 r=100.5}
+        INSTANCE [353,  87  30x 30] Video_fill
+INSTANCE [ 39,  23 351x 22] Component 2
+  GROUP  [315,  27  75x 13] icons-right
+    GROUP  [363,  27  27x 13] battery
+      VECTOR [363,  27  25x 13] outline  {stroke=#000000@1.0550861358642578 r=4.0}
+      VECTOR [389,  32   1x  4] end  {fill=#000000}
+      VECTOR [365,  29  21x  9] charged  {fill=#000000 r=2.0}
+    BOOLEAN_OPERATION [340,  27  17x 12] wi-fi  {fill=#000000}
+      VECTOR [340,  27  17x  5] wifi-1  {fill=#DADADA}
+      VECTOR [343,  31  11x  4] wifi-2  {fill=#DADADA}
+      VECTOR [346,  35   5x  4] wifi-3  {fill=#DADADA}
+    VECTOR [315,  27  18x 12] signal  {fill=#000000}
+  GROUP  [ 39,  23  35x 22] icons-left
+    TEXT   [ 39,  23  35x 22] 9:41  {fill=#000000}
+      "9:41"  [SF Pro Text 17/600 lh=22 ls=-0.8 C #000000]
+INSTANCE [  0, 952 430x350] Group 8627
+  GROUP  [  0, 944 430x410] Group 208
+    RECTANGLE [  0, 952 430x402] Rectangle 7  {fill=#333037 r=40.0}
+    FRAME  [166, 944  98x 40] Frame 8639  {pad=t10,r10,b10,l10 gap=10 VER}
+      VECTOR [187, 964  56x  0] Vector 1  {stroke=grad-LINEAR(#F0DA8F->#A79A6D)@4.0}
+  FRAME  [ 28, 986 375x291] Frame 1  {GRI}
+    GROUP  [129,1096  72x 90] Group 209
+      RECTANGLE [129,1096  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=14.3}
+      TEXT   [134,1169  64x 17] حول المؤسسة  {fill=#FFFFFF@80%}
+        "حول المؤسسة"  [Inter 11/400 lh=17 ls=-0.1 C #FFFFFF@80%]
+      INSTANCE [147,1114  36x 36] Folders_line_fill
+        VECTOR [155,1118   9x 23] Vector  {stroke=#3F4144@0.9905195832252502}
+        VECTOR [163,1121  12x 10] Rectangle 4019  {fill=#3F4144 r=1.0}
+        VECTOR [163,1136  12x 10] Rectangle 4020  {fill=#3F4144 r=1.0}
+    GROUP  [230,1096  72x 91] Group 213
+      RECTANGLE [230,1096  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=14.3}
+      INSTANCE [247,1113  38x 38] group_share
+        BOOLEAN_OPERATION [261,1117   9x  9] Union  {fill=#3F4144}
+        BOOLEAN_OPERATION [251,1134   9x  9] Union  {fill=#3F4144}
+        BOOLEAN_OPERATION [270,1134   9x  9] Union  {fill=#3F4144}
+        BOOLEAN_OPERATION [252,1120  27x 26] Subtract  {fill=#3F4144}
+      TEXT   [236,1169  62x 18] حول التطبيق  {fill=#FFFFFF@80%}
+        "حول التطبيق"  [Inter 12/400 lh=18 ls=-0.1 C #FFFFFF@80%]
+    GROUP  [331,1096  72x 90] Group 214
+      RECTANGLE [331,1096  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=14.3}
+      TEXT   [351,1169  34x 17] البوصلة  {fill=#FFFFFF@80%}
+        "البوصلة"  [Inter 11/400 lh=17 ls=-0.1 C #FFFFFF@80%]
+      INSTANCE [353,1117  29x 29] Compass_alt_fill
+        BOOLEAN_OPERATION [353,1117  29x 29] Union  {fill=#3F4144}
+    GROUP  [230, 986  72x 91] Group 210
+      FRAME  [230, 986  72x 72] Frame 14
+        RECTANGLE [230, 986  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=18.0}
+        INSTANCE [246,1002  39x 39] Video_fill
+      TEXT   [248,1059  38x 18] الوسائط  {fill=#FFFFFF@80%}
+        "الوسائط"  [Inter 12/400 lh=18 ls=-0.1 C #FFFFFF@80%]
+    GROUP  [129, 986  72x 91] Group 211
+      RECTANGLE [129, 986  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=18.0}
+      INSTANCE [143,1000  43x 43] Book_open_duotone
+        VECTOR [167,1008  16x 29] Vector 59  {fill=#3F4144}
+        BOOLEAN_OPERATION [149,1008  16x 29] Subtract  {fill=#3F4144}
+      TEXT   [140,1059  52x 18] تراث الامام  {fill=#FFFFFF@80%}
+        "تراث الامام"  [Inter 12/400 lh=18 ls=-0.1 C #FFFFFF@80%]
+    GROUP  [ 28,1096  72x 90] Group 215
+      RECTANGLE [ 28,1096  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=14.3}
+      TEXT   [ 38,1169  54x 17] القرآن الكريم  {fill=#FFFFFF@80%}
+        "القرآن الكريم"  [Inter 11/400 lh=17 ls=-0.1 C #FFFFFF@80%]
+      INSTANCE [ 45,1112  40x 40] Book_open_alt_duotone
+        VECTOR [ 50,1118  15x 25] Vector  {fill=#6E6E6E@25% stroke=#3F4144@0.938386857509613}
+        GROUP  [ 50,1118  15x 25] Mask group
+        VECTOR [ 67,1118  13x 25] Vector  {fill=#3F4144}
+    GROUP  [ 28,1205  72x 90] Group 216
+      RECTANGLE [ 28,1205  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=14.3}
+      TEXT   [ 46,1278  39x 17] الخدمات  {fill=#FFFFFF@80%}
+        "الخدمات"  [Inter 11/400 lh=17 ls=-0.1 C #FFFFFF@80%]
+      INSTANCE [ 48,1226  32x 32] Widget_add
+        RECTANGLE [ 52,1230   9x  9] Rectangle 4006  {fill=#3F4144 stroke=#3F4144@2.6587626934051514 r=1.3}
+        RECTANGLE [ 52,1244   9x  9] Rectangle 4008  {fill=#3F4144 stroke=#3F4144@2.6587626934051514 r=1.3}
+        RECTANGLE [ 66,1230   9x  9] Rectangle 4007  {fill=#3F4144 stroke=#3F4144@2.6587626934051514 r=1.3}
+        VECTOR [ 71,1244   0x  9] Vector 217  {stroke=#3F4144@2.6587626934051514 r=1.3}
+        VECTOR [ 66,1249   9x  0] Vector 218  {stroke=#3F4144@2.6587626934051514 r=1.3}
+    GROUP  [ 28, 986  72x 91] Group 212
+      GROUP  [ 28, 986  72x 72] Group 220
+        RECTANGLE [ 28, 986  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=18.0}
+        FRAME  [ 47,1005  35x 35] library-svgrepo-com 1
+      TEXT   [ 48,1059  34x 18] المكتبة  {fill=#FFFFFF@80%}
+        "المكتبة"  [Inter 12/400 lh=18 ls=-0.1 C #FFFFFF@80%]
+    GROUP  [331, 986  72x 91] Group 218
+      FRAME  [331, 986  72x 72] Frame 14
+        RECTANGLE [331, 986  72x 72] Rectangle 7  {fill=grad-LINEAR(#F0DA8F->#A79A6D) r=18.0}
+        INSTANCE [346, 998  42x 42] Home_fill
+      TEXT   [347,1059  39x 18] الرئيسية  {fill=#FFFFFF@80%}
+        "الرئيسية"  [Inter 12/400 lh=18 ls=-0.1 C #FFFFFF@80%]
+INSTANCE [ 27, 153 377x 33] Frame 8638  {gap=5 HOR}
+  FRAME  [ 27, 153 274x 33] Frame 332  {fill=#FFFFFF r=9.4 pad=t1,r12,b1,l12 gap=12 HOR}
+    TEXT   [ 42, 158  52x 23] حزب 16  {fill=#000000}
+      "حزب 16"  [Inter 16/400 lh=23 ls=-0.2 R #000000]
+    VECTOR [107, 163   0x 13] Vector 394  {stroke=#222125@1.001601219177246}
+    TEXT   [119, 158  36x 23] جزء 8  {fill=#000000}
+      "جزء 8"  [Inter 16/400 lh=23 ls=-0.2 R #000000]
+    VECTOR [168, 163   0x 13] Vector 395  {stroke=#222125@1.001601219177246}
+    TEXT   [180, 158  67x 23] صفحة 151  {fill=#000000}
+      "صفحة 151"  [Inter 16/400 lh=23 ls=-0.2 R #000000]
+    VECTOR [260, 163   0x 13] Vector 396  {stroke=#222125@1.001601219177246}
+    VECTOR [272, 162  13x 14] Rectangle 1  {fill=#46444A}
+  INSTANCE [306, 153  98x 32] Frame 335  {fill=#FFFFFF r=7.9 pad=t1,r12,b1,l12 gap=12 HOR}
+    TEXT   [311, 160  43x 20] فهرس  {fill=#000000}
+      "فهرس"  [Inter 15/400 lh=13 ls=-0.2 R #000000]
+    INSTANCE [367, 157  25x 25] Menu
+      VECTOR [372, 164  14x  0] Vector 7  {stroke=#33363F@2.061007499694824 r=2.1}
+      VECTOR [372, 170  14x  0] Vector 8  {stroke=#33363F@2.061007499694824 r=2.1}
+      VECTOR [372, 175  14x  0] Vector 9  {stroke=#33363F@2.061007499694824 r=2.1}
+INSTANCE [  0, 818 430x350] Frame 9

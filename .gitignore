@@ -1,0 +1,65 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# Figma — secrets and exported renders (regenerate via scripts/figma_export.py)
+.figma/.env
+.figma/exports/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# بروفايلات المتصفّح اللي تشغّلها سكربتات فيغما — بيها كوكيز و«Login Data»،
+# وممنوع تطلع بريبو عام. تنولد من جديد بأول تشغيل.
+.figma2/_chromeprof/
+.figma2/_navprof/
+.figma2/_pngprof/
+.figma2/_rastprof/
+.figma2/_prevprof/
+
+# نسخ احتياطية ثقيلة لتفريغ فيغما — الأصل design.json يكفي
+.figma/*.bak.json
+.figma2/*.bak.json
+
+# أدوات المساعد الآلي — ما تخص المشروع ولا تنرفع
+CLAUDE.md
+.claude/

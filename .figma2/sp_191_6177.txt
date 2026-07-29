@@ -1,0 +1,139 @@
+FRAME 191:6177  الاشعارات  430x932
+  bg=['#F2EFE8']
+==========================================================================================
+TEXT   [283, 803   0x 40] Text  {fill=#000000@80%}
+  " "  [Inter 13/400 lh=20 ls=-0.1 R #000000@80%]
+BOOLEAN_OPERATION [  0,   0   0x  0] Union  {fill=#33363F}
+GROUP  [ 27,  78 377x230] Group 219
+  RECTANGLE [ 27,  78 377x230] Rectangle 120  {fill=#B9B9B9 r=17.0}
+  VECTOR [ 47, 237 336x  0] Vector 11  {stroke=#989898@0.5}
+  FRAME  [ 73, 246 283x 55] Frame 13  {gap=22 HOR}
+    FRAME  [ 73, 246  55x 55] Frame 18  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      INSTANCE [ 79, 252  43x 43] Color_Mode
+        ELLIPSE [ 87, 259  29x 29] Ellipse 55  {stroke=#3F4144@2.0490798950195312}
+        ELLIPSE [ 85, 257  32x 32] Ellipse 56  {fill=#3F4144}
+    FRAME  [150, 246  54x 54] Frame 19  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l10 gap=10 HOR}
+      FRAME  [160, 258  35x 30] Layer_1
+        VECTOR [160, 258  35x 30] Vector  {fill=#3F4144}
+    FRAME  [226, 246  54x 54] Frame 20  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      INSTANCE [232, 252  42x 42] Bell_pin_fill
+        BOOLEAN_OPERATION [239, 257  30x 24] Subtract  {fill=#3F4144}
+        ELLIPSE [248, 277  10x 10] Ellipse 45  {fill=#3F4144}
+        ELLIPSE [260, 259   7x  7] Ellipse 6  {fill=#3F4144 stroke=#3F4144@1.0245399475097656}
+    FRAME  [302, 246  54x 54] Frame 21  {stroke=#9D9D9D@0.6000000238418579 r=7.0 pad=t6,r6,b6,l6 gap=10 HOR}
+      VECTOR [309, 255  42x 36] Vector  {fill=#33363F}
+  GROUP  [ 68, 147 300x 65] Group 218
+    GROUP  [116, 168 205x 44] Group
+      GROUP  [150, 183  23x 14] Group
+        VECTOR [150, 183  12x 14] Vector  {fill=#3F4144}
+        VECTOR [161, 183  12x 14] Vector  {fill=#3F4144}
+      GROUP  [266, 183  23x 14] Group
+        VECTOR [277, 183  12x 14] Vector  {fill=#3F4144}
+        VECTOR [266, 183  12x 14] Vector  {fill=#3F4144}
+      VECTOR [198, 168  44x 44] Vector  {fill=#3F4144}
+      GROUP  [310, 184  11x 10] Group
+        VECTOR [310, 184  11x  7] Vector  {fill=#3F4144}
+        VECTOR [310, 188  11x  7] Vector  {fill=#3F4144}
+      VECTOR [116, 185  14x 10] Vector  {fill=#3F4144}
+    GROUP  [ 68, 147 300x 12] Group
+      VECTOR [126, 152 242x  2] Vector  {fill=#9E9E9E}
+      VECTOR [ 68, 152  61x  2] Vector  {fill=#3F4144}
+      VECTOR [123, 147  12x 12] Vector  {fill=#3F4144}
+FRAME  [ 27,  76 377x696] Frame 266  {gap=12 VER}
+  INSTANCE [ 25,  76 381x 66] Frame 12  {fill=#2E2A32 r=20.0 pad=t8,r11,b7,l13 gap=10 VER}
+    FRAME  [ 50,  94 334x 30] Frame 11  {gap=39 HOR}
+      GROUP  [ 50,  98  29x 23] Group 8591
+        BOOLEAN_OPERATION [ 50, 102  26x 19] Subtract  {fill=#F2EFE8}
+        ELLIPSE [ 65,  98  14x 14] Ellipse 103  {fill=#F7B161}
+      TEXT   [117, 100 165x 20] ثلاثاء 31 آذار 12 شوال، 1447 هـ  {fill=#F2EFE8}
+        "ثلاثاء 31 آذار 12 شوال، 1447 هـ"  [Inter 13/500 lh=20 ls=-0.1 R #F2EFE8]
+      FRAME  [321,  94  62x 30] Frame 10  {gap=4 HOR}
+        FRAME  [321, 109  29x  2] Frame 7  {gap=3 HOR}
+        FRAME  [353,  94  30x 30] Frame 9  {stroke=#D9D7CB@1.2560679912567139 r=100.5}
+  FRAME  [ 35, 154 361x 24] Frame 69  {gap=285 HOR}
+    INSTANCE [ 35, 154  24x 24] Setting_fill
+      BOOLEAN_OPERATION [ 37, 156  20x 20] Subtract  {fill=#222222}
+        BOOLEAN_OPERATION [ 37, 156  20x 20] Union  {fill=#273B4A}
+        ELLIPSE [ 43, 162   8x  8] Ellipse 5  {fill=#273B4A}
+    TEXT   [329, 154  67x 24] الاشعارات  {fill=#000000}
+      "الاشعارات"  [Inter 16/600 lh=24 ls=-0.2 R #000000]
+  FRAME  [ 27, 190 377x582] Frame 68  {gap=10 VER}
+    GROUP  [ 27, 190 377x 64] Group 249  {r=16.0}
+      RECTANGLE [ 27, 190 377x 64] Rectangle 4152  {fill=#D9D7CB r=16.0}
+      TEXT   [294, 197  96x 20] المسابقات الجارية  {fill=#000000}
+        "المسابقات الجارية"  [Inter 13/600 lh=20 ls=-0.1 R #000000]
+      TEXT   [ 42, 197  39x 15] 2:53 PM  {fill=#555555}
+        "2:53 PM"  [Inter 10/500 lh=15 ls=-0.1 R #555555]
+      TEXT   [ 50, 227 340x 18] حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ضيافة...  {fill=#000000}
+        "حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ض…"  [Inter 12/400 lh=18 ls=-0.1 R #000000]
+    GROUP  [ 27, 264 377x 64] Group 251  {r=16.0}
+      RECTANGLE [ 27, 264 377x 64] Rectangle 4152  {fill=#D9D7CB r=16.0}
+      TEXT   [294, 271  96x 20] المسابقات الجارية  {fill=#000000}
+        "المسابقات الجارية"  [Inter 13/600 lh=20 ls=-0.1 R #000000]
+      TEXT   [ 42, 271  39x 15] 2:53 PM  {fill=#555555}
+        "2:53 PM"  [Inter 10/500 lh=15 ls=-0.1 R #555555]
+      TEXT   [ 50, 301 340x 18] حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ضيافة...  {fill=#000000}
+        "حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ض…"  [Inter 12/400 lh=18 ls=-0.1 R #000000]
+    GROUP  [ 27, 338 377x 64] Group 252  {r=16.0}
+      RECTANGLE [ 27, 338 377x 64] Rectangle 4152  {fill=#D9D7CB r=16.0}
+      TEXT   [294, 345  96x 20] المسابقات الجارية  {fill=#000000}
+        "المسابقات الجارية"  [Inter 13/600 lh=20 ls=-0.1 R #000000]
+      TEXT   [ 42, 345  39x 15] 2:53 PM  {fill=#555555}
+        "2:53 PM"  [Inter 10/500 lh=15 ls=-0.1 R #555555]
+      TEXT   [ 50, 375 340x 18] حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ضيافة...  {fill=#000000}
+        "حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ض…"  [Inter 12/400 lh=18 ls=-0.1 R #000000]
+    GROUP  [ 27, 412 377x 64] Group 253  {r=16.0}
+      RECTANGLE [ 27, 412 377x 64] Rectangle 4152  {fill=#D9D7CB r=16.0}
+      TEXT   [294, 419  96x 20] المسابقات الجارية  {fill=#000000}
+        "المسابقات الجارية"  [Inter 13/600 lh=20 ls=-0.1 R #000000]
+      TEXT   [ 42, 419  39x 15] 2:53 PM  {fill=#555555}
+        "2:53 PM"  [Inter 10/500 lh=15 ls=-0.1 R #555555]
+      TEXT   [ 50, 449 340x 18] حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ضيافة...  {fill=#000000}
+        "حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ض…"  [Inter 12/400 lh=18 ls=-0.1 R #000000]
+    GROUP  [ 27, 486 377x 64] Group 254  {r=16.0}
+      RECTANGLE [ 27, 486 377x 64] Rectangle 4152  {fill=#D9D7CB r=16.0}
+      TEXT   [294, 493  96x 20] المسابقات الجارية  {fill=#000000}
+        "المسابقات الجارية"  [Inter 13/600 lh=20 ls=-0.1 R #000000]
+      TEXT   [ 42, 493  39x 15] 2:53 PM  {fill=#555555}
+        "2:53 PM"  [Inter 10/500 lh=15 ls=-0.1 R #555555]
+      TEXT   [ 50, 523 340x 18] حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ضيافة...  {fill=#000000}
+        "حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ض…"  [Inter 12/400 lh=18 ls=-0.1 R #000000]
+    GROUP  [ 27, 560 377x 64] Group 255  {r=16.0}
+      RECTANGLE [ 27, 560 377x 64] Rectangle 4152  {fill=#D9D7CB r=16.0}
+      TEXT   [294, 567  96x 20] المسابقات الجارية  {fill=#000000}
+        "المسابقات الجارية"  [Inter 13/600 lh=20 ls=-0.1 R #000000]
+      TEXT   [ 42, 567  39x 15] 2:53 PM  {fill=#555555}
+        "2:53 PM"  [Inter 10/500 lh=15 ls=-0.1 R #555555]
+      TEXT   [ 50, 597 340x 18] حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ضيافة...  {fill=#000000}
+        "حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ض…"  [Inter 12/400 lh=18 ls=-0.1 R #000000]
+    GROUP  [ 27, 634 377x 64] Group 256  {r=16.0}
+      RECTANGLE [ 27, 634 377x 64] Rectangle 4152  {fill=#D9D7CB r=16.0}
+      TEXT   [294, 641  96x 20] المسابقات الجارية  {fill=#000000}
+        "المسابقات الجارية"  [Inter 13/600 lh=20 ls=-0.1 R #000000]
+      TEXT   [ 42, 641  39x 15] 2:53 PM  {fill=#555555}
+        "2:53 PM"  [Inter 10/500 lh=15 ls=-0.1 R #555555]
+      TEXT   [ 50, 671 340x 18] حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ضيافة...  {fill=#000000}
+        "حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ض…"  [Inter 12/400 lh=18 ls=-0.1 R #000000]
+    GROUP  [ 27, 708 377x 64] Group 257  {r=16.0}
+      RECTANGLE [ 27, 708 377x 64] Rectangle 4152  {fill=#D9D7CB r=16.0}
+      TEXT   [294, 715  96x 20] المسابقات الجارية  {fill=#000000}
+        "المسابقات الجارية"  [Inter 13/600 lh=20 ls=-0.1 R #000000]
+      TEXT   [ 42, 715  39x 15] 2:53 PM  {fill=#555555}
+        "2:53 PM"  [Inter 10/500 lh=15 ls=-0.1 R #555555]
+      TEXT   [ 50, 745 340x 18] حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ضيافة...  {fill=#000000}
+        "حفظ رسالة الحقوق : الجوائز : المبيت في كربلاء في ض…"  [Inter 12/400 lh=18 ls=-0.1 R #000000]
+INSTANCE [  0, 818 430x350] Frame 9
+INSTANCE [ 39,  23 351x 22] Component 2
+  GROUP  [315,  27  75x 13] icons-right
+    GROUP  [363,  27  27x 13] battery
+      VECTOR [363,  27  25x 13] outline  {stroke=#000000@1.0550861358642578 r=4.0}
+      VECTOR [389,  32   1x  4] end  {fill=#000000}
+      VECTOR [365,  29  21x  9] charged  {fill=#000000 r=2.0}
+    BOOLEAN_OPERATION [340,  27  17x 12] wi-fi  {fill=#000000}
+      VECTOR [340,  27  17x  5] wifi-1  {fill=#DADADA}
+      VECTOR [343,  31  11x  4] wifi-2  {fill=#DADADA}
+      VECTOR [346,  35   5x  4] wifi-3  {fill=#DADADA}
+    VECTOR [315,  27  18x 12] signal  {fill=#000000}
+  GROUP  [ 39,  23  35x 22] icons-left
+    TEXT   [ 39,  23  35x 22] 9:41  {fill=#000000}
+      "9:41"  [SF Pro Text 17/600 lh=22 ls=-0.8 C #000000]
