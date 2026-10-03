@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/features/multimedia/presentation/providers/audio_player_controller.dart';
 
 /// غلاف، عنوان ومُلقٍ، شريط تقدّم، أزرار (السابق / −10ث / تشغيل / +10ث /
@@ -59,9 +60,10 @@ class AudioPlayerScreen extends ConsumerWidget {
                         const Expanded(
                           child: Text(
                             'الآن يُشغّل',
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.right,
                             style: TextStyle(
-                              fontFamily: 'NotoNaskhArabic',
+                              fontFamily: 'Inter',
+                              fontFamilyFallback: kArabicFontFallback,
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
@@ -87,7 +89,8 @@ class AudioPlayerScreen extends ConsumerWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                            fontFamily: 'Amiri',
+                            fontFamily: 'Inter',
+                            fontFamilyFallback: kArabicFontFallback,
                             fontSize: 21,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -101,7 +104,8 @@ class AudioPlayerScreen extends ConsumerWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              fontFamily: 'NotoNaskhArabic',
+                              fontFamily: 'Inter',
+                              fontFamilyFallback: kArabicFontFallback,
                               fontSize: 14,
                               color: AppColors.accentGoldLight,
                             ),

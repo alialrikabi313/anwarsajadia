@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/core/widgets/empty_state_widget.dart';
 import 'package:anwarsajadia/features/bookmarks/data/bookmarks_storage.dart';
 import 'package:anwarsajadia/features/bookmarks/presentation/providers/bookmarks_provider.dart';
@@ -21,7 +22,7 @@ class BookmarksScreen extends ConsumerWidget {
       backgroundColor: AppColors.backgroundLight,
       appBar: AppBar(
         title: const Text('المفضلة'),
-        centerTitle: true,
+        centerTitle: false,
         actions: [
           if (bookmarks.isNotEmpty)
             IconButton(
@@ -52,10 +53,14 @@ class BookmarksScreen extends ConsumerWidget {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text(
+        title: Text(
           'مسح جميع المفضلة',
           textDirection: TextDirection.rtl,
-          style: TextStyle(fontFamily: 'Amiri', fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         content: const Text(
           'هل أنت متأكد من حذف جميع العناصر المحفوظة؟',
@@ -181,7 +186,8 @@ class _BookmarkTile extends ConsumerWidget {
             item.title,
             textDirection: TextDirection.rtl,
             style: const TextStyle(
-              fontFamily: 'Amiri',
+              fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 15,
               fontWeight: FontWeight.bold,
               color: AppColors.headerPillBg,
@@ -193,13 +199,14 @@ class _BookmarkTile extends ConsumerWidget {
             item.bookTitle,
             textDirection: TextDirection.rtl,
             style: const TextStyle(
-              fontFamily: 'NotoNaskhArabic',
+              fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 12,
               color: AppColors.textSecondaryLight,
             ),
           ),
           trailing: const Icon(
-            Icons.chevron_left,
+            Icons.chevron_right,
             color: AppColors.textSecondaryLight,
           ),
           onTap: () => _navigateToItem(context, item),

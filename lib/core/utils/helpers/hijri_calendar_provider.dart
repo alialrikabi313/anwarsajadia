@@ -2,6 +2,8 @@
 // الهلال المنشورة على sistani.org، وما بيه تعديل يدوي بالأيام — القرار ديني
 // يرجع للمكتب، والتطبيق ينقل ولا يجتهد.
 
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shia_hijri_calendar/shia_hijri_calendar.dart';
 
@@ -31,11 +33,33 @@ final ShiaHijriCalendar shiaHijriCalendar = ShiaHijriCalendar(
 final StreamProvider<DateTime> currentDayProvider = StreamProvider<DateTime>((
   ref,
 ) async* {
+  // المؤقّت يُلغى عند التخلّص من المزوّد. لو استعملنا Future.delayed لبقي
+  // مؤقّتٌ معلّقاً دقيقةً بعد زوال المستمعين — وهو ما كان يُفشل اختبارات
+  // الويدجتس بـ«A Timer is still pending».
+  final gone = Completer<void>();
+  Timer? pending;
+  ref.onDispose(() {
+    pending?.cancel();
+    pending = null;
+    if (!gone.isCompleted) gone.complete();
+  });
+
+  /// انتظارٌ يستيقظ بانقضاء المدّة أو بزوال المزوّد، أيّهما أسبق.
+  Future<void> sleep(Duration d) {
+    final tick = Completer<void>();
+    pending = Timer(d, () {
+      pending = null;
+      if (!tick.isCompleted) tick.complete();
+    });
+    return Future.any([tick.future, gone.future]);
+  }
+
   var last = DateTime.now();
   yield DateTime(last.year, last.month, last.day);
-  while (true) {
+  while (!gone.isCompleted) {
     // فحص كل دقيقة: أرخص من مؤقّت مضبوط على منتصف الليل، ويصحّ حتى لو نام الجهاز.
-    await Future<void>.delayed(const Duration(minutes: 1));
+    await sleep(const Duration(minutes: 1));
+    if (gone.isCompleted) return;
     final now = DateTime.now();
     if (now.day != last.day ||
         now.month != last.month ||

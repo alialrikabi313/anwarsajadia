@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:anwarsajadia/core/network/api_client.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/core/utils/validators.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 
@@ -126,7 +127,7 @@ class _VisitByProxyScreenState extends ConsumerState<VisitByProxyScreen> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_forward_rounded,
+                      icon: const Icon(Icons.arrow_back_rounded,
                           color: AppColors.primary),
                       onPressed: () => Navigator.of(context).maybePop(),
                     ),
@@ -140,7 +141,8 @@ class _VisitByProxyScreenState extends ConsumerState<VisitByProxyScreen> {
                         'طلب الزيارة بالانابة',
                         textAlign: TextAlign.right,
                         style: TextStyle(
-                          fontFamily: 'NotoNaskhArabic',
+                          fontFamily: 'Inter',
+                          fontFamilyFallback: kArabicFontFallback,
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
                           color: AppColors.primaryDark,

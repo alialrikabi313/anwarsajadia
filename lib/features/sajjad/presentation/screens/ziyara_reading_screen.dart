@@ -10,6 +10,7 @@ import 'package:anwarsajadia/core/utils/helpers/share_helper.dart';
 import 'package:anwarsajadia/features/bookmarks/data/bookmarks_storage.dart';
 import 'package:anwarsajadia/features/bookmarks/presentation/providers/bookmarks_provider.dart';
 import 'package:anwarsajadia/features/sajjad/presentation/providers/ziyarat_list_provider.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 class ZiyaraReadingScreen extends ConsumerStatefulWidget {
   const ZiyaraReadingScreen({required this.ziyaraId, super.key});
@@ -62,9 +63,15 @@ class _ZiyaraReadingScreenState extends ConsumerState<ZiyaraReadingScreen> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        centerTitle: true,
-        // سهم الرجوع باليسار مثل بقية شاشات القراءة.
+        centerTitle: false,
+        // سهم الرجوع في أقصى اليمين مثل بقية شاشات القراءة (ملاحظة 1): مع RTL
+        // موضع `leading` هو اليمين، بخلاف وضعه ضمن `actions` كما كان.
         automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          tooltip: 'رجوع',
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.text_increase),
@@ -74,11 +81,6 @@ class _ZiyaraReadingScreenState extends ConsumerState<ZiyaraReadingScreen> {
                 _fontSizeIndex = (_fontSizeIndex + 1) % _fontSizes.length;
               });
             },
-          ),
-          IconButton(
-            icon: const Icon(Icons.arrow_forward_rounded),
-            tooltip: 'رجوع',
-            onPressed: () => Navigator.of(context).maybePop(),
           ),
         ],
       ),
@@ -110,6 +112,7 @@ class _ZiyaraReadingScreenState extends ConsumerState<ZiyaraReadingScreen> {
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                         color: AppColors.ink,

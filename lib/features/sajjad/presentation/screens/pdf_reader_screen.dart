@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:anwarsajadia/core/network/api_client.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // قارئ PDF داخل التطبيق.
 
@@ -110,6 +111,7 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
             fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
@@ -167,8 +169,11 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
         children: [
           Row(
             children: [
+              // الجهة اليمنى = بداية المستند بالعربية: «أول صفحة» ثم «السابقة».
+              // الأيقونتان تنعكسان تلقائياً مع RTL، فـchevron_left يُرسم «‹»
+              // معكوساً أي يشير يميناً — وهو اتجاه الرجوع الصحيح (ملاحظة 4).
               _iconBtn(Icons.first_page_rounded, () => _goTo(0)),
-              _iconBtn(Icons.chevron_left_rounded, () => _goTo(_current + 1)),
+              _iconBtn(Icons.chevron_left_rounded, () => _goTo(_current - 1)),
               Expanded(
                 child: SliderTheme(
                   data: SliderThemeData(
@@ -189,7 +194,8 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
                   ),
                 ),
               ),
-              _iconBtn(Icons.chevron_right_rounded, () => _goTo(_current - 1)),
+              // والجهة اليسرى = اتجاه التقدّم: «التالية» ثم «آخر صفحة».
+              _iconBtn(Icons.chevron_right_rounded, () => _goTo(_current + 1)),
               _iconBtn(Icons.last_page_rounded, () => _goTo(_pages - 1)),
             ],
           ),
@@ -197,6 +203,7 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
             'صفحة ${_current + 1} من $_pages',
             style: const TextStyle(
               fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 12,
               color: Colors.white70,
             ),

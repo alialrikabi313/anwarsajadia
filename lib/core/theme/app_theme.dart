@@ -3,14 +3,16 @@
 // يرجع مبدّل السمة.
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 
 abstract final class AppTheme {
   static ThemeData get light {
     final base = ThemeData.light(useMaterial3: true);
-    final inter = GoogleFonts.interTextTheme(base.textTheme).apply(
+    final inter = base.textTheme.apply(
+      fontFamily: 'Inter',
+      fontFamilyFallback: kArabicFontFallback,
       bodyColor: AppColors.textPrimaryLight,
       displayColor: AppColors.textPrimaryLight,
     );
@@ -45,8 +47,11 @@ abstract final class AppTheme {
         backgroundColor: AppColors.backgroundLight,
         foregroundColor: AppColors.textPrimaryLight,
         elevation: 0,
-        centerTitle: true,
-        titleTextStyle: GoogleFonts.inter(
+        // العناوين تلتصق باليمين لا تتوسّط — سياسة عامة للتطبيق.
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 17,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimaryLight,
@@ -60,11 +65,15 @@ abstract final class AppTheme {
         unselectedItemColor: AppColors.gray400,
         type: BottomNavigationBarType.fixed,
         elevation: 0,
-        selectedLabelStyle: GoogleFonts.inter(
+        selectedLabelStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 11,
           fontWeight: FontWeight.w500,
         ),
-        unselectedLabelStyle: GoogleFonts.inter(
+        unselectedLabelStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 11,
           fontWeight: FontWeight.w400,
         ),
@@ -89,7 +98,9 @@ abstract final class AppTheme {
             borderRadius: BorderRadius.circular(50),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          textStyle: GoogleFonts.inter(
+          textStyle: TextStyle(
+            fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
             fontSize: 13,
             fontWeight: FontWeight.w600,
           ),
@@ -98,7 +109,9 @@ abstract final class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppColors.greenDeep,
-          textStyle: GoogleFonts.inter(
+          textStyle: TextStyle(
+            fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
             fontSize: 13,
             fontWeight: FontWeight.w500,
           ),
@@ -107,9 +120,7 @@ abstract final class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.textPrimaryLight,
-          side: BorderSide(
-            color: AppColors.borderLight.withValues(alpha: 0.5),
-          ),
+          side: BorderSide(color: AppColors.borderLight.withValues(alpha: 0.5)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
           ),
@@ -132,14 +143,15 @@ abstract final class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(50),
-          borderSide: const BorderSide(
-            color: AppColors.greenDeep,
-            width: 1.5,
-          ),
+          borderSide: const BorderSide(color: AppColors.greenDeep, width: 1.5),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        hintStyle: GoogleFonts.inter(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+        hintStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 13,
           color: AppColors.textMutedLight,
         ),
@@ -156,39 +168,41 @@ abstract final class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.cardLight,
         selectedColor: AppColors.charcoal,
-        labelStyle: GoogleFonts.inter(
+        labelStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: AppColors.textPrimaryLight,
         ),
-        secondaryLabelStyle: GoogleFonts.inter(
+        secondaryLabelStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 12,
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),
         side: BorderSide.none,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.charcoal,
-        contentTextStyle: GoogleFonts.inter(
+        contentTextStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 13,
           color: Colors.white,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: AppColors.cardLight,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        titleTextStyle: GoogleFonts.inter(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        titleTextStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 17,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimaryLight,
@@ -199,7 +213,9 @@ abstract final class AppTheme {
 
   static ThemeData get dark {
     final base = ThemeData.dark(useMaterial3: true);
-    final inter = GoogleFonts.interTextTheme(base.textTheme).apply(
+    final inter = base.textTheme.apply(
+      fontFamily: 'Inter',
+      fontFamilyFallback: kArabicFontFallback,
       bodyColor: AppColors.textPrimaryDark,
       displayColor: AppColors.textPrimaryDark,
     );
@@ -234,8 +250,11 @@ abstract final class AppTheme {
         backgroundColor: AppColors.backgroundDark,
         foregroundColor: AppColors.textPrimaryDark,
         elevation: 0,
-        centerTitle: true,
-        titleTextStyle: GoogleFonts.inter(
+        // العناوين تلتصق باليمين لا تتوسّط — سياسة عامة للتطبيق.
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 17,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimaryDark,
@@ -247,11 +266,15 @@ abstract final class AppTheme {
         unselectedItemColor: AppColors.gray500,
         type: BottomNavigationBarType.fixed,
         elevation: 0,
-        selectedLabelStyle: GoogleFonts.inter(
+        selectedLabelStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 11,
           fontWeight: FontWeight.w500,
         ),
-        unselectedLabelStyle: GoogleFonts.inter(
+        unselectedLabelStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 11,
           fontWeight: FontWeight.w400,
         ),
@@ -259,9 +282,7 @@ abstract final class AppTheme {
       cardTheme: CardThemeData(
         color: AppColors.cardElevatedDark,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -272,7 +293,9 @@ abstract final class AppTheme {
             borderRadius: BorderRadius.circular(50),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          textStyle: GoogleFonts.inter(
+          textStyle: TextStyle(
+            fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
             fontSize: 13,
             fontWeight: FontWeight.w600,
           ),
@@ -296,9 +319,13 @@ abstract final class AppTheme {
             width: 1.5,
           ),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        hintStyle: GoogleFonts.inter(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
+        hintStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 13,
           color: AppColors.textMutedDark,
         ),
@@ -315,31 +342,31 @@ abstract final class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.cardElevatedDark,
         selectedColor: AppColors.accentGold,
-        labelStyle: GoogleFonts.inter(
+        labelStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 12,
           color: AppColors.textPrimaryDark,
         ),
         side: BorderSide.none,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.cardElevatedDark,
-        contentTextStyle: GoogleFonts.inter(
+        contentTextStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           color: AppColors.textPrimaryDark,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         behavior: SnackBarBehavior.floating,
       ),
       dialogTheme: DialogThemeData(
         backgroundColor: AppColors.cardElevatedDark,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        titleTextStyle: GoogleFonts.inter(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        titleTextStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 17,
           fontWeight: FontWeight.w600,
           color: AppColors.textPrimaryDark,

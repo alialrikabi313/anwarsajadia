@@ -16,6 +16,7 @@ import 'package:anwarsajadia/core/widgets/highlighted_text.dart';
 import 'package:anwarsajadia/core/widgets/loading_indicator.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/quran/presentation/providers/quran_providers.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 class QuranSearchScreen extends ConsumerStatefulWidget {
   const QuranSearchScreen({super.key});
@@ -61,16 +62,17 @@ class _QuranSearchScreenState extends ConsumerState<QuranSearchScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_forward_rounded),
+                    icon: const Icon(Icons.arrow_back_rounded),
                     onPressed: () => context.backOrHome(),
                     color: AppColors.textPrimaryLight,
                   ),
                   Expanded(
                     child: Text(
                       l10n.quranSearch,
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.right,
                       style: const TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: AppColors.textPrimaryLight,
@@ -201,7 +203,8 @@ class _QuranSearchScreenState extends ConsumerState<QuranSearchScreen> {
                                     : 'سورة ${result.surahName}',
                                 textDirection: TextDirection.rtl,
                                 style: const TextStyle(
-                                  fontFamily: 'Amiri',
+                                  fontFamily: 'Inter',
+                                  fontFamilyFallback: kArabicFontFallback,
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -225,7 +228,7 @@ class _QuranSearchScreenState extends ConsumerState<QuranSearchScreen> {
                                     )
                                   : null,
                               trailing: Icon(
-                                Icons.chevron_left,
+                                Icons.chevron_right,
                                 color: theme.colorScheme.onSurface
                                     .withValues(alpha: 0.3),
                               ),

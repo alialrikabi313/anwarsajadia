@@ -4,21 +4,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:anwarsajadia/core/network/api_client.dart';
 
-/// تصنيف كتب (GET /book-categories). إصدارات المؤسسة نفسها هي تصنيف
-/// «الإصدارات» (slug `al-isdaraat`)، وبقية التصنيفات تخصصية.
+/// تصنيف كتب (GET /book-categories) — تُستعمل الآن للتجميع العرضي فقط
+/// («المكتبة التخصصية» مبوَّبة بتصنيفها)، لا لتمييز إصدارات المؤسسة.
 class BookCategory {
   BookCategory({required this.id, required this.title, required this.slug});
 
   final String id;
   final String title;
   final String slug;
-
-  /// تصنيف «اصدارات المؤسسة».
-  bool get isPublications =>
-      slug == 'al-isdaraat' || title.contains('الإصدارات');
 }
 
 /// كتاب (GET /books). [pdfUrl] الملف القابل للتنزيل و[coverUrl] صورة الغلاف.
+///
+/// [isPublication] هو معيار «اصدارات المؤسسة» المعتمد الآن (حقل `is_publication`
+/// من الخادم مباشرة)؛ تصنيف الكتاب لا يُستعمل لهذا التمييز بعد كما كان،
+/// لأن عدّة كتب إصدارات فعلية مصنَّفة تحت تصنيفاتٍ أخرى فكانت تسقط من
+/// قائمة الإصدارات ظلماً.
 class ApiBook {
   ApiBook({
     required this.id,
@@ -29,6 +30,8 @@ class ApiBook {
     required this.pdfUrl,
     required this.pages,
     required this.publishYear,
+    required this.isPublication,
+    required this.partsCount,
   });
 
   final String id;
@@ -39,9 +42,47 @@ class ApiBook {
   final String? pdfUrl;
   final int pages;
   final String publishYear;
+  final bool isPublication;
+
+  /// عدد الأجزاء (`parts_count`). كتابٌ مقسَّم لأجزاء يحمل `pdf_url` فارغاً
+  /// على مستواه هو، والملفات الفعلية على مستوى كل جزء — فيُجلب `GET
+  /// /books/{id}` عند الحاجة ليرجّع مصفوفة `parts` (انظر [BookPart]).
+  final int partsCount;
+
+  bool get hasPdf => (pdfUrl ?? '').isNotEmpty;
+  bool get hasParts => partsCount > 0;
+
+  /// هل للكتاب محتوًى قابل للفتح — إمّا ملفه هو، أو أجزاؤه.
+  bool get isReadable => hasPdf || hasParts;
+}
+
+/// جزءٌ من كتاب مقسَّم (عنصر من مصفوفة `parts` في `GET /books/{id}`). عنوانه
+/// عنوان الكتاب الأب نفسه — الخادم لا يفرد لكل جزء عنواناً مستقلاً، فنبني
+/// تسميته («الجزء ١») في العرض لا من البيانات.
+class BookPart {
+  BookPart({
+    required this.id,
+    required this.partNumber,
+    required this.pages,
+    required this.pdfUrl,
+  });
+
+  final String id;
+  final int partNumber;
+  final int pages;
+  final String? pdfUrl;
 
   bool get hasPdf => (pdfUrl ?? '').isNotEmpty;
 }
+
+/// يحوّل عنصراً من مصفوفة `parts` إلى [BookPart]. دالةٌ عُليا (لا خاصّة
+/// بالصنف) كي يختبرها الاختبار مباشرةً بلا حاجة لنداء شبكة.
+BookPart mapBookPart(Map<String, dynamic> m) => BookPart(
+      id: (m['id'] ?? '').toString(),
+      partNumber: (m['part_number'] as num?)?.toInt() ?? 0,
+      pages: (m['pages'] as num?)?.toInt() ?? 0,
+      pdfUrl: m['pdf_url']?.toString(),
+    );
 
 /// التصنيفات والكتب مجلوبة بنداء واحد، مع مساعدات تقسمها لقسمي «اصدارات
 /// المؤسسة» و«المكتبة التخصصية».
@@ -51,27 +92,18 @@ class LibraryData {
   final List<BookCategory> categories;
   final List<ApiBook> books;
 
-  BookCategory? get _publicationsCategory {
-    for (final c in categories) {
-      if (c.isPublications) return c;
-    }
-    return null;
-  }
+  /// كتب إصدارات المؤسسة — بحقل `is_publication` لا بمطابقة تصنيف.
+  List<ApiBook> get publications =>
+      books.where((b) => b.isPublication).toList();
 
-  /// كتب تصنيف «الإصدارات» (إصدارات المؤسسة).
-  List<ApiBook> get publications {
-    final cat = _publicationsCategory;
-    if (cat == null) return const [];
-    return books.where((b) => b.categoryId == cat.id).toList();
-  }
-
-  /// التصنيفات التخصصية الثلاثة، كل واحد مع كتبه. ما نرجّع تصنيفاً فارغاً:
-  /// قسم بلا كتب يبيّن عطلاً بالتطبيق لا نقصاً بالمحتوى.
+  /// التصنيفات التخصصية، كل واحد مع كتبه غير المصنَّفة إصداراً. ما نرجّع
+  /// تصنيفاً فارغاً: قسم بلا كتب يبيّن عطلاً بالتطبيق لا نقصاً بالمحتوى.
   List<({BookCategory category, List<ApiBook> books})> get specialized {
     final out = <({BookCategory category, List<ApiBook> books})>[];
     for (final c in categories) {
-      if (c.isPublications) continue;
-      final list = books.where((b) => b.categoryId == c.id).toList();
+      final list = books
+          .where((b) => b.categoryId == c.id && !b.isPublication)
+          .toList();
       if (list.isNotEmpty) out.add((category: c, books: list));
     }
     return out;
@@ -102,6 +134,18 @@ class BooksRemoteDatasource {
     ];
   }
 
+  /// أجزاء كتابٍ مقسَّم، مرتّبة برقم الجزء. `GET /books/{id}` (لا القائمة
+  /// المسطّحة) هو المصدر الوحيد الذي يرجّع مصفوفة `parts` بروابط ملفاتها.
+  Future<List<BookPart>> getBookParts(String bookId) async {
+    final json = await client.getJsonCached('/books/$bookId');
+    final parts = (json?['data']?['parts'] as List? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(mapBookPart)
+        .toList()
+      ..sort((a, b) => a.partNumber.compareTo(b.partNumber));
+    return parts;
+  }
+
   BookCategory _mapCategory(Map<String, dynamic> m) {
     final tr = _defaultTranslation(m['translation'], m['book_category_translations']);
     return BookCategory(
@@ -123,6 +167,8 @@ class BooksRemoteDatasource {
       pdfUrl: m['pdf_url']?.toString(),
       pages: (m['pages'] as num?)?.toInt() ?? 0,
       publishYear: (m['publish_year'] ?? '').toString(),
+      isPublication: m['is_publication'] == true,
+      partsCount: (m['parts_count'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -153,4 +199,11 @@ final libraryDataProvider = FutureProvider<LibraryData>((ref) async {
     categories: results[0] as List<BookCategory>,
     books: results[1] as List<ApiBook>,
   );
+});
+
+/// أجزاء كتابٍ بعينه — تُجلب فقط لمّا يضغط المستخدم كتاباً مقسَّماً، لا مع
+/// القائمة كلها دفعة واحدة.
+final bookPartsProvider =
+    FutureProvider.family<List<BookPart>, String>((ref, bookId) {
+  return ref.watch(booksRemoteProvider).getBookParts(bookId);
 });

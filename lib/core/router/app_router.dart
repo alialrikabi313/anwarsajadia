@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/features/splash/presentation/screens/splash_screen.dart';
+import 'package:anwarsajadia/features/home/presentation/screens/hadith_archive_screen.dart';
 import 'package:anwarsajadia/features/home/presentation/screens/home_screen.dart';
 import 'package:anwarsajadia/features/home/presentation/screens/home_tab_screen.dart';
 import 'package:anwarsajadia/features/quran/presentation/screens/surah_list_screen.dart';
@@ -26,14 +27,14 @@ import 'package:anwarsajadia/features/sajjad/presentation/screens/publications_s
 import 'package:anwarsajadia/features/sajjad/presentation/screens/pdf_reader_screen.dart';
 import 'package:anwarsajadia/features/sajjad/presentation/screens/sahifa_explained_screen.dart';
 import 'package:anwarsajadia/features/sajjad/presentation/screens/sahifa_prayer_reading_screen.dart';
+import 'package:anwarsajadia/features/multimedia/presentation/screens/audio_list_screen.dart';
+import 'package:anwarsajadia/features/multimedia/presentation/screens/audio_player_screen.dart';
 import 'package:anwarsajadia/features/multimedia/presentation/screens/multimedia_home_screen.dart';
 import 'package:anwarsajadia/features/multimedia/presentation/screens/video_list_screen.dart';
 import 'package:anwarsajadia/features/multimedia/presentation/screens/video_playlist_screen.dart';
 import 'package:anwarsajadia/features/multimedia/presentation/screens/youtube_video_screen.dart';
 import 'package:anwarsajadia/features/multimedia/presentation/screens/video_player_screen.dart';
-import 'package:anwarsajadia/features/multimedia/presentation/screens/audio_list_screen.dart';
-import 'package:anwarsajadia/features/multimedia/presentation/screens/audio_player_screen.dart';
-import 'package:anwarsajadia/features/multimedia/presentation/screens/photo_gallery_screen.dart';
+import 'package:anwarsajadia/features/multimedia/presentation/screens/photo_viewer_screen.dart';
 import 'package:anwarsajadia/features/martyrs/presentation/screens/martyrs_list_screen.dart';
 import 'package:anwarsajadia/features/martyrs/presentation/screens/martyr_detail_screen.dart';
 import 'package:anwarsajadia/features/visit_by_proxy/presentation/screens/visit_by_proxy_screen.dart';
@@ -51,7 +52,9 @@ import 'package:anwarsajadia/features/notifications/presentation/screens/notific
 import 'package:anwarsajadia/features/settings/presentation/screens/about_app_screen.dart';
 import 'package:anwarsajadia/features/settings/presentation/screens/about_foundation_screen.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>(
+/// مفتاح الملّاح الجذري. مكشوف لأن أغلفة فوق `MaterialApp.builder`
+/// (مثل مقبض لوحة المشغّل) لا Navigator في سياقها، فتحتاجه لفتح الحوارات.
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
 );
 
@@ -76,7 +79,7 @@ CustomTransitionPage<void> _buildPage(Widget child, GoRouterState state) {
 }
 
 GoRouter createAppRouter() => GoRouter(
-  navigatorKey: _rootNavigatorKey,
+  navigatorKey: rootNavigatorKey,
   initialLocation: RoutePaths.splash,
   routes: [
     // شاشة البداية
@@ -90,7 +93,7 @@ GoRouter createAppRouter() => GoRouter(
     GoRoute(
       path: '/search',
       name: RouteNames.globalSearch,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state) =>
           _buildPage(const GlobalSearchScreen(), state),
     ),
@@ -99,7 +102,7 @@ GoRouter createAppRouter() => GoRouter(
     GoRoute(
       path: '/bookmarks',
       name: RouteNames.bookmarks,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state) =>
           _buildPage(const BookmarksScreen(), state),
     ),
@@ -108,16 +111,25 @@ GoRouter createAppRouter() => GoRouter(
     GoRoute(
       path: '/notifications',
       name: RouteNames.notifications,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state) =>
           _buildPage(const NotificationsScreen(), state),
+    ),
+
+    // أرشيف حِكَم الإمام (عليه السلام)
+    GoRoute(
+      path: '/hadith-archive',
+      name: RouteNames.hadithArchive,
+      parentNavigatorKey: rootNavigatorKey,
+      pageBuilder: (context, state) =>
+          _buildPage(const HadithArchiveScreen(), state),
     ),
 
     // عن التطبيق
     GoRoute(
       path: '/about-app',
       name: RouteNames.aboutApp,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state) =>
           _buildPage(const AboutAppScreen(), state),
     ),
@@ -126,7 +138,7 @@ GoRouter createAppRouter() => GoRouter(
     GoRoute(
       path: '/about-foundation',
       name: RouteNames.aboutFoundation,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state) =>
           _buildPage(const AboutFoundationScreen(), state),
     ),
@@ -136,7 +148,7 @@ GoRouter createAppRouter() => GoRouter(
     GoRoute(
       path: '/pdf',
       name: RouteNames.pdfReader,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state) {
         final data = state.extra is Map
             ? (state.extra! as Map).cast<String, String>()
@@ -152,18 +164,24 @@ GoRouter createAppRouter() => GoRouter(
     GoRoute(
       path: '/martyrs',
       name: RouteNames.martyrs,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state) =>
           _buildPage(const MartyrsListScreen(), state),
       routes: [
         GoRoute(
           path: ':martyrId',
           name: RouteNames.martyrDetail,
-          parentNavigatorKey: _rootNavigatorKey,
+          parentNavigatorKey: rootNavigatorKey,
           pageBuilder: (context, state) {
             final id =
                 int.tryParse(state.pathParameters['martyrId'] ?? '') ?? 0;
-            return _buildPage(MartyrDetailScreen(martyrId: id), state);
+            return _buildPage(
+              MartyrDetailScreen(
+                martyrId: id,
+                openedFromHome: state.uri.queryParameters['from'] == 'home',
+              ),
+              state,
+            );
           },
         ),
       ],
@@ -173,7 +191,7 @@ GoRouter createAppRouter() => GoRouter(
     GoRoute(
       path: '/visit-by-proxy',
       name: RouteNames.visitByProxy,
-      parentNavigatorKey: _rootNavigatorKey,
+      parentNavigatorKey: rootNavigatorKey,
       pageBuilder: (context, state) =>
           _buildPage(const VisitByProxyScreen(), state),
     ),
@@ -383,9 +401,12 @@ GoRouter createAppRouter() => GoRouter(
                   builder: (context, state) => const AudioPlayerScreen(),
                 ),
                 GoRoute(
-                  path: 'photos',
-                  name: RouteNames.photoGallery,
-                  builder: (context, state) => const PhotoGalleryScreen(),
+                  path: 'photo/:index',
+                  name: RouteNames.photoViewer,
+                  builder: (context, state) => PhotoViewerScreen(
+                    initialIndex:
+                        int.tryParse(state.pathParameters['index'] ?? '0') ?? 0,
+                  ),
                 ),
               ],
             ),

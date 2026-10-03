@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:anwarsajadia/core/utils/arabic_search.dart';
+import 'package:anwarsajadia/core/widgets/app_search_field.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/core/utils/helpers/url_helper.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/sajjad/data/datasources/books_remote_datasource.dart';
 import 'package:anwarsajadia/features/sajjad/presentation/widgets/api_book_card.dart';
+import 'package:anwarsajadia/features/sajjad/presentation/widgets/book_parts_sheet.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // شاشة «المكتبة التخصصية».
 
@@ -57,7 +61,7 @@ class _SpecializedLibraryScreenState
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_forward_rounded),
+                    icon: const Icon(Icons.arrow_back_rounded),
                     onPressed: () => Navigator.of(context).pop(),
                     color: AppColors.primary,
                   ),
@@ -67,6 +71,7 @@ class _SpecializedLibraryScreenState
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                         color: AppColors.primary,
@@ -83,35 +88,8 @@ class _SpecializedLibraryScreenState
             // شريط بحث بسيط.
             Padding(
               padding: const EdgeInsets.fromLTRB(27, 2, 27, 10),
-              child: Container(
-                height: 45,
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: TextField(
-                  onChanged: (v) => setState(() => _query = v.trim()),
-                  textAlign: TextAlign.right,
-                  decoration: const InputDecoration(
-                    hintText: 'بحث',
-                    hintStyle: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 13,
-                      color: Colors.black54,
-                    ),
-                    isCollapsed: true,
-                    filled: false,
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    focusedErrorBorder: InputBorder.none,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  style: const TextStyle(fontFamily: 'Inter', fontSize: 13),
-                ),
+              child: AppSearchField(
+                onChanged: (v) => setState(() => _query = v.trim()),
               ),
             ),
             Expanded(
@@ -124,7 +102,10 @@ class _SpecializedLibraryScreenState
                     child: Text(
                       'تعذّر تحميل الكتب: $e',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontFamily: 'Inter'),
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
+                      ),
                     ),
                   ),
                 ),
@@ -139,8 +120,8 @@ class _SpecializedLibraryScreenState
                             ? s.books
                             : s.books
                                 .where((b) =>
-                                    b.title.contains(_query) ||
-                                    b.author.contains(_query))
+                                    arabicContains(b.title, _query) ||
+                                    arabicContains(b.author, _query))
                                 .toList(),
                       ),
                   ].where((s) => s.books.isNotEmpty).toList();
@@ -150,7 +131,9 @@ class _SpecializedLibraryScreenState
                       child: Text(
                         'لا توجد كتب',
                         style: TextStyle(
-                            fontFamily: 'Inter', color: AppColors.primary),
+                            fontFamily: 'Inter',
+                            fontFamilyFallback: kArabicFontFallback,
+                            color: AppColors.primary),
                       ),
                     );
                   }
@@ -167,12 +150,24 @@ class _SpecializedLibraryScreenState
                         for (final b in s.books) ...[
                           ApiBookCard(
                             book: b,
-                            onRead: () => context.pushNamed(
-                              RouteNames.pdfReader,
-                              extra: {'url': b.pdfUrl ?? '', 'title': b.title},
-                            ),
-                            onDownload: () =>
-                                UrlHelper.downloadPdf(context, b.pdfUrl, b.title),
+                            // كتابٌ مقسَّم لا يحمل ملفاً على مستواه؛ أجزاؤه
+                            // هي التي تحمل الملفات، فتُفتح بورقة عند الضغط
+                            // بدل فتح رابطٍ فارغ.
+                            onRead: b.hasParts
+                                ? () => showBookPartsSheet(context,
+                                    book: b, download: false)
+                                : () => context.pushNamed(
+                                      RouteNames.pdfReader,
+                                      extra: {
+                                        'url': b.pdfUrl ?? '',
+                                        'title': b.title
+                                      },
+                                    ),
+                            onDownload: b.hasParts
+                                ? () => showBookPartsSheet(context,
+                                    book: b, download: true)
+                                : () => UrlHelper.downloadPdf(
+                                    context, b.pdfUrl, b.title),
                           ),
                           const SizedBox(height: 11),
                         ],
@@ -220,6 +215,7 @@ class _CategoryHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 15.5,
               fontWeight: FontWeight.w800,
               color: AppColors.libraryInk,

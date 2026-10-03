@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/features/multimedia/domain/entities/video_item.dart';
 import 'package:anwarsajadia/features/multimedia/presentation/providers/multimedia_providers.dart';
 
@@ -29,14 +30,15 @@ class VideoPlayerScreen extends ConsumerWidget {
           data: (v) => Text(
             v.title,
             style: const TextStyle(
-              fontFamily: 'Amiri',
+              fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 17,
               fontWeight: FontWeight.bold,
             ),
           ),
           orElse: () => Text('فيديو $videoId'),
         ),
-        centerTitle: true,
+        centerTitle: false,
       ),
       body: videoAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -163,7 +165,8 @@ class _VideoPlayerBody extends StatelessWidget {
               Text(
                 video.title,
                 style: const TextStyle(
-                  fontFamily: 'Amiri',
+                  fontFamily: 'Inter',
+                  fontFamilyFallback: kArabicFontFallback,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),

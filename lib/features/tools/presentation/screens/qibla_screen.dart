@@ -3,14 +3,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:geolocator/geolocator.dart';
 
+import 'package:anwarsajadia/core/utils/arabic_text_format.dart';
 import 'package:anwarsajadia/core/router/nav_extensions.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/tools/domain/entities/holy_site.dart';
 import 'package:anwarsajadia/features/tools/domain/entities/imam_ziyarat_data.dart';
 import 'package:anwarsajadia/features/tools/presentation/providers/compass_providers.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 class QiblaScreen extends ConsumerWidget {
   const QiblaScreen({super.key});
@@ -47,16 +49,17 @@ class QiblaScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_forward_rounded),
+                    icon: const Icon(Icons.arrow_back_rounded),
                     onPressed: () => context.backOrHome(),
                     color: AppColors.textPrimaryLight,
                   ),
                   const Expanded(
                     child: Text(
                       'البوصلة',
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.right,
                       style: TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: AppColors.textPrimaryLight,
@@ -94,34 +97,68 @@ class _CompassBody extends ConsumerStatefulWidget {
   ConsumerState<_CompassBody> createState() => _CompassBodyState();
 }
 
-class _CompassBodyState extends ConsumerState<_CompassBody> {
+class _CompassBodyState extends ConsumerState<_CompassBody>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
 
-  void _openZiyara(BuildContext context, HolySite site) {
-    final ziyarat = imamZiyaratMap[site.id];
-    if (ziyarat == null) return;
-    if (ziyarat.hasFullText) {
-      showModalBottomSheet<void>(
-        context: context,
-        isScrollControlled: true,
-        useSafeArea: true,
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        builder: (context) => _ZiyaratBottomSheet(entry: ziyarat),
-      );
-    } else {
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // رجوع المستخدم بعد تشغيل الموقع: نلتقطه فوراً بلا ما يخرج ويرجع للصفحة.
+    if (state == AppLifecycleState.resumed) {
+      ref.invalidate(locationServiceEnabledProvider);
+      ref.invalidate(userLocationProvider);
+      ref.invalidate(passiveLocationProvider);
+    }
+  }
+
+
+  /// يفتح كل زيارات الوجهة بورقة واحدة متّصلة، كل زيارة بعنوانها.
+  void _openZiyaraRow(BuildContext context, _QRow row) {
+    // نُسقط أي نصّ مكرّر احتياطاً: عرض الزيارة نفسها مرّتين تحت عنوانين
+    // يربك القارئ.
+    final entries = <ImamZiyaratEntry>[];
+    final seenTexts = <String>{};
+    for (final id in row.siteIds) {
+      final e = imamZiyaratMap[id];
+      if (e == null) continue;
+      if (e.text.isNotEmpty && !seenTexts.add(e.text)) continue;
+      entries.add(e);
+    }
+    if (entries.isEmpty) return;
+    if (entries.every((e) => !e.hasFullText)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            '${ziyarat.title} \u2014 \u0642\u0631\u064a\u0628\u0627\u064b \u0625\u0646 \u0634\u0627\u0621 \u0627\u0644\u0644\u0647',
+            '${row.visit} — قريباً إن شاء الله',
             textDirection: TextDirection.rtl,
             style: const TextStyle(fontFamily: 'NotoNaskhArabic'),
           ),
           backgroundColor: AppColors.primary,
         ),
       );
+      return;
     }
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) =>
+          _ZiyaratBottomSheet(entries: entries, heading: row.visit),
+    );
   }
 
   HolySite? _siteFor(String id) {
@@ -150,9 +187,29 @@ class _CompassBodyState extends ConsumerState<_CompassBody> {
     ref.listen(userLocationProvider, (prev, next) {
       if (next.hasValue) ref.invalidate(passiveLocationProvider);
     });
+    final serviceOn = ref.watch(locationServiceEnabledProvider).valueOrNull;
+    final locError = ref.watch(userLocationProvider).hasError;
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       children: [
+        // حالة صريحة بدل شاشة فارغة: سبب التعطّل وزر يعالجه (ملاحظة 21).
+        if (serviceOn == false || locError) ...[
+          _LocationNotice(
+            serviceDisabled: serviceOn == false,
+            onFix: () async {
+              if (serviceOn == false) {
+                await Geolocator.openLocationSettings();
+              } else {
+                await Geolocator.openAppSettings();
+              }
+            },
+            onRetry: () {
+              ref.invalidate(locationServiceEnabledProvider);
+              ref.invalidate(userLocationProvider);
+            },
+          ),
+          const SizedBox(height: 14),
+        ],
         // القرص الحيّ بالأعلى: إبرته على المرقد المختار، والضغط عليه يفتح
         // ورقة البوصلة بملء الشاشة لذلك المرقد.
         _CompassHeaderDial(
@@ -165,10 +222,7 @@ class _CompassBodyState extends ConsumerState<_CompassBody> {
           _Section5Row(
             row: r,
             selected: selectedSite.id == r.siteId,
-            onVisit: () {
-              final site = _siteFor(r.siteId);
-              if (site != null) _openZiyara(context, site);
-            },
+            onVisit: () => _openZiyaraRow(context, r),
             onTap: () {
               final site = _siteFor(r.siteId);
               if (site != null) {
@@ -179,6 +233,109 @@ class _CompassBodyState extends ConsumerState<_CompassBody> {
           const SizedBox(height: 14),
         ],
       ],
+    );
+  }
+}
+
+/// لافتة تشرح سبب تعطّل البوصلة وتعطي مخرجاً: زر يفتح الإعدادات وآخر يعيد
+/// المحاولة — بدل ترك المستخدم أمام مساحة فارغة.
+class _LocationNotice extends StatelessWidget {
+  const _LocationNotice({
+    required this.serviceDisabled,
+    required this.onFix,
+    required this.onRetry,
+  });
+
+  final bool serviceDisabled;
+  final VoidCallback onFix;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 18, 16, 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            serviceDisabled
+                ? Icons.location_off_rounded
+                : Icons.lock_outline_rounded,
+            size: 42,
+            color: AppColors.accentGoldDark,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            serviceDisabled
+                ? 'خدمة تحديد الموقع مطفأة'
+                : 'إذن الموقع غير ممنوح',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: 'NotoNaskhArabic',
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textPrimaryLight,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            serviceDisabled
+                ? 'البوصلة تحتاج تحديد الموقع لتعرف اتجاه المزار من مكانك.'
+                : 'اسمح للتطبيق بالوصول للموقع حتى تعمل البوصلة.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontFamily: 'NotoNaskhArabic',
+              fontSize: 13,
+              height: 1.6,
+              color: AppColors.textSecondaryLight,
+            ),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton.icon(
+                onPressed: onFix,
+                icon: const Icon(Icons.settings_rounded, size: 18),
+                label: Text(
+                  serviceDisabled ? 'تشغيل تحديد الموقع' : 'فتح الإعدادات',
+                  style: const TextStyle(
+                    fontFamily: 'NotoNaskhArabic',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: AppColors.accentGold,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              TextButton(
+                onPressed: onRetry,
+                child: const Text(
+                  'إعادة المحاولة',
+                  style: TextStyle(
+                    fontFamily: 'NotoNaskhArabic',
+                    fontSize: 13,
+                    color: AppColors.textPrimaryLight,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -241,7 +398,8 @@ class _CompassHeaderDial extends ConsumerWidget {
           'اتجاه ${site.name}',
           textAlign: TextAlign.center,
           style: const TextStyle(
-            fontFamily: 'Amiri',
+            fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: AppColors.compassInk,
@@ -292,38 +450,53 @@ String _fmtKm(double km) =>
 
 // صف واحد بقائمة القبلة.
 class _QRow {
-  const _QRow(this.direction, this.visit, this.shrine, this.siteId);
+  const _QRow(this.direction, this.visit, this.shrine, this.siteIds,
+      {this.compassId});
   final String direction;
   final String visit;
   final String shrine;
-  final String siteId;
+
+  /// معرّفات المراقد بهذه الوجهة — أكثر من واحد بالمراقد اللي تضمّ أكثر من
+  /// إمام (البقيع، سامراء، الكاظمية، كربلاء).
+  final List<String> siteIds;
+
+  /// أول معرّف: هو اللي تدور عليه إبرة البوصلة.
+  /// معرّف الموقع الجغرافي الذي توجّه إليه الإبرة. نفصله عن
+  /// [siteIds] لأن أوّل الزيارات قد يكون نصّاً جامعاً لا موقعاً
+  /// (كالزيارة الجامعة لأئمة البقيع).
+  final String? compassId;
+
+  String get siteId => compassId ?? siteIds.first;
 }
 
 const _shrines = 'assets/figma_assets/shrines';
 const _qiblaRows = <_QRow>[
   // الكعبة المشرفة = اتجاه القبلة فقط، لا توجد لها زيارة (لذلك بلا زرّ زيارة).
-  _QRow('اتجاه الكعبة المشرفة', '', '$_shrines/kaaba.png', 'kaaba'),
-  _QRow('اتجاه المدينة المنورة', 'زيارة النبي محمد', '$_shrines/medina.png',
-      'prophet'),
-  _QRow('اتجاه البقيع', 'زيارة البقيع', '$_shrines/baqi.png', 'imam_hasan'),
-  _QRow('اتجاه النجف الاشرف', 'زيارة الامام علي', '$_shrines/najaf.png',
-      'imam_ali'),
-  _QRow('اتجاه كربلاء', 'زيارة الامام الحسين', '$_shrines/karbala_husayn.png',
-      'imam_husayn'),
-  _QRow('اتجاه كربلاء', 'زيارة الامام العباس', '$_shrines/karbala_abbas.png',
-      'imam_husayn'),
-  _QRow('اتجاه سامراء', 'زيارة العسكريين', '$_shrines/samarra.png',
-      'imam_hadi'),
-  _QRow('اتجاه الكاظمية بغداد', 'زيارة الكاظمين', '$_shrines/kadhimiya.png',
-      'imam_kadhim'),
-  _QRow('اتجاه مشهد المقدسة', 'زيارة الامام الرضا', '$_shrines/ridha.png',
-      'imam_ridha'),
+  _QRow('اتجاه الكعبة المشرفة', '', '$_shrines/kaaba.png', ['kaaba']),
+  _QRow('اتجاه المدينة المنورة', 'زيارة النبي محمد (صلى الله عليه وآله)', '$_shrines/medina.png',
+      ['prophet']),
+  // البقيع يضمّ أربعة من الأئمة (عليهم السلام): تُفتح الورقة على الزيارة
+  // الجامعة لهم، ثم زيارة كل إمام مخصوصةً بالترتيب.
+  _QRow('اتجاه البقيع', 'زيارة أئمة البقيع (عليهم السلام)', '$_shrines/baqi.png',
+      ['baqi_joint', 'imam_hasan', 'imam_sajjad', 'imam_baqir', 'imam_sadiq'],
+      compassId: 'imam_hasan'),
+  _QRow('اتجاه النجف الاشرف', 'زيارة الإمام علي (عليه السلام)', '$_shrines/najaf.png',
+      ['imam_ali']),
+  // كربلاء مدخل واحد يضمّ زيارتَي الإمام الحسين وأبي الفضل العباس.
+  _QRow('اتجاه كربلاء', 'زيارة الإمام الحسين وأبي الفضل العباس (عليهما السلام)',
+      '$_shrines/karbala_husayn.png', ['imam_husayn', 'abbas']),
+  _QRow('اتجاه سامراء', 'زيارة الإمامين العسكريين (عليهما السلام)', '$_shrines/samarra.png',
+      ['imam_hadi', 'imam_askari']),
+  _QRow('اتجاه الكاظمية بغداد', 'زيارة الإمامين الكاظمين (عليهما السلام)', '$_shrines/kadhimiya.png',
+      ['imam_kadhim', 'imam_jawad']),
+  _QRow('اتجاه مشهد المقدسة', 'زيارة الإمام الرضا (عليه السلام)', '$_shrines/ridha.png',
+      ['imam_ridha']),
 ];
 
 /// رسم المرقد بحسب معرّف الموقع — يُعرض بوسط البوصلة.
 String _shrineForSiteId(String siteId) {
   for (final r in _qiblaRows) {
-    if (r.siteId == siteId) return r.shrine;
+    if (r.siteIds.contains(siteId)) return r.shrine;
   }
   return _qiblaRows.first.shrine; // الكعبة fallback
 }
@@ -385,6 +558,7 @@ class _Section5Row extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontFamily: 'Inter',
+                    fontFamilyFallback: kArabicFontFallback,
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     color: AppColors.ink,
@@ -418,6 +592,7 @@ class _Section5Row extends StatelessWidget {
                           'قراءة الزيارة',
                           style: TextStyle(
                             fontFamily: 'Inter',
+                            fontFamilyFallback: kArabicFontFallback,
                             fontSize: 12.5,
                             fontWeight: FontWeight.w500,
                             color: AppColors.blackPure,
@@ -441,8 +616,13 @@ class _Section5Row extends StatelessWidget {
 // ── ورقة الزيارة السفلية ──────────────────────────────────────
 
 class _ZiyaratBottomSheet extends StatefulWidget {
-  const _ZiyaratBottomSheet({required this.entry});
-  final ImamZiyaratEntry entry;
+  const _ZiyaratBottomSheet({required this.entries, required this.heading});
+
+  /// كل زيارات الوجهة بالترتيب — تُعرض متتابعة بصفحة واحدة.
+  final List<ImamZiyaratEntry> entries;
+
+  /// عنوان الوجهة أعلى الورقة (مثل «زيارة أئمة البقيع»).
+  final String heading;
 
   @override
   State<_ZiyaratBottomSheet> createState() => _ZiyaratBottomSheetState();
@@ -450,36 +630,6 @@ class _ZiyaratBottomSheet extends StatefulWidget {
 
 class _ZiyaratBottomSheetState extends State<_ZiyaratBottomSheet> {
   double _fontSize = 22.0;
-  AudioPlayer? _player;
-  bool _isLoadingAudio = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _initAudio();
-  }
-
-  Future<void> _initAudio() async {
-    final path = widget.entry.audioPath;
-    if (path == null) return;
-
-    _player = AudioPlayer();
-    setState(() => _isLoadingAudio = true);
-    try {
-      await _player!.setAsset(path);
-    } catch (_) {
-      // ملف الصوت قد يكون مفقوداً أو تالفاً — نتجاهل بصمت، النص يبقى مقروءاً
-      await _player?.dispose();
-      _player = null;
-    }
-    if (mounted) setState(() => _isLoadingAudio = false);
-  }
-
-  @override
-  void dispose() {
-    _player?.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -511,9 +661,10 @@ class _ZiyaratBottomSheetState extends State<_ZiyaratBottomSheet> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      widget.entry.title,
+                      widget.heading,
                       style: const TextStyle(
-                        fontFamily: 'Amiri',
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primaryGreen,
@@ -552,13 +703,6 @@ class _ZiyaratBottomSheetState extends State<_ZiyaratBottomSheet> {
                 ),
               ),
 
-              // أزرار المشغّل
-              if (_player != null || _isLoadingAudio)
-                _AudioPlayerBar(
-                  player: _player,
-                  isLoading: _isLoadingAudio,
-                ),
-
               Divider(
                 height: 1,
                 color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
@@ -580,16 +724,68 @@ class _ZiyaratBottomSheetState extends State<_ZiyaratBottomSheet> {
                         width: 0.8,
                       ),
                     ),
-                    child: SelectableText(
-                      widget.entry.text,
-                      textAlign: TextAlign.justify,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(
-                        fontFamily: 'Amiri',
-                        fontSize: _fontSize,
-                        height: 1.9,
-                        color: Colors.black,
-                      ),
+                    // كل زيارات الوجهة متتابعة، وبين كل واحدة والتالية
+                    // عنوان واضح يبيّن أين انتهت وأين بدأت.
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (var i = 0; i < widget.entries.length; i++) ...[
+                          if (i > 0)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 18),
+                              child: Divider(
+                                height: 1,
+                                color: AppColors.borderLight,
+                              ),
+                            ),
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.only(bottom: 12),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: AppColors.cream,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              widget.entries[i].title,
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontFamilyFallback: kArabicFontFallback,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                          if (widget.entries[i].hasFullText)
+                            SelectableText(
+                              formatReadingParagraph(widget.entries[i].text),
+                              textAlign: TextAlign.justify,
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                fontFamily: 'Amiri',
+                                fontSize: _fontSize,
+                                height: 1.95,
+                                color: Colors.black,
+                              ),
+                            )
+                          else
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 6),
+                              child: Text(
+                                'النصّ غير متوفّر بعد — سيُضاف بمجرّد تزويدنا به.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: 'NotoNaskhArabic',
+                                  fontSize: 13,
+                                  color: AppColors.textSecondaryLight,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ],
                     ),
                   ),
                 ),
@@ -601,246 +797,6 @@ class _ZiyaratBottomSheetState extends State<_ZiyaratBottomSheet> {
     );
   }
 }
-
-// ── شريط المشغّل ──────────────────────────────────────────────
-
-class _AudioPlayerBar extends StatelessWidget {
-  const _AudioPlayerBar({
-    required this.player,
-    required this.isLoading,
-  });
-
-  final AudioPlayer? player;
-  final bool isLoading;
-
-  String _fmt(Duration d) {
-    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$m:$s';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (isLoading || player == null) {
-      return Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: const Center(
-          child: SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: AppColors.primaryGreen,
-            ),
-          ),
-        ),
-      );
-    }
-
-    final audioPlayer = player!;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.primaryGreen.withValues(alpha: 0.06),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // شريط التقدّم
-          StreamBuilder<Duration>(
-            stream: audioPlayer.positionStream,
-            builder: (context, posSnapshot) {
-              final position = posSnapshot.data ?? Duration.zero;
-              final total = audioPlayer.duration ?? Duration.zero;
-              final progress = total.inMilliseconds > 0
-                  ? position.inMilliseconds / total.inMilliseconds
-                  : 0.0;
-
-              return Column(
-                children: [
-                  SliderTheme(
-                    data: SliderThemeData(
-                      trackHeight: 3,
-                      thumbShape:
-                          const RoundSliderThumbShape(enabledThumbRadius: 6),
-                      overlayShape:
-                          const RoundSliderOverlayShape(overlayRadius: 14),
-                      activeTrackColor: AppColors.primaryGreen,
-                      inactiveTrackColor:
-                          AppColors.primaryGreen.withValues(alpha: 0.2),
-                      thumbColor: AppColors.primaryGreen,
-                    ),
-                    child: Slider(
-                      value: progress.clamp(0.0, 1.0),
-                      onChanged: (v) {
-                        final newPosition = Duration(
-                          milliseconds:
-                              (v * total.inMilliseconds).round(),
-                        );
-                        audioPlayer.seek(newPosition);
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          _fmt(position),
-                          style: const TextStyle(
-                            fontFamily: 'NotoNaskhArabic',
-                            fontSize: 11,
-                            color: AppColors.textSecondaryDark,
-                          ),
-                        ),
-                        Text(
-                          _fmt(total),
-                          style: const TextStyle(
-                            fontFamily: 'NotoNaskhArabic',
-                            fontSize: 11,
-                            color: AppColors.textSecondaryDark,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-
-          // التشغيل/الإيقاف وأزرار السرعة
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // السرعة
-              StreamBuilder<double>(
-                stream: audioPlayer.speedStream,
-                builder: (context, snap) {
-                  final speed = snap.data ?? 1.0;
-                  return TextButton(
-                    onPressed: () {
-                      // دورة: 0.75 ← 1.0 ← 1.25 ← 1.5 ← 0.75
-                      final speeds = [0.75, 1.0, 1.25, 1.5];
-                      final idx = speeds.indexOf(speed);
-                      final next = speeds[(idx + 1) % speeds.length];
-                      audioPlayer.setSpeed(next);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      minimumSize: const Size(40, 36),
-                    ),
-                    child: Text(
-                      '${speed}x',
-                      style: const TextStyle(
-                        fontFamily: 'NotoNaskhArabic',
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryGreen,
-                      ),
-                    ),
-                  );
-                },
-              ),
-
-              const SizedBox(width: 8),
-
-              // رجوع 10 ثوانٍ
-              IconButton(
-                icon: const Icon(Icons.replay_10, size: 28),
-                color: AppColors.primaryGreen,
-                onPressed: () {
-                  final pos = audioPlayer.position;
-                  audioPlayer
-                      .seek(pos - const Duration(seconds: 10));
-                },
-              ),
-
-              const SizedBox(width: 4),
-
-              // تشغيل/إيقاف
-              StreamBuilder<PlayerState>(
-                stream: audioPlayer.playerStateStream,
-                builder: (context, snapshot) {
-                  final state = snapshot.data;
-                  final playing = state?.playing ?? false;
-                  final completed =
-                      state?.processingState == ProcessingState.completed;
-
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryGreen,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color:
-                              AppColors.primaryGreen.withValues(alpha: 0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        completed
-                            ? Icons.replay
-                            : playing
-                                ? Icons.pause
-                                : Icons.play_arrow,
-                        size: 32,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        if (completed) {
-                          audioPlayer.seek(Duration.zero);
-                          audioPlayer.play();
-                        } else if (playing) {
-                          audioPlayer.pause();
-                        } else {
-                          audioPlayer.play();
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-
-              const SizedBox(width: 4),
-
-              // تقدّم 10 ثوانٍ
-              IconButton(
-                icon: const Icon(Icons.forward_10, size: 28),
-                color: AppColors.primaryGreen,
-                onPressed: () {
-                  final pos = audioPlayer.position;
-                  final dur =
-                      audioPlayer.duration ?? Duration.zero;
-                  final newPos = pos + const Duration(seconds: 10);
-                  audioPlayer.seek(newPos > dur ? dur : newPos);
-                },
-              ),
-
-              const SizedBox(width: 8),
-
-              // إيقاف
-              IconButton(
-                icon: const Icon(Icons.stop, size: 24),
-                color: AppColors.primaryGreen.withValues(alpha: 0.7),
-                onPressed: () {
-                  audioPlayer.stop();
-                  audioPlayer.seek(Duration.zero);
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 
 /// ورقة بوصلة حيّة: الإبرة على [site] باستعمال GPS للاتجاه والمغناطيسية
 /// لاتجاه الجهاز. تنفتح بالضغط على صف، والموقع يكون منضبطاً أصلاً
@@ -885,7 +841,8 @@ class _SiteCompassSheet extends ConsumerWidget {
             Text(
               'اتجاه ${site.name}',
               style: const TextStyle(
-                fontFamily: 'Amiri',
+                fontFamily: 'Inter',
+                fontFamilyFallback: kArabicFontFallback,
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: AppColors.compassInk,
@@ -1034,6 +991,7 @@ class _CompassStat extends StatelessWidget {
             value,
             style: const TextStyle(
               fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 19,
               fontWeight: FontWeight.w800,
               color: AppColors.compassInk,

@@ -199,8 +199,18 @@ abstract final class AppColors {
   static const qiblaSheetSurface = Color(0xFFF3EFE6);
   static const qiblaSheetInk = Color(0xFF5A5340);
 
+  // زرّا بطاقة الواجهة — قيمٌ مأخوذة بالقياس من صورة التصميم المعتمدة:
+  // حشوان مصمتان بلا تدرّج ولا حدّ.
+  static const heroBioFill = Color(0xFFD7AF74);   // زرّ سيرة الإمام
+  static const heroBioInk = Color(0xFF3F312D);
+  static const heroHikamFill = Color(0xFF706844); // زرّ جميع الحِكَم
+  static const heroHikamInk = Color(0xFFC7BF97);
+
   // المقامات والزيارات
   static const maqamCardSand = Color(0xFFE5DBC2);
+  // شريط الموقع داخل بطاقة المقام: رمادي أفتح من لوح البطاقة الفحمي حتى يبرز
+  // فوقه (من التصميم المعتمد لصفحتي المقامات).
+  static const maqamLocationSlate = Color(0xFF4A4750);
   static const maqamCoverStart = Color(0xFF5B4A2F);
   static const maqamCoverEnd = Color(0xFF8C7340);
   static const medallionSand = Color(0xFFD9CFB4);

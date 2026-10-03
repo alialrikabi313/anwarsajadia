@@ -9,6 +9,7 @@ import 'package:anwarsajadia/core/widgets/empty_state_widget.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/notifications/data/notifications_storage.dart';
 import 'package:anwarsajadia/features/notifications/presentation/providers/notifications_provider.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
@@ -31,20 +32,16 @@ class NotificationsScreen extends ConsumerWidget {
       body: Column(
         children: [
           const HomeHeader(dark: true),
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_forward_rounded,
-                  color: AppColors.primary),
-              onPressed: () => Navigator.of(context).maybePop(),
-            ),
-          ),
-          const SizedBox(height: 4),
-          // صف العنوان: «الاشعارات» باليمين البصري.
+          // صفّ واحد: السهم بأقصى اليمين والعنوان يلتصق به يميناً.
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            padding: const EdgeInsets.fromLTRB(8, 4, 8, 4),
             child: Row(
               children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_rounded,
+                      color: AppColors.primary),
+                  onPressed: () => Navigator.of(context).maybePop(),
+                ),
                 Expanded(
                   child: GestureDetector(
                     onTap: notifications.isEmpty
@@ -57,13 +54,16 @@ class NotificationsScreen extends ConsumerWidget {
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontFamily: 'Inter',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
+                        fontFamilyFallback: kArabicFontFallback,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.primary,
                       ),
                     ),
                   ),
                 ),
+                // يوازن عرض زر الرجوع فيبقى العنوان بالمنتصف تماماً.
+                const SizedBox(width: 48),
               ],
             ),
           ),
@@ -168,6 +168,7 @@ class _NotificationTile extends StatelessWidget {
                       item.title,
                       style: const TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: Colors.black,
@@ -179,6 +180,7 @@ class _NotificationTile extends StatelessWidget {
                   NotificationsScreen._relativeTime(item.timestamp),
                   style: const TextStyle(
                     fontFamily: 'Inter',
+                    fontFamilyFallback: kArabicFontFallback,
                     fontSize: 10,
                     fontWeight: FontWeight.w500,
                     color: AppColors.notifGray,
@@ -194,6 +196,7 @@ class _NotificationTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontFamily: 'Inter',
+                fontFamilyFallback: kArabicFontFallback,
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
                 color: Colors.black,

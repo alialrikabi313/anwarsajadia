@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:anwarsajadia/core/l10n/generated/app_localizations.dart';
 import 'package:anwarsajadia/core/network/api_client.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/core/utils/validators.dart';
 
 class ContactScreen extends ConsumerStatefulWidget {
@@ -107,7 +108,7 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.toolsContact),
-        centerTitle: true,
+        centerTitle: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -137,7 +138,8 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
                   Text(
                     l10n.toolsContact,
                     style: const TextStyle(
-                      fontFamily: 'Amiri',
+                      fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,

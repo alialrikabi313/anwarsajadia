@@ -8,6 +8,7 @@ import 'package:anwarsajadia/core/constants/app_constants.dart';
 import 'package:anwarsajadia/core/l10n/generated/app_localizations.dart';
 import 'package:anwarsajadia/core/providers/core_providers.dart';
 import 'package:anwarsajadia/core/theme/app_theme.dart';
+import 'package:anwarsajadia/core/widgets/playback_handle_overlay.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -46,7 +47,11 @@ class App extends ConsumerWidget {
           maxScaleFactor: 1.1,
           child: Directionality(
             textDirection: TextDirection.rtl,
-            child: child ?? const SizedBox.shrink(),
+            // مقبض لوحة المشغّل يلفّ كل شاشة، فتبقى اللوحة في متناول اليد من
+            // أي مكان ما دام في المشغّل مقطع (ملاحظة 22).
+            child: PlaybackHandleOverlay(
+              child: child ?? const SizedBox.shrink(),
+            ),
           ),
         );
       },

@@ -3,16 +3,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:anwarsajadia/core/router/nav_extensions.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/martyrs/presentation/providers/martyrs_provider.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 /// مبنية على البطاقة اليمنى بإطار فيغما `الشهداء`.
 class MartyrDetailScreen extends ConsumerWidget {
-  const MartyrDetailScreen({required this.martyrId, super.key});
+  const MartyrDetailScreen({
+    required this.martyrId,
+    this.openedFromHome = false,
+    super.key,
+  });
 
   final int martyrId;
+
+  /// فُتحت من بطاقة الواجهة لا من قائمة الشهداء — فالقائمة ليست تحتها في
+  /// المكدّس، والرجوع لو طوى الصفحة لعاد بنا إلى الرئيسية.
+  final bool openedFromHome;
+
+  /// الرجوع من السيرة يقع على قائمة الشهداء دائماً: نطوي الصفحة إن كانت
+  /// القائمة تحتنا، وإلا فتحناها مكانها.
+  void _backToList(BuildContext context) {
+    if (openedFromHome || !context.canPop()) {
+      context.pushReplacementNamed(RouteNames.martyrs);
+    } else {
+      context.pop();
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,15 +51,16 @@ class MartyrDetailScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: () => context.backOrHome(),
-                    icon: const Icon(Icons.arrow_forward_rounded),
+                    onPressed: () => _backToList(context),
+                    icon: const Icon(Icons.arrow_back_rounded),
                   ),
                   const Expanded(
                     child: Text(
                       'الشهداء',
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.right,
                       style: TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: AppColors.textPrimaryLight,
@@ -152,6 +174,7 @@ class MartyrDetailScreen extends ConsumerWidget {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: 'Inter',
+                                        fontFamilyFallback: kArabicFontFallback,
                                         fontSize: 17,
                                         fontWeight: FontWeight.w800,
                                         letterSpacing: -0.2,
@@ -179,6 +202,7 @@ class MartyrDetailScreen extends ConsumerWidget {
                                           overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(
                                             fontFamily: 'Inter',
+                                            fontFamilyFallback: kArabicFontFallback,
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.white,

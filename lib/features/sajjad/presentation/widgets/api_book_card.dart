@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/features/sajjad/data/datasources/books_remote_datasource.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 /// بطاقة بأسلوب فيغما: صندوق غلاف داكن بمقاس ثابت + صفوف معلومات + زرّا
 /// «قراءة» و«تحميل»، وكلاهما ينادي [onOpen] (ملف الكتاب). تتقاسمها شاشتا
@@ -89,7 +90,7 @@ class ApiBookCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: GestureDetector(
-                        onTap: book.hasPdf
+                        onTap: book.isReadable
                             ? onRead
                             : () => _notAvailable(context),
                         child: Container(
@@ -103,6 +104,7 @@ class ApiBookCard extends StatelessWidget {
                             'قــراءة',
                             style: TextStyle(
                               fontFamily: 'Inter',
+                              fontFamilyFallback: kArabicFontFallback,
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
                               color: AppColors.ink,
@@ -113,7 +115,7 @@ class ApiBookCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     GestureDetector(
-                      onTap: book.hasPdf
+                      onTap: book.isReadable
                           ? onDownload
                           : () => _notAvailable(context),
                       child: Container(
@@ -190,6 +192,7 @@ class _InfoRow extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(
           fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 12.5,
           fontWeight: FontWeight.w400,
           color: AppColors.surfaceNearBlack,

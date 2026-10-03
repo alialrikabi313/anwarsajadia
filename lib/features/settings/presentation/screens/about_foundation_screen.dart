@@ -8,6 +8,7 @@ import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/core/theme/app_text_styles.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 /// تعريف بالمؤسسة الناشرة ورسالتها وطرق التواصل معها.
 class AboutFoundationScreen extends StatelessWidget {
@@ -23,7 +24,7 @@ class AboutFoundationScreen extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              icon: const Icon(Icons.arrow_forward_rounded,
+              icon: const Icon(Icons.arrow_back_rounded,
                   color: AppColors.primary),
               onPressed: () => Navigator.of(context).maybePop(),
             ),
@@ -46,6 +47,7 @@ class AboutFoundationScreen extends StatelessWidget {
                       'حول المؤسسة',
                       style: TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: AppColors.primaryDark,
@@ -69,6 +71,7 @@ class AboutFoundationScreen extends StatelessWidget {
                         'حول التطبيق',
                         style: TextStyle(
                           fontFamily: 'Inter',
+                          fontFamilyFallback: kArabicFontFallback,
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: AppColors.primary,

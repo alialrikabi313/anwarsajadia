@@ -1,23 +1,38 @@
-// شاشة المقامات.
+// شاشة قائمة المقامات — مطابقة للتصميم المعتمد (ملاحظة 16).
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:anwarsajadia/core/utils/arabic_search.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
+import 'package:anwarsajadia/features/sajjad/presentation/providers/maqam_favorites_provider.dart';
 import 'package:anwarsajadia/features/sajjad/presentation/providers/maqamat_list_provider.dart';
+import 'package:anwarsajadia/features/sajjad/presentation/widgets/maqam_image_viewer.dart';
+import 'package:anwarsajadia/features/sajjad/presentation/widgets/maqamat_top_bar.dart';
 
-/// شاشة المقامات، مبنية على الصف السفلي بإطار فيغما `تراث الامام`: بطاقات
-/// بصور. وإلى أن تتوفّر صورة لكل مقام نعرض تدرّجاً وأيقونة وطبقة داكنة للعنوان
-/// — بديل مصمَّم لا صورة مقام ثاني، حتى ما ننسب مكاناً لغير موضعه.
-class MaqamatScreen extends ConsumerWidget {
+/// قائمة المقامات: بطاقات فحمية أفقية — الصورة يساراً، والاسم والموقع وأزرار
+/// «دخـول / المفضّلة / الصورة» يميناً، كما بالتصميم.
+class MaqamatScreen extends ConsumerStatefulWidget {
   const MaqamatScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MaqamatScreen> createState() => _MaqamatScreenState();
+}
+
+class _MaqamatScreenState extends ConsumerState<MaqamatScreen> {
+  String _query = '';
+
+  /// قلب صفّ البحث هنا مرشّح: يعرض المفضّلة وحدها.
+  bool _favoritesOnly = false;
+
+  @override
+  Widget build(BuildContext context) {
     final maqamatAsync = ref.watch(maqamatIndexProvider);
+    final favorites = ref.watch(maqamFavoritesProvider);
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -26,17 +41,12 @@ class MaqamatScreen extends ConsumerWidget {
         body: Column(
           children: [
             const HomeHeader(),
-            Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_forward_rounded,
-                  color: AppColors.primary,
-                ),
-                onPressed: () => Navigator.of(context).maybePop(),
-              ),
+            MaqamatSectionHeader(
+              onSearchChanged: (v) => setState(() => _query = v.trim()),
+              favoriteActive: _favoritesOnly,
+              onFavoriteTap: () =>
+                  setState(() => _favoritesOnly = !_favoritesOnly),
             ),
-            const _ScreenTitle(),
             Expanded(
               child: maqamatAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
@@ -46,15 +56,33 @@ class MaqamatScreen extends ConsumerWidget {
                     child: Text('تعذّر تحميل قائمة المقامات: $e'),
                   ),
                 ),
-                data: (maqamat) {
+                data: (all) {
+                  final maqamat = [
+                    for (final m in all)
+                      // البحث بالعنوان وحده: البحث داخل المتن كان يرجّع مقامات
+                      // لا يظهر فيها المكتوب، فتبدو النتيجة بلا سبب.
+                      if ((_query.isEmpty || arabicContains(m.name, _query)) &&
+                          (!_favoritesOnly || favorites.contains(m.id)))
+                        m,
+                  ];
                   if (maqamat.isEmpty) {
-                    return const Center(child: Text('لا توجد مقامات متاحة'));
+                    return Center(
+                      child: Text(
+                        _favoritesOnly
+                            ? 'لا توجد مقامات في المفضّلة'
+                            : 'لا توجد مقامات مطابقة',
+                        style: const TextStyle(
+                          fontFamily: 'NotoNaskhArabic',
+                          color: AppColors.textSecondaryLight,
+                        ),
+                      ),
+                    );
                   }
                   return ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                    padding: const EdgeInsets.fromLTRB(20, 2, 20, 24),
                     itemCount: maqamat.length,
                     itemBuilder: (context, i) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.only(bottom: 14),
                       child: _MaqamCard(maqam: maqamat[i]),
                     ),
                   );
@@ -68,39 +96,9 @@ class MaqamatScreen extends ConsumerWidget {
   }
 }
 
-class _ScreenTitle extends StatelessWidget {
-  const _ScreenTitle();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'المقامات',
-            textAlign: TextAlign.right,
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimaryLight,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Container(
-            height: 0.6,
-            color: AppColors.borderLight.withValues(alpha: 0.5),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// بطاقة مقام: صورة أفقية كبيرة + عنوان + موقع + زر «زيارة».
-class _MaqamCard extends StatelessWidget {
+/// بطاقة التصميم: لوحة فحمية بنصف قطر 20، الصورة مربّعة في الجهة اليسرى،
+/// وإلى يمينها الاسم ثم شريط الموقع الرمادي ثم صفّ الأزرار.
+class _MaqamCard extends ConsumerWidget {
   const _MaqamCard({required this.maqam});
 
   final MaqamIndexEntry maqam;
@@ -113,187 +111,192 @@ class _MaqamCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFav = ref.watch(maqamFavoritesProvider).contains(maqam.id);
+
     return InkWell(
       onTap: () => _openDetail(context),
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(20),
       child: Container(
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.medallionSand,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.07),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          color: AppColors.cardDarkHome,
+          borderRadius: BorderRadius.circular(20),
         ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        // مع RTL أول عنصر يمين: عمود النصّ، والصورة تنزل يساراً.
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // منطقة الصورة: صورة المقام من كتاب المؤسسة، وإذا ما وُجدت
-            // ينزل البديل المتدرّج.
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: maqam.image.isNotEmpty
-                  ? Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Image.asset(
-                          maqam.image,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) =>
-                              const ColoredBox(color: AppColors.maqamCoverStart),
-                        ),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.black.withValues(alpha: 0.6),
-                                ],
-                              ),
-                            ),
-                            child: Text(
-                              maqam.location,
-                              textAlign: TextAlign.right,
-                              style: const TextStyle(
-                                fontFamily: 'NotoNaskhArabic',
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.maqamCardSand,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [AppColors.maqamCoverStart, AppColors.maqamCoverEnd],
-                        ),
-                      ),
-                      child: Stack(
-                        children: [
-                          const Center(
-                            child: Icon(
-                              Icons.mosque_rounded,
-                              size: 76,
-                              color: AppColors.accentGoldLight,
-                            ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.black.withValues(alpha: 0.6),
-                                  ],
-                                ),
-                              ),
-                              child: Text(
-                                maqam.location,
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(
-                                  fontFamily: 'NotoNaskhArabic',
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.maqamCardSand,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-            ),
-            // صف المعلومات: العنوان يميناً وحبّة «زيارة» يساراً.
-            Padding(
-              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-              child: Row(
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          maqam.name,
-                          style: const TextStyle(
-                            fontFamily: 'Amiri',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimaryLight,
-                            height: 1.3,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        if (maqam.description.isNotEmpty) ...[
-                          const SizedBox(height: 2),
-                          Text(
-                            maqam.description,
-                            style: const TextStyle(
-                              fontFamily: 'NotoNaskhArabic',
-                              fontSize: 11,
-                              color: AppColors.textSecondaryLight,
-                              height: 1.4,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ],
+                  Text(
+                    maqam.name,
+                    textAlign: TextAlign.right,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      height: 1.35,
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(height: 8),
+                  // شريط الموقع: مستطيل رمادي داكن بخطّ أكبر — أبرز عنصر
+                  // بالبطاقة حسب التصميم.
                   Container(
+                    width: double.infinity,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,
-                      vertical: 6,
+                      vertical: 10,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(50),
+                      color: AppColors.maqamLocationSlate,
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
-                      'زيارة',
+                    child: Text(
+                      maqam.location,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontFamily: 'NotoNaskhArabic',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.accentGoldLight,
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 10),
+                  // صفّ الأزرار: «دخـول» عريض يميناً، ثم القلب، ثم الصورة.
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _CardButton(
+                          onTap: () => _openDetail(context),
+                          child: Text(
+                            'دخــول',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontFamilyFallback: kArabicFontFallback,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      _CardButton(
+                        onTap: () => ref
+                            .read(maqamFavoritesProvider.notifier)
+                            .toggle(maqam.id),
+                        child: Icon(
+                          isFav
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
+                          size: 18,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      _CardButton(
+                        onTap: () => showMaqamImage(context, maqam),
+                        child: const Icon(
+                          Icons.photo_library_rounded,
+                          size: 18,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
+            const SizedBox(width: 12),
+            // الصورة: مربّع بنصف قطر 12 في الطرف الأيسر.
+            SizedBox(
+              width: 118,
+              height: 128,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: _MaqamThumb(image: maqam.image),
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// زر رملي صغير داخل البطاقة (دخـول / قلب / صورة).
+class _CardButton extends StatelessWidget {
+  const _CardButton({required this.onTap, required this.child});
+
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        height: 32,
+        constraints: const BoxConstraints(minWidth: 44),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          color: AppColors.medallionSand,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: child,
+      ),
+    );
+  }
+}
+
+/// صورة المقام أو بديلها المصمَّم — لا نضع صورة مقام آخر مكان الناقصة.
+class _MaqamThumb extends StatelessWidget {
+  const _MaqamThumb({required this.image});
+
+  final String image;
+
+  @override
+  Widget build(BuildContext context) {
+    if (image.isEmpty) return const _ThumbFallback();
+    return Image.asset(
+      image,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => const _ThumbFallback(),
+    );
+  }
+}
+
+class _ThumbFallback extends StatelessWidget {
+  const _ThumbFallback();
+
+  @override
+  Widget build(BuildContext context) {
+    return const DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.maqamCoverStart, AppColors.maqamCoverEnd],
+        ),
+      ),
+      child: Center(
+        child: Icon(
+          Icons.mosque_rounded,
+          size: 44,
+          color: AppColors.accentGoldLight,
         ),
       ),
     );

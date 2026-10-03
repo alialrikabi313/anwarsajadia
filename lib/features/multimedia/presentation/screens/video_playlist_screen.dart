@@ -49,7 +49,7 @@ class VideoPlaylistScreen extends ConsumerWidget {
           overflow: TextOverflow.ellipsis,
           style: AppTextStyles.titleLarge.copyWith(color: Colors.white),
         ),
-        centerTitle: true,
+        centerTitle: false,
         elevation: 0,
       ),
       body: videosAsync.when(

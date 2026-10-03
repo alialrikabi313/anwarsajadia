@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:anwarsajadia/core/l10n/generated/app_localizations.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/core/utils/helpers/share_helper.dart';
 import 'package:anwarsajadia/features/home/data/models/post_model.dart';
 import 'package:anwarsajadia/features/home/presentation/providers/posts_provider.dart';
@@ -23,7 +24,7 @@ class ActivitiesScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(l10n.foundationActivities),
-          centerTitle: true,
+          centerTitle: false,
         ),
         body: postsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -143,7 +144,8 @@ class _ExpandableActivityCardState extends State<_ExpandableActivityCard> {
                     child: Text(
                       p.title,
                       style: const TextStyle(
-                        fontFamily: 'Amiri',
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),

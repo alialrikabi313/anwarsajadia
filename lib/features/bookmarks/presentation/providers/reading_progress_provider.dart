@@ -25,6 +25,14 @@ class ReadingProgressNotifier extends Notifier<ReadingProgress?> {
   }
 }
 
+/// آخر موضعٍ في كتابٍ بعينه — تستعمله بطاقة القرآن بالواجهة كي تستأنف آخر
+/// سورة ولو قُرئ بعدها كتابٌ آخر.
+final bookReadingProgressProvider =
+    Provider.family<ReadingProgress?, int>((ref, bookId) {
+  ref.watch(readingProgressProvider);
+  return ref.read(readingProgressStorageProvider).loadForBook(bookId);
+});
+
 final readingProgressProvider =
     NotifierProvider<ReadingProgressNotifier, ReadingProgress?>(
   ReadingProgressNotifier.new,

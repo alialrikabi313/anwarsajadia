@@ -1,7 +1,10 @@
 name: anwarsajadia
 description: "Anwar Al-Sajjadiya - Islamic Religious Application"
 publish_to: 'none'
-version: 1.0.0+1
+# تحديثٌ فوق المنشور بكوكل بلي. الرقم بعد الـ + هو versionCode ولازم يكون
+# أعلى من كل ما رُفع قبله — وآخر باندل بُني حمل 20000 (باسم 2.0.0، وهو ما
+# وُقِّع ونُشر). الاصطلاح المتّبع: major*10000 + minor*100 + patch.
+version: 2.0.3+20003
 
 environment:
   sdk: ^3.9.0
@@ -69,7 +72,6 @@ dependencies:
   # UI
   flutter_svg: ^2.0.16
   shimmer: ^3.0.0
-  google_fonts: ^6.2.1
 
   # Icons
   cupertino_icons: ^1.0.8
@@ -107,7 +109,6 @@ flutter:
     - assets/figma_assets/lib_icons/
     - assets/data/
     - assets/books/
-    - assets/sounds/
     - assets/quran/
 
   fonts:

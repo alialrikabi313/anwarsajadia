@@ -9,6 +9,7 @@ import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/core/theme/app_text_styles.dart';
 import 'package:anwarsajadia/core/utils/helpers/share_helper.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 /// شكر وتعريف بالأقسام وروابط المشاركة والتواصل.
 class AboutAppScreen extends ConsumerWidget {
@@ -26,7 +27,7 @@ class AboutAppScreen extends ConsumerWidget {
           Align(
             alignment: Alignment.centerRight,
             child: IconButton(
-              icon: const Icon(Icons.arrow_forward_rounded,
+              icon: const Icon(Icons.arrow_back_rounded,
                   color: AppColors.primary),
               onPressed: () => Navigator.of(context).maybePop(),
             ),
@@ -53,6 +54,7 @@ class AboutAppScreen extends ConsumerWidget {
                         'حول المؤسسة',
                         style: TextStyle(
                           fontFamily: 'Inter',
+                          fontFamilyFallback: kArabicFontFallback,
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: AppColors.primary,
@@ -74,6 +76,7 @@ class AboutAppScreen extends ConsumerWidget {
                       'حول التطبيق',
                       style: TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: AppColors.primaryDark,
@@ -239,7 +242,7 @@ class _LinkTile extends StatelessWidget {
             child: Row(
               children: [
                 const Icon(
-                  Icons.chevron_left_rounded,
+                  Icons.chevron_right_rounded,
                   color: AppColors.textMutedLight,
                 ),
                 Expanded(

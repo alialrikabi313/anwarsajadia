@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 /// مدخل «تراث الإمام». مبني على إطار فيغما 2072:5723: شاشة كريمية بقائمة
 /// بطاقات أقسام عمودية (رملي بلوحة داخلية أفتح، نصف قطر 16، أيقونة + عنوان).
@@ -34,14 +35,6 @@ class SajjadHomeScreen extends StatelessWidget {
         ),
       ),
       _SajjadCategory(
-        title: 'مسند الإمام',
-        iconSvg: 'assets/figma_assets/svg/ic_musnad.svg',
-        onTap: () => context.pushNamed(
-          RouteNames.bookChapters,
-          pathParameters: {'bookId': '3'},
-        ),
-      ),
-      _SajjadCategory(
         title: 'شرح الصحيفة',
         iconSvg: 'assets/figma_assets/svg/ic_rasael.svg',
         onTap: () => context.pushNamed(RouteNames.sahifaExplained),
@@ -50,6 +43,14 @@ class SajjadHomeScreen extends StatelessWidget {
         title: 'مقامات الإمام',
         iconSvg: 'assets/figma_assets/svg/ic_maqamat.svg',
         onTap: () => context.pushNamed(RouteNames.maqamat),
+      ),
+      // مؤخّرة عمداً عن بقية الأقسام لأن محتواها لا يزال قيد العمل.
+      _SajjadCategory(
+        title: 'مسند الإمام',
+        iconSvg: 'assets/figma_assets/svg/ic_musnad.svg',
+        onTap: () {},
+        badge: '(قيد العمل)',
+        disabled: true,
       ),
     ];
 
@@ -68,6 +69,7 @@ class SajjadHomeScreen extends StatelessWidget {
                 'تراث الامام',
                 style: const TextStyle(
                   fontFamily: 'Inter',
+                  fontFamilyFallback: kArabicFontFallback,
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: AppColors.primary,
@@ -113,10 +115,16 @@ class _SajjadCategory {
     required this.title,
     required this.iconSvg,
     required this.onTap,
+    this.badge,
+    this.disabled = false,
   });
   final String title;
   final String iconSvg;
   final VoidCallback onTap;
+  // نصّ صغير اختياري يظهر أسفل العنوان (مثلاً حالة "قيد العمل").
+  final String? badge;
+  // القسم قيد العمل: بطاقته رمادية غير قابلة للنقر حتى يكتمل محتواه.
+  final bool disabled;
 }
 
 class _SajjadCategoryCard extends StatelessWidget {
@@ -132,7 +140,9 @@ class _SajjadCategoryCard extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: category.onTap,
+        // قيد العمل: لا يستجيب للنقر، لكن مظهره كبقية البطاقات — الشارة
+        // أسفل العنوان («قيد العمل») هي ما يميّزه لا اللون.
+        onTap: category.disabled ? null : category.onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
           height: 92,
@@ -178,16 +188,38 @@ class _SajjadCategoryCard extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
                     Expanded(
-                      child: Text(
-                        category.title,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: -0.2,
-                          color: AppColors.headerPillBg,
-                        ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            category.title,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontFamilyFallback: kArabicFontFallback,
+                              // نخفّض حجم العنوان قليلاً عند وجود شارة أسفله
+                              // كي لا يطفح النص خارج ارتفاع البطاقة الثابت.
+                              fontSize: category.badge != null ? 15 : 17,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: -0.2,
+                              color: AppColors.headerPillBg,
+                            ),
+                          ),
+                          if (category.badge != null) ...[
+                            const SizedBox(height: 2),
+                            Text(
+                              category.badge!,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontFamilyFallback: kArabicFontFallback,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textSecondaryWarm,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
                     // أيقونة المرقد الخطّية (SVG) — تطلع باليسار البصري.
@@ -196,10 +228,8 @@ class _SajjadCategoryCard extends StatelessWidget {
                       width: 60,
                       height: 64,
                       fit: BoxFit.contain,
-                      placeholderBuilder: (_) => const SizedBox(
-                        width: 60,
-                        height: 64,
-                      ),
+                      placeholderBuilder: (_) =>
+                          const SizedBox(width: 60, height: 64),
                     ),
                   ],
                 ),

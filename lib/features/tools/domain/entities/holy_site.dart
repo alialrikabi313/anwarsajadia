@@ -28,7 +28,7 @@ class HolySite {
 }
 
 const holySites = <HolySite>[
-  // ── القبلة والنبي ﷺ ──
+  // ── القبلة والنبي (صلى الله عليه وآله وسلم) ──
   HolySite(
     id: 'kaaba',
     name: 'الكعبة المشرفة',
@@ -39,7 +39,7 @@ const holySites = <HolySite>[
   ),
   HolySite(
     id: 'prophet',
-    name: 'قبر النبي ﷺ',
+    name: 'قبر النبي (صلى الله عليه وآله وسلم)',
     location: 'المدينة المنورة',
     latitude: 24.4672,
     longitude: 39.6112,

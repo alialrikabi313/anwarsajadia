@@ -10,6 +10,7 @@ import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/core/utils/extensions/string_extensions.dart';
 import 'package:anwarsajadia/core/widgets/loading_indicator.dart';
 import 'package:anwarsajadia/features/tools/presentation/providers/tools_providers.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // شاشة «المسابقات».
 
@@ -29,7 +30,7 @@ class QuizListScreen extends ConsumerWidget {
         backgroundColor: AppColors.readingSand,
         appBar: AppBar(
           title: Text(l10n.toolsQuiz),
-          centerTitle: true,
+          centerTitle: false,
           backgroundColor: AppColors.readingSand,
           elevation: 0,
         ),
@@ -141,6 +142,7 @@ class _QuizCard extends StatelessWidget {
                             item.badge!,
                             style: const TextStyle(
                               fontFamily: 'Inter',
+                              fontFamilyFallback: kArabicFontFallback,
                               fontSize: 10.5,
                               fontWeight: FontWeight.w700,
                               color: AppColors.primary,
@@ -154,6 +156,7 @@ class _QuizCard extends StatelessWidget {
                         textAlign: TextAlign.right,
                         style: const TextStyle(
                           fontFamily: 'Inter',
+                          fontFamilyFallback: kArabicFontFallback,
                           fontSize: 15.5,
                           fontWeight: FontWeight.w700,
                           color: gold,
@@ -173,7 +176,7 @@ class _QuizCard extends StatelessWidget {
                   ),
                 ),
                 Icon(
-                  Icons.chevron_left_rounded,
+                  Icons.chevron_right_rounded,
                   color: Colors.white.withValues(alpha: 0.5),
                 ),
               ],

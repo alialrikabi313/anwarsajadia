@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/core/widgets/empty_state_widget.dart';
 import 'package:anwarsajadia/core/widgets/highlighted_text.dart';
 import 'package:anwarsajadia/core/widgets/loading_indicator.dart';
@@ -49,7 +50,7 @@ class _GlobalSearchScreenState extends ConsumerState<GlobalSearchScreen> {
         backgroundColor: AppColors.backgroundLight,
         appBar: AppBar(
           title: const Text('البحث الشامل'),
-          centerTitle: true,
+          centerTitle: false,
         ),
         body: Column(
           children: [
@@ -164,7 +165,8 @@ class _SearchResultTile extends StatelessWidget {
         result.chapter.title,
         textDirection: TextDirection.rtl,
         style: const TextStyle(
-          fontFamily: 'Amiri',
+          fontFamily: 'Inter',
+          fontFamilyFallback: kArabicFontFallback,
           fontSize: 16,
           fontWeight: FontWeight.bold,
         ),
@@ -197,7 +199,8 @@ class _SearchResultTile extends StatelessWidget {
             child: Text(
               result.bookTitle,
               style: const TextStyle(
-                fontFamily: 'NotoNaskhArabic',
+                fontFamily: 'Inter',
+                fontFamilyFallback: kArabicFontFallback,
                 fontSize: 11,
                 color: AppColors.primaryGreen,
               ),
@@ -206,7 +209,7 @@ class _SearchResultTile extends StatelessWidget {
         ],
       ),
       trailing: Icon(
-        Icons.chevron_left,
+        Icons.chevron_right,
         color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
       ),
       // goNamed لا pushNamed: chapterReading يعيش داخل فرع قشرة و/search

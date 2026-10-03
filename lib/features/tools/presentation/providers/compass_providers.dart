@@ -9,7 +9,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:anwarsajadia/features/tools/data/geomag_service.dart';
 import 'package:anwarsajadia/features/tools/domain/entities/holy_site.dart';
 
-// ── الموقع ────────────────────────────────────────────────────
+// ── الموقع ───────────────────────────────────────────────
+
+/// هل خدمة تحديد الموقع مشغّلة بالجهاز؟ تُستعمل لعرض حالة واضحة
+/// بشاشة البوصلة بدل ترك المستخدم أمام مساحة فارغة.
+final locationServiceEnabledProvider =
+    FutureProvider<bool>((ref) => Geolocator.isLocationServiceEnabled());
 
 /// موقع المستخدم الحالي، ويطلب الإذن إذا لزم.
 final userLocationProvider = FutureProvider<Position>((ref) async {
@@ -39,9 +44,11 @@ final userLocationProvider = FutureProvider<Position>((ref) async {
 
 /// يبثّ اتجاه بوصلة الجهاز بالدرجات (0–360، و0 = الشمال).
 final compassHeadingProvider = StreamProvider<double>((ref) {
-  return FlutterCompass.events!.where((e) => e.heading != null).map(
-        (e) => e.heading!,
-      );
+  // أجهزة بلا حسّاس مغناطيسي ترجّع null هنا؛ `!` كانت ترمي، فنرجّع بثّاً فارغاً
+  // وتتكفّل الشاشة بعرض حالة «لا بوصلة» بدل الانهيار.
+  final events = FlutterCompass.events;
+  if (events == null) return const Stream<double>.empty();
+  return events.where((e) => e.heading != null).map((e) => e.heading!);
 });
 
 // ── الموقع المختار ────────────────────────────────────────────
@@ -59,14 +66,16 @@ final bearingToSiteProvider = Provider<double?>((ref) {
   final locationAsync = ref.watch(userLocationProvider);
   final site = ref.watch(selectedSiteProvider);
 
-  return locationAsync.whenData((pos) {
-    return _calculateBearing(
-      pos.latitude,
-      pos.longitude,
-      site.latitude,
-      site.longitude,
-    );
-  }).value;
+  // valueOrNull لا value: الأخيرة ترمي الخطأ عند رفض صلاحية الموقع
+  // فتُسقِط الشاشة بدل أن تتعامل معه بهدوء.
+  final pos = locationAsync.valueOrNull;
+  if (pos == null) return null;
+  return _calculateBearing(
+    pos.latitude,
+    pos.longitude,
+    site.latitude,
+    site.longitude,
+  );
 });
 
 /// المسافة بالكيلومترات من المستخدم للموقع المختار.
@@ -74,14 +83,14 @@ final distanceToSiteProvider = Provider<double?>((ref) {
   final locationAsync = ref.watch(userLocationProvider);
   final site = ref.watch(selectedSiteProvider);
 
-  return locationAsync.whenData((pos) {
-    return _calculateDistance(
-      pos.latitude,
-      pos.longitude,
-      site.latitude,
-      site.longitude,
-    );
-  }).value;
+  final pos = locationAsync.valueOrNull;
+  if (pos == null) return null;
+  return _calculateDistance(
+    pos.latitude,
+    pos.longitude,
+    site.latitude,
+    site.longitude,
+  );
 });
 
 /// الانحراف المغناطيسي المحلي (بالدرجات، الموجب = شرقاً) عند موقع المستخدم.
@@ -105,9 +114,9 @@ final compassNeedleAngleProvider = Provider<double?>((ref) {
 
   if (bearing == null) return null;
 
-  return headingAsync.whenData((heading) {
-    return bearing - heading - declination;
-  }).value;
+  final heading = headingAsync.valueOrNull;
+  if (heading == null) return null;
+  return bearing - heading - declination;
 });
 
 // ── بوصلة الرئيسية (سلبية — ما تطلب إذناً أبداً) ───────────────
@@ -147,12 +156,12 @@ final homeNeedleToTargetProvider =
     target.lat,
     target.lng,
   );
-  return ref.watch(compassHeadingProvider).whenData((heading) {
-    // نقرّب لدرجتين: بثّ الحسّاس ~33 مرة بالثانية وبيه ضجيج، وبلا التقريب
-    // تنعاد بناء بطاقة الرئيسية بكل إطار. والإبرة تبقى تتحرّك بسلاسة.
-    final angle = bearing - heading - declination;
-    return (angle / 2).roundToDouble() * 2;
-  }).value;
+  final heading = ref.watch(compassHeadingProvider).valueOrNull;
+  if (heading == null) return null;
+  // نقرّب لدرجتين: بثّ الحسّاس ~33 مرة بالثانية وبيه ضجيج، وبلا التقريب
+  // تنعاد بناء بطاقة الرئيسية بكل إطار. والإبرة تبقى تتحرّك بسلاسة.
+  final angle = bearing - heading - declination;
+  return (angle / 2).roundToDouble() * 2;
 });
 
 // ── مساعدات هافرساين ──────────────────────────────────────────

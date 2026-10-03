@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:anwarsajadia/core/utils/arabic_search.dart';
 import 'package:anwarsajadia/core/router/nav_extensions.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
@@ -15,9 +16,17 @@ import 'package:anwarsajadia/core/utils/extensions/string_extensions.dart';
 import 'package:anwarsajadia/core/utils/helpers/share_helper.dart';
 import 'package:anwarsajadia/core/widgets/loading_indicator.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
+import 'package:anwarsajadia/features/sajjad/data/repositories/asset_sajjad_repository.dart'
+    show kSahifaCommentarySources, sahifaDuaIntro, sahifaPrayerName;
 import 'package:anwarsajadia/features/sajjad/presentation/providers/sajjad_providers.dart';
 
 // شاشة قراءة دعاء من الصحيفة.
+
+/// أسماء الشرّاح الموجودة في العبارة — بترتيب عرضها في ورقة الشرح.
+List<String> _commentaryKeys(Map<String, dynamic> phrase) =>
+    kSahifaCommentarySources
+        .where((s) => (phrase[s] as String?)?.trim().isNotEmpty == true)
+        .toList();
 
 /// دعاء واحد بإطار فيغما 191:5723: نص عربي متّصل، والعبارة اللي لها شرح تنفتح
 /// بالضغط.
@@ -35,6 +44,40 @@ class _SahifaPrayerReadingScreenState
     extends ConsumerState<SahifaPrayerReadingScreen> {
   double _fontSize = 18;
 
+  // ── البحث داخل الدعاء ──
+  final ScrollController _scroll = ScrollController();
+  final TextEditingController _searchCtrl = TextEditingController();
+  String _query = '';
+  int _matchIndex = 0;
+  final List<GlobalKey> _matchKeys = [];
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  int _countMatches(String text) {
+    // مطابقة متسامحة مع التشكيل: النصّ مشكّل والمستخدم يكتب بلا تشكيل.
+    return arabicMatches(text, _query).length;
+  }
+
+  void _jumpTo(int i) {
+    if (_matchKeys.isEmpty) return;
+    final idx = i % _matchKeys.length;
+    setState(() => _matchIndex = idx);
+    final ctx = _matchKeys[idx].currentContext;
+    if (ctx != null) {
+      Scrollable.ensureVisible(
+        ctx,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+        alignment: 0.3,
+      );
+    }
+  }
+
   void _navigateToPrayer(int prayerNumber) {
     context.pushReplacementNamed(
       RouteNames.sahifaPrayerReading,
@@ -43,10 +86,7 @@ class _SahifaPrayerReadingScreenState
   }
 
   void _showCommentaryBottomSheet(Map<String, dynamic> phrase) {
-    final commentaryKeys = phrase.keys
-        .where((k) => k != 'text')
-        .where((k) => (phrase[k] as String?)?.isNotEmpty == true)
-        .toList();
+    final commentaryKeys = _commentaryKeys(phrase);
 
     if (commentaryKeys.isEmpty) return;
 
@@ -79,7 +119,12 @@ class _SahifaPrayerReadingScreenState
           loading: () => const Center(child: LoadingIndicator()),
           error: (error, _) => _ErrorView(error: error.toString()),
           data: (prayer) {
-            final title = prayer['prayer_title'] as String? ?? '';
+            final title = sahifaPrayerName(prayer);
+            // ظرف الدعاء كما هو بالمصدر — العنوان مختصرٌ فلا يحمله.
+            final topic = (prayer['prayer_topic'] as String?)?.trim();
+            final intro = (topic == null || topic.isEmpty)
+                ? null
+                : sahifaDuaIntro(topic);
             final phrases =
                 (prayer['phrases'] as List<dynamic>?) ?? const <dynamic>[];
 
@@ -87,22 +132,44 @@ class _SahifaPrayerReadingScreenState
               children: [
                 const HomeHeader(dark: true),
                 _SectionTitle(),
-                _SearchRow(onBack: () => context.backOrHome()),
+                _SearchRow(
+                  onBack: () => context.backOrHome(),
+                  controller: _searchCtrl,
+                  matchCount: _countMatches(
+                    phrases
+                        .map((p) =>
+                            ((p as Map<String, dynamic>)['text'] as String?) ??
+                            '')
+                        .join('\n'),
+                  ),
+                  current: _matchIndex,
+                  onChanged: (v) => setState(() {
+                    _query = v.trim();
+                    _matchIndex = 0;
+                  }),
+                  onPrev: () => _jumpTo(_matchIndex - 1),
+                  onNext: () => _jumpTo(_matchIndex + 1),
+                ),
                 Expanded(
                   child: SingleChildScrollView(
+                    controller: _scroll,
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         _PrayerHeaderCard(
                           title: title,
-                          phraseCount: phrases.length,
+                          prayerNumber: widget.prayerNumber,
                         ),
                         const SizedBox(height: 12),
                         _ReadingBody(
+                          intro: intro,
                           phrases: phrases,
                           fontSize: _fontSize,
                           onPhraseTap: _showCommentaryBottomSheet,
+                          query: _query,
+                          matchKeys: _matchKeys,
+                          activeMatch: _matchIndex,
                         ),
                       ],
                     ),
@@ -153,9 +220,13 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
+      // مع RTL أول عنصر بالصفّ = اليمين: فاصل قصير، العنوان، ثم الفاصل الطويل
+      // يمتدّ لليسار — فيلتصق العنوان باليمين لا يبعد عنه (كان الترتيب معكوساً
+      // فيسقط العنوان قرب اليسار).
       child: Row(
         children: [
-          Expanded(
+          SizedBox(
+            width: 12,
             child: Container(
               height: 0.6,
               color: AppColors.borderLight.withValues(alpha: 0.6),
@@ -163,17 +234,15 @@ class _SectionTitle extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            'الـصـحـيـفــة الـسـجـاديــة',
+            'شـرح الـصـحـيـفــة الـسـجـاديــة',
             style: AppTextStyles.headlineSmall.copyWith(
               color: AppColors.textPrimaryLight,
-              fontFamily: 'Amiri',
               fontWeight: FontWeight.w700,
               letterSpacing: 1.5,
             ),
           ),
           const SizedBox(width: 8),
-          SizedBox(
-            width: 12,
+          Expanded(
             child: Container(
               height: 0.6,
               color: AppColors.borderLight.withValues(alpha: 0.6),
@@ -189,9 +258,23 @@ class _SectionTitle extends StatelessWidget {
 // صف البحث: حبّة المفضلة + حقل البحث + سهم الرجوع
 // ─────────────────────────────────────────────────────────────────────
 class _SearchRow extends StatelessWidget {
-  const _SearchRow({required this.onBack});
+  const _SearchRow({
+    required this.onBack,
+    required this.controller,
+    required this.matchCount,
+    required this.current,
+    required this.onChanged,
+    required this.onPrev,
+    required this.onNext,
+  });
 
   final VoidCallback onBack;
+  final TextEditingController controller;
+  final int matchCount;
+  final int current;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onPrev;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {
@@ -199,6 +282,20 @@ class _SearchRow extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Row(
         children: [
+          // سهم الرجوع بأقصى اليمين (أول عنصر مع RTL).
+          GestureDetector(
+            onTap: onBack,
+            child: const SizedBox(
+              width: 32,
+              height: 38,
+              child: Icon(
+                Icons.arrow_back_rounded,
+                size: 22,
+                color: AppColors.textPrimaryLight,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
           Container(
             width: 56,
             height: 38,
@@ -256,26 +353,58 @@ class _SearchRow extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    'بحث',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textMutedLight,
+                  Expanded(
+                    child: TextField(
+                      controller: controller,
+                      onChanged: onChanged,
+                      textAlign: TextAlign.right,
+                      textAlignVertical: TextAlignVertical.center,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textPrimaryLight,
+                      ),
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        filled: false,
+                        contentPadding: EdgeInsets.zero,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'بحث',
+                        hintStyle: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textMutedLight,
+                        ),
+                      ),
                     ),
                   ),
+                  if (controller.text.trim().isNotEmpty) ...[
+                    Text(
+                      matchCount == 0
+                          ? 'لا نتائج'
+                          : '${current + 1}/$matchCount',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textSecondaryLight,
+                      ),
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.zero,
+                      constraints:
+                          const BoxConstraints(minWidth: 24, minHeight: 24),
+                      icon: const Icon(Icons.keyboard_arrow_up_rounded,
+                          size: 18),
+                      onPressed: matchCount == 0 ? null : onPrev,
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.zero,
+                      constraints:
+                          const BoxConstraints(minWidth: 24, minHeight: 24),
+                      icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                          size: 18),
+                      onPressed: matchCount == 0 ? null : onNext,
+                    ),
+                  ],
                 ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          GestureDetector(
-            onTap: onBack,
-            child: const SizedBox(
-              width: 32,
-              height: 38,
-              child: Icon(
-                Icons.arrow_forward_rounded,
-                size: 22,
-                color: AppColors.textPrimaryLight,
               ),
             ),
           ),
@@ -290,10 +419,10 @@ class _SearchRow extends StatelessWidget {
 // صف القائمة نفسه، حتى يحسّ القارئ أنه لسّه بنفس السياق
 // ─────────────────────────────────────────────────────────────────────
 class _PrayerHeaderCard extends StatelessWidget {
-  const _PrayerHeaderCard({required this.title, required this.phraseCount});
+  const _PrayerHeaderCard({required this.title, required this.prayerNumber});
 
   final String title;
-  final int phraseCount;
+  final int prayerNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -348,7 +477,7 @@ class _PrayerHeaderCard extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            '${phraseCount.toArabicNumeral()} فقرة',
+            'الدعاء ${prayerNumber.toArabicNumeral()}',
             style: AppTextStyles.listItemMeta.copyWith(
               color: AppColors.textSecondaryLight,
             ),
@@ -389,11 +518,22 @@ class _ReadingBody extends StatefulWidget {
     required this.phrases,
     required this.fontSize,
     required this.onPhraseTap,
+    required this.query,
+    required this.matchKeys,
+    required this.activeMatch,
+    this.intro,
   });
+
+  /// العبارة الفاصلة التي تتصدّر الدعاء بالمصدر — تُعرض فوق البسملة لأن
+  /// العنوان صار مختصراً فضاع منه ظرف الدعاء.
+  final String? intro;
 
   final List<dynamic> phrases;
   final double fontSize;
   final void Function(Map<String, dynamic>) onPhraseTap;
+  final String query;
+  final List<GlobalKey> matchKeys;
+  final int activeMatch;
 
   @override
   State<_ReadingBody> createState() => _ReadingBodyState();
@@ -424,6 +564,8 @@ class _ReadingBodyState extends State<_ReadingBody> {
         TapGestureRecognizer()..onTap = () => widget.onPhraseTap(phrase),
       );
     }
+    // مفاتيح المطابقات تُبنى من جديد بترتيب ورودها في المتن.
+    widget.matchKeys.clear();
 
     // بفيغما 191:5723 نص الدعاء على بطاقة بيضاء (نصف قطر 24 بحدّ خافت) بنص
     // أسود صرف — أوضح من الفحمي على الكريمي، اللي كان ينقرأ رفيعاً باهتاً.
@@ -441,6 +583,29 @@ class _ReadingBodyState extends State<_ReadingBody> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          if (widget.intro != null) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: AppColors.greenDeep.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                widget.intro!,
+                textAlign: TextAlign.center,
+                textDirection: TextDirection.rtl,
+                style: TextStyle(
+                  fontFamily: 'Amiri',
+                  fontSize: widget.fontSize - 3,
+                  height: 1.8,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.greenDeep,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+          ],
           Text(
             'بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ ﷽',
             textAlign: TextAlign.center,
@@ -462,17 +627,24 @@ class _ReadingBodyState extends State<_ReadingBody> {
               style: TextStyle(
                 fontFamily: 'Amiri',
                 fontSize: widget.fontSize,
-                height: 1.95,
+                height: 2.0,
                 color: Colors.black,
               ),
               children: [
+                // العبارات أجزاء متتابعة من نصّ الدعاء نفسه، فتُوصل بمسافة؛
+                // ولا ينزل السطر إلا حيث تنتهي فقرة في الأصل (break).
                 for (var i = 0; i < widget.phrases.length; i++) ...[
-                  _phraseSpan(
+                  ..._phraseSpans(
                     widget.phrases[i] as Map<String, dynamic>,
                     _recognizers[i],
                   ),
                   if (i < widget.phrases.length - 1)
-                    const TextSpan(text: '  '),
+                    TextSpan(
+                      text: (widget.phrases[i]
+                                  as Map<String, dynamic>)['break'] == true
+                          ? '\n'
+                          : ' ',
+                    ),
                 ],
               ],
             ),
@@ -482,14 +654,68 @@ class _ReadingBodyState extends State<_ReadingBody> {
     );
   }
 
-  TextSpan _phraseSpan(
+  /// يقسّم العبارة عند مواضع البحث: المطابق يُلفّ بمفتاح ولون، والباقي يبقى
+  /// نصاً عادياً محتفظاً بلمسة الشرح إن وُجدت.
+  List<InlineSpan> _phraseSpans(
     Map<String, dynamic> phrase,
     TapGestureRecognizer recognizer,
   ) {
+    final q = widget.query.trim();
     final text = (phrase['text'] as String?) ?? '';
-    final hasCommentary = phrase.keys
-        .where((k) => k != 'text')
-        .any((k) => (phrase[k] as String?)?.isNotEmpty == true);
+    final hits = arabicMatches(text, q);
+    if (hits.isEmpty) return [_phraseSpan(phrase, recognizer)];
+    final base = TextStyle(
+      fontFamily: 'Amiri',
+      fontSize: widget.fontSize,
+      height: 2.0,
+      color: Colors.black,
+    );
+    final hasCommentary = _commentaryKeys(phrase).isNotEmpty;
+    final spans = <InlineSpan>[];
+    var cursor = 0;
+    for (final h in hits) {
+      if (h.start > cursor) {
+        spans.add(_phraseSpan(phrase, recognizer,
+            override: text.substring(cursor, h.start)));
+      }
+      final key = GlobalKey();
+      final isActive = widget.matchKeys.length == widget.activeMatch;
+      widget.matchKeys.add(key);
+      spans.add(WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: GestureDetector(
+          onTap: hasCommentary ? () => widget.onPhraseTap(phrase) : null,
+          child: Container(
+            key: key,
+            decoration: BoxDecoration(
+              color: AppColors.searchHighlight,
+              // المطابقة الحالية بالأصفر نفسه وإطار رفيع — تغيير اللون كان
+              // يجعل نتيجةً واحدة تبدو مختلفة عن أخواتها.
+              border: isActive
+                  ? Border.all(color: AppColors.accentGoldDark, width: 1.2)
+                  : null,
+              borderRadius: BorderRadius.circular(3),
+            ),
+            child: Text(text.substring(h.start, h.end), style: base),
+          ),
+        ),
+      ));
+      cursor = h.end;
+    }
+    if (cursor < text.length) {
+      spans.add(_phraseSpan(phrase, recognizer,
+          override: text.substring(cursor)));
+    }
+    return spans;
+  }
+
+  TextSpan _phraseSpan(
+    Map<String, dynamic> phrase,
+    TapGestureRecognizer recognizer, {
+    String? override,
+  }) {
+    final text = override ?? (phrase['text'] as String?) ?? '';
+    final hasCommentary = _commentaryKeys(phrase).isNotEmpty;
 
     if (!hasCommentary) {
       return TextSpan(text: text);
@@ -558,12 +784,12 @@ class _BottomActionBar extends StatelessWidget {
             _IconButton(icon: Icons.share_outlined, onTap: onShare),
             const Spacer(),
             _IconButton(
-              icon: Icons.chevron_right_rounded,
+              icon: Icons.chevron_left_rounded,
               onTap: onPrev,
               disabled: onPrev == null,
             ),
             _IconButton(
-              icon: Icons.chevron_left_rounded,
+              icon: Icons.chevron_right_rounded,
               onTap: onNext,
               disabled: onNext == null,
             ),

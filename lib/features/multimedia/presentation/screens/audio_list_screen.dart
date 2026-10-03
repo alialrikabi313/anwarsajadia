@@ -9,6 +9,7 @@ import 'package:anwarsajadia/core/l10n/generated/app_localizations.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/core/theme/app_text_styles.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/features/multimedia/domain/entities/audio_item.dart';
 import 'package:anwarsajadia/features/multimedia/presentation/providers/audio_player_controller.dart';
 import 'package:anwarsajadia/features/multimedia/presentation/providers/multimedia_providers.dart';
@@ -38,7 +39,7 @@ class AudioListScreen extends ConsumerWidget {
           l10n.mediaAudios,
           style: AppTextStyles.headlineMedium.copyWith(color: Colors.white),
         ),
-        centerTitle: true,
+        centerTitle: false,
         elevation: 0,
       ),
       bottomNavigationBar: _MiniPlayer(controller: controller),
@@ -252,7 +253,8 @@ class _MiniPlayer extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.right,
                       style: const TextStyle(
-                        fontFamily: 'Amiri',
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,

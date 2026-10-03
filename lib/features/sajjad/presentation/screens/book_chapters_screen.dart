@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:anwarsajadia/core/router/nav_extensions.dart';
+import 'package:anwarsajadia/core/utils/arabic_search.dart';
+import 'package:anwarsajadia/core/widgets/app_search_field.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/core/utils/extensions/string_extensions.dart';
@@ -16,6 +17,7 @@ import 'package:anwarsajadia/features/bookmarks/presentation/providers/bookmarks
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/sajjad/domain/entities/chapter.dart';
 import 'package:anwarsajadia/features/sajjad/presentation/providers/sajjad_providers.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // فهرس كتاب.
 
@@ -78,7 +80,6 @@ class _BookChaptersScreenState extends ConsumerState<BookChaptersScreen> {
                 _SearchRow(
                   controller: _searchController,
                   onChanged: (v) => setState(() => _query = v.trim()),
-                  onBack: () => context.backOrHome(),
                 ),
                 Expanded(
                   child: Consumer(
@@ -97,8 +98,8 @@ class _BookChaptersScreenState extends ConsumerState<BookChaptersScreen> {
                         // ── فصل بلا مواضيع فعلية ← صف واحد يفتح المتن ──
                         if (!expandable) {
                           if (searching &&
-                              !c.title.contains(_query) &&
-                              !c.content.contains(_query)) {
+                              !arabicContains(c.title, _query) &&
+                              !arabicContains(c.content, _query)) {
                             continue;
                           }
                           final key = 'chapter-${widget.bookId}-${c.id}-all';
@@ -113,7 +114,7 @@ class _BookChaptersScreenState extends ConsumerState<BookChaptersScreen> {
                           ));
                           // أثناء البحث نعرض العبارة المطابقة نفسها مبرَزة
                           // تحت صف الدعاء، حتى يعرف ليش طلع هذا الصف.
-                          if (searching && c.content.contains(_query)) {
+                          if (searching && arabicContains(c.content, _query)) {
                             final snip = _snippet(c.content, _query);
                             if (snip.isNotEmpty) {
                               children.add(_snippetRow(
@@ -132,10 +133,10 @@ class _BookChaptersScreenState extends ConsumerState<BookChaptersScreen> {
                         for (var i = 0; i < c.subjects!.length; i++) {
                           final s = c.subjects![i];
                           if (!searching ||
-                              s.title.contains(_query) ||
-                              c.title.contains(_query) ||
+                              arabicContains(s.title, _query) ||
+                              arabicContains(c.title, _query) ||
                               s.phrases
-                                  .any((p) => p.content.contains(_query))) {
+                                  .any((p) => arabicContains(p.content, _query))) {
                             subs.add(MapEntry(i, s));
                           }
                         }
@@ -179,8 +180,14 @@ class _BookChaptersScreenState extends ConsumerState<BookChaptersScreen> {
                               child: FigmaListItem(
                                 title: s.title,
                                 highlight: _query,
-                                subtitle:
-                                    '${s.phrases.length.toArabicNumeral()} فقرة',
+                                // رقم الدعاء بدل عدد الفقرات — لفصل أدعية
+                                // الصحيفة وحده (١٠٠١). بقية فصول الكتاب
+                                // (المقدّمات والفصول والملحقات) ليست أدعية
+                                // مرقّمة، فترقيمها كان يكتب «الدعاء ١» أمام
+                                // «مقدمة».
+                                subtitle: c.id == 1001
+                                    ? 'الدعاء ${(si + 1).toArabicNumeral()}'
+                                    : '${s.phrases.length.toArabicNumeral()} فقرة',
                                 background: AppColors.creamLight,
                                 isFavorite:
                                     bookmarks.any((b) => b.key == key),
@@ -195,7 +202,7 @@ class _BookChaptersScreenState extends ConsumerState<BookChaptersScreen> {
                               var shown = 0;
                               for (final p in s.phrases) {
                                 if (shown >= 3) break;
-                                if (!p.content.contains(_query)) continue;
+                                if (!arabicContains(p.content, _query)) continue;
                                 final snip = _snippet(p.content, _query);
                                 if (snip.isEmpty) continue;
                                 shown++;
@@ -244,8 +251,10 @@ class _BookChaptersScreenState extends ConsumerState<BookChaptersScreen> {
   /// ومذيَّلاً بنقاط — حتى تبان العبارة المطابقة نفسها بنتيجة البحث.
   static String _snippet(String text, String query, {int radius = 55}) {
     final clean = text.replaceAll(RegExp(r'\s+'), ' ').trim();
-    final i = clean.indexOf(query);
-    if (i < 0) return '';
+    // موضع أول مطابقة تجاهلاً للتشكيل — النصّ مشكّل والمكتوب ليس كذلك.
+    final hits = arabicMatches(clean, query);
+    if (hits.isEmpty) return '';
+    final i = hits.first.start;
     var start = i - radius;
     if (start <= 0) {
       start = 0;
@@ -336,7 +345,7 @@ class _SectionTitle extends StatelessWidget {
         children: [
           // زر رجوع داخل الشاشة (مع RTL أول عنصر يقعد باليمين البصري).
           IconButton(
-            icon: const Icon(Icons.arrow_forward_rounded,
+            icon: const Icon(Icons.arrow_back_rounded,
                 color: AppColors.primary),
             visualDensity: VisualDensity.compact,
             onPressed: () => Navigator.of(context).maybePop(),
@@ -346,6 +355,7 @@ class _SectionTitle extends StatelessWidget {
             title,
             style: const TextStyle(
               fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.primary,
@@ -369,12 +379,10 @@ class _SearchRow extends StatelessWidget {
   const _SearchRow({
     required this.controller,
     required this.onChanged,
-    required this.onBack,
   });
 
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
-  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -383,66 +391,14 @@ class _SearchRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              height: 45,
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/icons/search_alt.svg',
-                    width: 24,
-                    height: 24,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.charcoalDeep,
-                      BlendMode.srcIn,
-                    ),
-                    placeholderBuilder: (_) => const Icon(
-                      Icons.search,
-                      size: 22,
-                      color: AppColors.charcoalDeep,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      controller: controller,
-                      onChanged: onChanged,
-                      textAlign: TextAlign.right,
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: const InputDecoration(
-                        isCollapsed: true,
-                        filled: false,
-                        contentPadding: EdgeInsets.zero,
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        hintText: 'بحث',
-                        hintStyle: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            child: AppSearchField(
+              controller: controller,
+              onChanged: onChanged,
             ),
           ),
           const SizedBox(width: 5),
           GestureDetector(
-            onTap: onBack,
+            onTap: () => context.pushNamed(RouteNames.bookmarks),
             child: Container(
               width: 98,
               height: 45,
@@ -459,6 +415,7 @@ class _SearchRow extends StatelessWidget {
                     'المفضلة',
                     style: TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,

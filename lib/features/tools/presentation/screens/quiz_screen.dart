@@ -14,6 +14,7 @@ import 'package:anwarsajadia/features/home/presentation/providers/rights_challen
 import 'package:anwarsajadia/features/tools/data/datasources/contest_remote_datasource.dart';
 import 'package:anwarsajadia/features/tools/domain/entities/question.dart';
 import 'package:anwarsajadia/features/tools/presentation/providers/tools_providers.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 class QuizScreen extends ConsumerStatefulWidget {
   const QuizScreen({super.key});
@@ -97,7 +98,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
           textDirection: TextDirection.rtl,
           child: AlertDialog(
             title: const Text('تسليم الإجابات',
-                style: TextStyle(fontFamily: 'NotoNaskhArabic')),
+                style: TextStyle(
+                    fontFamily: 'Inter', fontFamilyFallback: kArabicFontFallback)),
             content: Text(
               'لديك $unanswered سؤالاً دون إجابة. هل تريد التسليم الآن؟',
               style: const TextStyle(fontFamily: 'NotoNaskhArabic'),
@@ -226,7 +228,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
           textDirection: TextDirection.rtl,
           child: AlertDialog(
             title: const Text('بيانات المشارك',
-                style: TextStyle(fontFamily: 'NotoNaskhArabic')),
+                style: TextStyle(
+                    fontFamily: 'Inter', fontFamilyFallback: kArabicFontFallback)),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -370,7 +373,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
       backgroundColor: AppColors.readingSand,
       appBar: AppBar(
         title: Text(l10n.toolsQuiz),
-        centerTitle: true,
+        centerTitle: false,
         backgroundColor: AppColors.readingSand,
         elevation: 0,
       ),
@@ -451,6 +454,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
                                           textAlign: TextAlign.right,
                                           style: const TextStyle(
                                             fontFamily: 'Inter',
+                                            fontFamilyFallback: kArabicFontFallback,
                                             fontSize: 15,
                                             fontWeight: FontWeight.w700,
                                             color: AppColors.cardOliveMuted,
@@ -524,6 +528,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontFamily: 'Inter',
+                                        fontFamilyFallback: kArabicFontFallback,
                                         fontSize: 10,
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.primary,
@@ -557,6 +562,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
                                     'تاريخ الانتهاء : ${formatRightsHijriDate(window.endDay, window.endMonth)}',
                                     style: const TextStyle(
                                       fontFamily: 'Inter',
+                                      fontFamilyFallback: kArabicFontFallback,
                                       fontSize: 10,
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.inkSoft,
@@ -733,7 +739,7 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
                               ? () => _goToQuestion(
                                   _currentQuestionIndex - 1, totalQuestions)
                               : null,
-                          icon: const Icon(Icons.chevron_right, size: 20),
+                          icon: const Icon(Icons.chevron_left, size: 20),
                           label: const Text(
                             'السابق',
                             style: TextStyle(
@@ -758,7 +764,10 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
                               ? () => _goToQuestion(
                                   _currentQuestionIndex + 1, totalQuestions)
                               : null,
-                          icon: const Icon(Icons.chevron_left, size: 20),
+                          // نفس اصطلاح السابق/التالي بشاشات القراءة الأخرى
+                          // (chapter_reading، pdf_reader، sahifa_prayer_reading):
+                          // السابق chevron_left والتالي chevron_right.
+                          icon: const Icon(Icons.chevron_right, size: 20),
                           label: const Text(
                             'التالي',
                             style: TextStyle(
@@ -884,7 +893,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
           Text(
             isPassing ? 'أحسنت! نتيجة رائعة' : 'حاول مرة أخرى',
             style: TextStyle(
-              fontFamily: 'Amiri',
+              fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
@@ -973,7 +983,9 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(Icons.arrow_forward),
+              // arrow_back ينعكس مع RTL فيُرسم «→» — اتجاه الرجوع الصحيح
+              // بالعربية. arrow_forward كان يُرسم «←» أي عكس المطلوب (ملاحظة 2).
+              icon: const Icon(Icons.arrow_back),
               label: const Text(
                 'العودة',
                 style: TextStyle(
@@ -1002,7 +1014,8 @@ class _QuizScreenState extends ConsumerState<QuizScreen>
           Text(
             'مراجعة الإجابات',
             style: TextStyle(
-              fontFamily: 'Amiri',
+              fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: isDark

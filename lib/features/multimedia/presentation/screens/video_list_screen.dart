@@ -29,7 +29,7 @@ class VideoListScreen extends ConsumerWidget {
           l10n.mediaVideos,
           style: AppTextStyles.headlineMedium.copyWith(color: Colors.white),
         ),
-        centerTitle: true,
+        centerTitle: false,
         elevation: 0,
       ),
       body: playlistsAsync.when(

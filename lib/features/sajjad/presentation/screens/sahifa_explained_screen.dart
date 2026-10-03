@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:anwarsajadia/core/router/nav_extensions.dart';
+import 'package:anwarsajadia/core/utils/arabic_search.dart';
+import 'package:anwarsajadia/core/widgets/app_search_field.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/core/theme/app_text_styles.dart';
@@ -15,7 +16,10 @@ import 'package:anwarsajadia/core/widgets/loading_indicator.dart';
 import 'package:anwarsajadia/features/bookmarks/data/bookmarks_storage.dart';
 import 'package:anwarsajadia/features/bookmarks/presentation/providers/bookmarks_provider.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
+import 'package:anwarsajadia/features/sajjad/data/repositories/asset_sajjad_repository.dart'
+    show sahifaPrayerName;
 import 'package:anwarsajadia/features/sajjad/presentation/providers/sajjad_providers.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // شاشة «الصحيفة السجادية»: قائمة الأدعية.
 
@@ -56,7 +60,9 @@ class _SahifaExplainedScreenState extends ConsumerState<SahifaExplainedScreen> {
                 : prayers.where((p) {
                     final title = (p['prayer_title'] as String?) ?? '';
                     final topic = (p['prayer_topic'] as String?) ?? '';
-                    return title.contains(_query) || topic.contains(_query);
+                    return arabicContains(sahifaPrayerName(p), _query) ||
+                        arabicContains(title, _query) ||
+                        arabicContains(topic, _query);
                   }).toList();
 
             return Column(
@@ -66,7 +72,6 @@ class _SahifaExplainedScreenState extends ConsumerState<SahifaExplainedScreen> {
                 _SearchRow(
                   controller: _searchController,
                   onChanged: (v) => setState(() => _query = v),
-                  onBack: () => context.backOrHome(),
                 ),
                 Expanded(
                   child: filtered.isEmpty
@@ -81,12 +86,9 @@ class _SahifaExplainedScreenState extends ConsumerState<SahifaExplainedScreen> {
                               itemBuilder: (context, index) {
                                 final prayer = filtered[index];
                                 final number = prayer['prayer_number'] as int;
-                                final title =
-                                    (prayer['prayer_title'] as String?) ??
-                                        'الدعاء ${number.toArabicNumeral()}';
-                                final phrases =
-                                    (prayer['phrases'] as List<dynamic>?) ??
-                                        const <dynamic>[];
+                                // العنوان اسمُ الدعاء لا رقمه؛ والرقم يظهر
+                                // في الحقل الجانبي كي يبقى مرجعاً للترتيب.
+                                final title = sahifaPrayerName(prayer);
                                 final bookmarkKey =
                                     'chapter-4-${4000 + number}-all';
                                 final isFav =
@@ -94,7 +96,7 @@ class _SahifaExplainedScreenState extends ConsumerState<SahifaExplainedScreen> {
                                 return FigmaListItem(
                                   title: title,
                                   subtitle:
-                                      '${phrases.length.toArabicNumeral()} فقرة',
+                                      'الدعاء ${number.toArabicNumeral()}',
                                   isFavorite: isFav,
                                   onFavoriteTap: () => ref
                                       .read(bookmarksProvider.notifier)
@@ -137,16 +139,17 @@ class _SectionTitle extends StatelessWidget {
         children: [
           // زر رجوع داخل الشاشة (مع RTL أول عنصر يقعد باليمين البصري).
           IconButton(
-            icon: const Icon(Icons.arrow_forward_rounded,
+            icon: const Icon(Icons.arrow_back_rounded,
                 color: AppColors.primary),
             visualDensity: VisualDensity.compact,
             onPressed: () => Navigator.of(context).maybePop(),
           ),
           const SizedBox(width: 4),
           const Text(
-            'الـصـحـيـفــة الـسـجـاديــة',
+            'شـرح الـصـحـيـفــة الـسـجـاديــة',
             style: TextStyle(
               fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.primary,
@@ -173,12 +176,10 @@ class _SearchRow extends StatelessWidget {
   const _SearchRow({
     required this.controller,
     required this.onChanged,
-    required this.onBack,
   });
 
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
-  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -191,67 +192,15 @@ class _SearchRow extends StatelessWidget {
         children: [
           // حقل البحث
           Expanded(
-            child: Container(
-              height: 45,
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/icons/search_alt.svg',
-                    width: 24,
-                    height: 24,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.charcoalDeep,
-                      BlendMode.srcIn,
-                    ),
-                    placeholderBuilder: (_) => const Icon(
-                      Icons.search,
-                      size: 22,
-                      color: AppColors.charcoalDeep,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      controller: controller,
-                      onChanged: onChanged,
-                      textAlign: TextAlign.right,
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: const InputDecoration(
-                        isCollapsed: true,
-                        filled: false,
-                        contentPadding: EdgeInsets.zero,
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        hintText: 'بحث',
-                        hintStyle: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12.5,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            child: AppSearchField(
+              controller: controller,
+              onChanged: onChanged,
             ),
           ),
           const SizedBox(width: 5),
-          // حبّة المفضلة (قلب داخل رقاقة كريمية مستديرة)
+          // حبّة المفضلة (قلب داخل رقاقة كريمية مستديرة) — تفتح شاشة المحفوظات.
           GestureDetector(
-            onTap: onBack,
+            onTap: () => context.pushNamed(RouteNames.bookmarks),
             child: Container(
               width: 98,
               height: 45,
@@ -270,6 +219,7 @@ class _SearchRow extends StatelessWidget {
                     'المفضلة',
                     style: TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,

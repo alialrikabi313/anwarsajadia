@@ -28,8 +28,20 @@ class ApiException implements Exception {
   final String message;
   final List<String> errors;
 
+  /// انقطاع من جهة الخادم لا من التطبيق (502/503/504): خدمة موقوفة أو تحت
+  /// الصيانة أو بوّابة لا تجيب. نفرّقها حتى نصارح المستخدم بالسبب.
+  bool get isServerDown =>
+      statusCode == 502 || statusCode == 503 || statusCode == 504;
+
   /// الرسالة اللي تنعرض للمستخدم: نفضّل أخطاء الحقول لأنها أدقّ من رسالة عامة.
-  String get displayMessage => errors.isNotEmpty ? errors.join('\n') : message;
+  String get displayMessage {
+    if (errors.isNotEmpty) return errors.join('\n');
+    if (isServerDown) {
+      return 'خدمة المؤسسة متوقّفة مؤقتاً على الخادم، والمحتوى سيعود فور '
+          'عودتها. ما نُزّل سابقاً يبقى متاحاً بلا إنترنت.';
+    }
+    return message;
+  }
 
   @override
   String toString() => 'ApiException($statusCode): $message';

@@ -2,19 +2,24 @@
 // فلا تعدّله ارتجالاً. الواجهة كلها Inter، والقراءة بخطوط عربية مخصّصة.
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 abstract final class AppTextStyles {
   // ──────────────────────────────────────────────
   // عرض — أرقام كبيرة مثل درجات البوصلة
   // ──────────────────────────────────────────────
-  static TextStyle get displayLarge => GoogleFonts.inter(
+  static TextStyle get displayLarge => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 28,
         fontWeight: FontWeight.w600,
         height: 1.1,
       );
 
-  static TextStyle get displayMedium => GoogleFonts.inter(
+  static TextStyle get displayMedium => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 24,
         fontWeight: FontWeight.w500,
         height: 1.2,
@@ -23,19 +28,25 @@ abstract final class AppTextStyles {
   // ──────────────────────────────────────────────
   // عناوين الصفحات ورؤوس الأقسام
   // ──────────────────────────────────────────────
-  static TextStyle get headlineLarge => GoogleFonts.inter(
+  static TextStyle get headlineLarge => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 20,
         fontWeight: FontWeight.w700,
         height: 1.3,
       );
 
-  static TextStyle get headlineMedium => GoogleFonts.inter(
+  static TextStyle get headlineMedium => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 17,
         fontWeight: FontWeight.w600,
         height: 1.3,
       );
 
-  static TextStyle get headlineSmall => GoogleFonts.inter(
+  static TextStyle get headlineSmall => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 16,
         fontWeight: FontWeight.w600,
         height: 1.4,
@@ -44,19 +55,25 @@ abstract final class AppTextStyles {
   // ──────────────────────────────────────────────
   // عناوين البطاقات وعناصر القوائم
   // ──────────────────────────────────────────────
-  static TextStyle get titleLarge => GoogleFonts.inter(
+  static TextStyle get titleLarge => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 14,
         fontWeight: FontWeight.w600,
         height: 1.4,
       );
 
-  static TextStyle get titleMedium => GoogleFonts.inter(
+  static TextStyle get titleMedium => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 13,
         fontWeight: FontWeight.w600,
         height: 1.4,
       );
 
-  static TextStyle get titleSmall => GoogleFonts.inter(
+  static TextStyle get titleSmall => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 12,
         fontWeight: FontWeight.w600,
         height: 1.4,
@@ -65,19 +82,25 @@ abstract final class AppTextStyles {
   // ──────────────────────────────────────────────
   // المتن — فقرات ووصف
   // ──────────────────────────────────────────────
-  static TextStyle get bodyLarge => GoogleFonts.inter(
+  static TextStyle get bodyLarge => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 14,
         fontWeight: FontWeight.w400,
         height: 1.5,
       );
 
-  static TextStyle get bodyMedium => GoogleFonts.inter(
+  static TextStyle get bodyMedium => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 13,
         fontWeight: FontWeight.w400,
         height: 1.5,
       );
 
-  static TextStyle get bodySmall => GoogleFonts.inter(
+  static TextStyle get bodySmall => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 12,
         fontWeight: FontWeight.w400,
         height: 1.4,
@@ -86,25 +109,33 @@ abstract final class AppTextStyles {
   // ──────────────────────────────────────────────
   // تسميات وتعليقات صغيرة
   // ──────────────────────────────────────────────
-  static TextStyle get labelLarge => GoogleFonts.inter(
+  static TextStyle get labelLarge => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 13,
         fontWeight: FontWeight.w500,
         height: 1.3,
       );
 
-  static TextStyle get labelMedium => GoogleFonts.inter(
+  static TextStyle get labelMedium => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 12,
         fontWeight: FontWeight.w500,
         height: 1.3,
       );
 
-  static TextStyle get labelSmall => GoogleFonts.inter(
+  static TextStyle get labelSmall => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 11,
         fontWeight: FontWeight.w500,
         height: 1.3,
       );
 
-  static TextStyle get caption => GoogleFonts.inter(
+  static TextStyle get caption => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 10,
         fontWeight: FontWeight.w400,
         height: 1.3,
@@ -138,38 +169,52 @@ abstract final class AppTextStyles {
   // ──────────────────────────────────────────────
   // أنماط لمواضع بعينها
   // ──────────────────────────────────────────────
-  static TextStyle get hijriDate => GoogleFonts.inter(
+  static TextStyle get hijriDate => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 13,
         fontWeight: FontWeight.w500,
       );
 
-  static TextStyle get navLabel => GoogleFonts.inter(
+  static TextStyle get navLabel => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 11,
         fontWeight: FontWeight.w500,
       );
 
-  static TextStyle get buttonLabel => GoogleFonts.inter(
+  static TextStyle get buttonLabel => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 13,
         fontWeight: FontWeight.w600,
       );
 
-  static TextStyle get heroTitle => GoogleFonts.inter(
+  static TextStyle get heroTitle => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 17,
         fontWeight: FontWeight.w700,
         height: 1.3,
       );
 
-  static TextStyle get sectionTab => GoogleFonts.inter(
+  static TextStyle get sectionTab => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 13,
         fontWeight: FontWeight.w600,
       );
 
-  static TextStyle get listItemTitle => GoogleFonts.inter(
+  static TextStyle get listItemTitle => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 12,
         fontWeight: FontWeight.w600,
       );
 
-  static TextStyle get listItemMeta => GoogleFonts.inter(
+  static TextStyle get listItemMeta => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 11,
         fontWeight: FontWeight.w400,
       );
@@ -181,19 +226,25 @@ abstract final class AppTextStyles {
   );
 
   static const surahName = TextStyle(
-    fontFamily: 'Amiri',
+    fontFamily: 'Inter',
+    fontFamilyFallback: kArabicFontFallback,
     fontSize: 20,
     fontWeight: FontWeight.bold,
   );
 
-  // جهات البوصلة (ش / ج / ش / غ) — خط Martel لأن حروفه أوضح بالمقاس الصغير
-  static TextStyle get compassDirection => GoogleFonts.martel(
+  // جهات البوصلة (ش / ج / ش / غ) — بخط Amiri المضمّن لأن حروفه العربية أوضح
+  // بالمقاس الصغير. كان Martel يُجلب من خوادم Google وقت التشغيل.
+  static TextStyle get compassDirection => TextStyle(
+        fontFamily: 'Amiri',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 11,
         fontWeight: FontWeight.w700,
       );
 
   // درجة البوصلة الكبيرة (مثل «260°»)
-  static TextStyle get compassDegree => GoogleFonts.inter(
+  static TextStyle get compassDegree => TextStyle(
+        fontFamily: 'Inter',
+        fontFamilyFallback: kArabicFontFallback,
         fontSize: 24,
         fontWeight: FontWeight.w500,
       );

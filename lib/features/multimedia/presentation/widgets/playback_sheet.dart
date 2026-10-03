@@ -1,9 +1,12 @@
 // لوحة التشغيل العامة، تنفتح من زر الصوت بحبّة الرأس.
 
+import 'dart:ui' show ImageFilter;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/features/multimedia/presentation/providers/audio_player_controller.dart';
 
 const _ink = AppColors.primary;
@@ -30,12 +33,20 @@ Future<void> showPlaybackSheet(BuildContext context) async {
         child: _PlaybackSheet(),
       ),
       transitionBuilder: (context, anim, _, child) {
-        return SlideTransition(
-          position: Tween<Offset>(
-            begin: const Offset(0, -1),
-            end: Offset.zero,
-          ).animate(CurvedAnimation(parent: anim, curve: Curves.easeOut)),
-          child: child,
+        // ضبابية خفيفة تتصاعد مع نزول اللوحة، فوق تعتيم الحاجز — يفصل اللوحة
+        // عن المحتوى خلفها بدل أن تطفو عليه (ملاحظة 22).
+        return BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 3 * anim.value,
+            sigmaY: 3 * anim.value,
+          ),
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, -1),
+              end: Offset.zero,
+            ).animate(CurvedAnimation(parent: anim, curve: Curves.easeOut)),
+            child: child,
+          ),
         );
       },
     );
@@ -96,7 +107,7 @@ class _PlaybackSheetState extends ConsumerState<_PlaybackSheet> {
           left: 28,
           right: 28,
           top: 22 + MediaQuery.of(context).padding.top,
-          bottom: 34,
+          bottom: 16,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -241,6 +252,29 @@ class _PlaybackSheetState extends ConsumerState<_PlaybackSheet> {
                 );
               },
             ),
+            // ── مقبض سفلي: يُسحب لأعلى (أو يُضغط) فتنغلق اللوحة — ملاحظة 22.
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => Navigator.of(context).maybePop(),
+              // اللوحة مرساة بالأعلى، فسحب المقبض لأعلى هو حركة الإغلاق.
+              onVerticalDragEnd: (d) {
+                if ((d.primaryVelocity ?? 0) < 0) {
+                  Navigator.of(context).maybePop();
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.only(top: 18, bottom: 2),
+                alignment: Alignment.center,
+                child: Container(
+                  width: 46,
+                  height: 4.5,
+                  decoration: BoxDecoration(
+                    color: _ink.withValues(alpha: 0.45),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
         ),
@@ -250,6 +284,7 @@ class _PlaybackSheetState extends ConsumerState<_PlaybackSheet> {
 
   static const _timeStyle = TextStyle(
     fontFamily: 'Inter',
+    fontFamilyFallback: kArabicFontFallback,
     fontSize: 14,
     fontWeight: FontWeight.w700,
     color: _ink,

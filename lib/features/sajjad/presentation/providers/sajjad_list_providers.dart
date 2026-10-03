@@ -5,6 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/features/sajjad/data/datasources/local_asset_data_source.dart';
+import 'package:anwarsajadia/core/utils/arabic_text_format.dart'
+    show unifyDuaSpelling;
+import 'package:anwarsajadia/features/sajjad/data/repositories/asset_sajjad_repository.dart'
+    show sahifaDuaShortTitle, sahifaPrayerName;
 import 'package:anwarsajadia/features/sajjad/presentation/providers/sajjad_providers.dart';
 
 /// مجموعة صفوف تحت فصل أب واحد. ترتيب المجموعات يتبع ملف المصدر حرفياً حتى
@@ -48,6 +52,21 @@ class SajjadListItem {
 
 const _arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
 
+/// عنوان موضوع بالقائمة الرئيسية. حين يكون [duaNumber] معلوماً (أي: الموضوع
+/// أحد أدعية الصحيفة) نرجّح عنوانه المختصر من [sahifaDuaShortTitle] — عناوين
+/// المصدر الخام مواضيعُ طويلة تصف الظرف لا اسماً موجزاً. غيرها (فهرس،
+/// مقدّمات الملحقات) يُسقط منه بادئة «وكان من» فقط.
+///
+/// عناوين أدعية الأيام تنتهي باسم اليوم («… في يوم السبت»)، وصفُّ القائمة
+/// سطرٌ واحد يقصّ آخر العنوان — فكان اسم اليوم أوّلَ ما يضيع. الحذف يقصّر
+/// العنوان ثمانية أحرف بلا أن ينقص من معناه.
+String sajjadSubjectTitle(String title, {int? duaNumber}) {
+  final shortTitle = sahifaDuaShortTitle(duaNumber);
+  if (shortTitle != null) return shortTitle;
+  final t = unifyDuaSpelling(title.trim());
+  return t.startsWith('وكان من ') ? t.substring('وكان من '.length) : t;
+}
+
 String _arabicNum(int n) {
   return n.toString().split('').map((d) {
     final digit = int.tryParse(d);
@@ -83,8 +102,17 @@ final sahifaSectionsProvider =
         key: 'chapter-1-$domainChapterId-$i',
         bookId: 1,
         chapterId: domainChapterId,
-        title: subject.title,
-        subtitle: 'عدد العبارات : ${_arabicNum(subject.phrases.length)}',
+        title: sajjadSubjectTitle(
+          subject.title,
+          // الفصل ١ بـal-sahifa.json هو أدعية الصحيفة نفسها؛ رقم الدعاء
+          // ترتيبه فيه (١-based) — الملحقات (٢، ٣) بلا عنوان مختصر مقابل.
+          duaNumber: chapter.id == 1 ? i + 1 : null,
+        ),
+        // رقم الدعاء لا عدد عباراته — الأنسب لتصفّح كتاب دعائي بالفصل
+        // نفسه (chapter.id == 1)؛ غيره (الملحقات) يبقى بعدد العبارات.
+        subtitle: chapter.id == 1
+            ? 'الدعاء ${_arabicNum(i + 1)}'
+            : '${_arabicNum(subject.phrases.length)} عبارة',
         routeName: RouteNames.chapterReading,
         pathParameters: {
           'bookId': '1',
@@ -166,14 +194,14 @@ final sahifaCompleteItemsProvider =
   return prayers.map((raw) {
     final p = raw as Map<String, dynamic>;
     final number = p['prayer_number'] as int;
-    final title = (p['prayer_title'] as String?) ?? 'الدعاء $number';
-    final phraseCount = (p['phrases'] as List<dynamic>?)?.length ?? 0;
+    // اسم الدعاء لا رقمه؛ والرقم في الحقل الجانبي مرجعاً للترتيب.
+    final title = sahifaPrayerName(p);
     return SajjadListItem(
       key: 'chapter-4-${4000 + number}-all',
       bookId: 4,
       chapterId: 4000 + number,
       title: title,
-      subtitle: 'عدد الفقرات : ${_arabicNum(phraseCount)}',
+      subtitle: 'الدعاء ${_arabicNum(number)}',
       routeName: RouteNames.sahifaPrayerReading,
       pathParameters: {'prayerNumber': '$number'},
     );
@@ -222,11 +250,11 @@ final sajjadTabSectionsProvider =
 String sajjadBookTitle(int bookId) {
   switch (bookId) {
     case 1:
-      return 'الصحيفة السجّادية';
+      return 'الصحيفة السجّادية الكاملة';
     case 2:
       return 'رسالة الحقوق';
     case 3:
-      return 'مسند الإمام زين العابدين';
+      return 'مسند الإمام زين العابدين (عليه السلام)';
     case 4:
       return 'شرح الصحيفة السجادية';
     default:

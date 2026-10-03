@@ -31,10 +31,19 @@ class ChapterSubject {
     required this.id,
     required this.title,
     required this.phrases,
+    this.intro,
   });
 
   final String id;
+
+  /// العنوان المعروض بالقوائم والترويسة — مختصرٌ بأدعية الصحيفة.
   final String title;
+
+  /// العبارة الفاصلة التي تتصدّر الدعاء بالمصدر («وكان من دعاؤه (عليه
+  /// السلام) إذا…»). تُعرض فوق المتن، ولا تُستعمل عنواناً لأنها طويلة.
+  /// null لما ما يكون للموضوع عبارةٌ فاصلة (الفصول والمقدّمات).
+  final String? intro;
+
   final List<ChapterPhrase> phrases;
 }
 

@@ -36,9 +36,6 @@ abstract final class RouteNames {
   static const String videoPlayer = 'video-player';
   static const String videoPlaylist = 'video-playlist';
   static const String youtubePlayer = 'youtube-player';
-  static const String audioList = 'audio-list';
-  static const String audioPlayer = 'audio-player';
-  static const String photoGallery = 'photo-gallery';
   static const String photoViewer = 'photo-viewer';
 
   // الأدوات والخدمات
@@ -51,7 +48,10 @@ abstract final class RouteNames {
 
   static const String bookmarks = 'bookmarks';
   static const String globalSearch = 'global-search';
+  static const String audioList = 'audio-list';
+  static const String audioPlayer = 'audio-player';
   static const String notifications = 'notifications';
+  static const String hadithArchive = 'hadith-archive';
 
   // المؤسسة
   static const String activities = 'activities';

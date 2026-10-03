@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:anwarsajadia/core/utils/arabic_search.dart';
 import 'package:anwarsajadia/core/router/nav_extensions.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
@@ -13,17 +14,32 @@ import 'package:anwarsajadia/features/bookmarks/data/bookmarks_storage.dart';
 import 'package:anwarsajadia/features/bookmarks/presentation/providers/bookmarks_provider.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/sajjad/presentation/providers/ziyarat_list_provider.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // قائمة الزيارات.
 
 /// نفس نمط القوائم بفيغما: رأس، عنوان قسم بشرطتين، صف بحث، ثم الصفوف.
 /// القائمة نفسها تُقرأ من `assets/data/ziyarat_index.json` عبر
 /// [ziyaratIndexProvider] — ما تنكتب بالواجهة أبداً.
-class ZiyaratListScreen extends ConsumerWidget {
+class ZiyaratListScreen extends ConsumerStatefulWidget {
   const ZiyaratListScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ZiyaratListScreen> createState() => _ZiyaratListScreenState();
+}
+
+class _ZiyaratListScreenState extends ConsumerState<ZiyaratListScreen> {
+  final TextEditingController _searchCtrl = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final bookmarks = ref.watch(bookmarksProvider);
     final ziyaratAsync = ref.watch(ziyaratIndexProvider);
     return Directionality(
@@ -34,7 +50,10 @@ class ZiyaratListScreen extends ConsumerWidget {
           children: [
             const HomeHeader(dark: true),
             const _SectionTitle(),
-            _SearchRow(onBack: () => context.backOrHome()),
+            _SearchRow(
+              controller: _searchCtrl,
+              onChanged: (v) => setState(() => _query = v.trim()),
+            ),
             Expanded(
               child: ziyaratAsync.when(
                 loading: () => const Center(
@@ -52,7 +71,14 @@ class ZiyaratListScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                data: (ziyarat) {
+                data: (all) {
+                  // ترشيح بالعنوان — الحقل كان صورة ساكنة بلا أثر.
+                  final ziyarat = _query.isEmpty
+                      ? all
+                      : [
+                          for (final z in all)
+                            if (arabicContains(z.title, _query)) z,
+                        ];
                   if (ziyarat.isEmpty) {
                     return Center(
                       child: Text(
@@ -115,19 +141,18 @@ class _SectionTitle extends StatelessWidget {
       // أول عنصر بالصف = اليمين، فالترتيب يمين←يسار: فاصل قصير، عنوان، فاصل طويل.
       child: Row(
         children: [
-          SizedBox(
-            width: 12,
-            child: Container(
-              height: 0.6,
-              color: AppColors.borderLight.withValues(alpha: 0.6),
-            ),
+          // زر رجوع داخل الشاشة (مع RTL أول عنصر يقعد باليمين البصري) — كان
+          // مفقوداً هنا وحبّة «المفضلة» بصفّ البحث تقوم مقامه خطأً.
+          IconButton(
+            icon: const Icon(Icons.arrow_back_rounded,
+                color: AppColors.primary),
+            visualDensity: VisualDensity.compact,
+            onPressed: () => context.backOrHome(),
           ),
-          const SizedBox(width: 8),
           Text(
             'الـزيـــارات',
             style: AppTextStyles.headlineSmall.copyWith(
               color: AppColors.textPrimaryLight,
-              fontFamily: 'Amiri',
               fontWeight: FontWeight.w700,
               letterSpacing: 1.5,
             ),
@@ -146,9 +171,13 @@ class _SectionTitle extends StatelessWidget {
 }
 
 class _SearchRow extends StatelessWidget {
-  const _SearchRow({required this.onBack});
+  const _SearchRow({
+    required this.controller,
+    required this.onChanged,
+  });
 
-  final VoidCallback onBack;
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -187,13 +216,35 @@ class _SearchRow extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Text(
-                    'بحث',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 11,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
+                  Expanded(
+                    child: TextField(
+                      controller: controller,
+                      onChanged: onChanged,
+                      textAlign: TextAlign.right,
+                      textAlignVertical: TextAlignVertical.center,
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                      decoration: const InputDecoration(
+                        isCollapsed: true,
+                        filled: false,
+                        contentPadding: EdgeInsets.zero,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'بحث',
+                        hintStyle: TextStyle(
+                          fontFamily: 'Inter',
+                          fontFamilyFallback: kArabicFontFallback,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black45,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -202,7 +253,7 @@ class _SearchRow extends StatelessWidget {
           ),
           const SizedBox(width: 5),
           GestureDetector(
-            onTap: onBack,
+            onTap: () => context.pushNamed(RouteNames.bookmarks),
             child: Container(
               width: 98,
               height: 45,
@@ -219,6 +270,7 @@ class _SearchRow extends StatelessWidget {
                     'المفضلة',
                     style: TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 11,
                       fontWeight: FontWeight.w400,
                       color: Colors.black,
@@ -298,7 +350,8 @@ class _ZiyaraRow extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontFamily: 'NotoNaskhArabic',
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: AppColors.textPrimaryLight,
@@ -310,7 +363,8 @@ class _ZiyaraRow extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        fontFamily: 'NotoNaskhArabic',
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 11,
                         color: AppColors.shrineIconBrown,
                       ),

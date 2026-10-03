@@ -14,8 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Chapter {
 
- int get id; int get bookId; int get orderIndex; String get title; String get content; String? get commentary;/// بيانات العبارات المهيكلة للكتب ذات البنية (الصحيفة، رسالة الحقوق).
-/// يكون null للمقالات والسيرة.
+ int get id; int get bookId; int get orderIndex; String get title; String get content; String? get commentary;/// العبارات المهيكلة للكتب ذات البنية. null بالمقالات والسيرة.
  List<ChapterSubject>? get subjects;
 /// Create a copy of Chapter
 /// with the given fields replaced by the non-null parameter values.
@@ -223,11 +222,9 @@ class _Chapter implements Chapter {
 @override final  String title;
 @override final  String content;
 @override final  String? commentary;
-/// بيانات العبارات المهيكلة للكتب ذات البنية (الصحيفة، رسالة الحقوق).
-/// يكون null للمقالات والسيرة.
+/// العبارات المهيكلة للكتب ذات البنية. null بالمقالات والسيرة.
  final  List<ChapterSubject>? _subjects;
-/// بيانات العبارات المهيكلة للكتب ذات البنية (الصحيفة، رسالة الحقوق).
-/// يكون null للمقالات والسيرة.
+/// العبارات المهيكلة للكتب ذات البنية. null بالمقالات والسيرة.
 @override@JsonKey() List<ChapterSubject>? get subjects {
   final value = _subjects;
   if (value == null) return null;

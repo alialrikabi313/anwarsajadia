@@ -12,6 +12,7 @@ class ReadingProgress {
     required this.bookTitle,
     required this.timestamp,
     this.subjectIndex,
+    this.scrollOffset,
   });
 
   factory ReadingProgress.fromJson(Map<String, dynamic> json) {
@@ -22,6 +23,7 @@ class ReadingProgress {
       bookTitle: json['bookTitle'] as String,
       timestamp: DateTime.parse(json['timestamp'] as String),
       subjectIndex: json['subjectIndex'] as int?,
+      scrollOffset: (json['scrollOffset'] as num?)?.toDouble(),
     );
   }
 
@@ -32,6 +34,10 @@ class ReadingProgress {
   final DateTime timestamp;
   final int? subjectIndex;
 
+  /// موضع التمرير داخل الفصل — به تُستأنف القراءة من حيث وقفت لا من رأس
+  /// السورة. تقريبيٌّ بطبعه: يتغيّر إن غيّر القارئ حجم الخطّ.
+  final double? scrollOffset;
+
   Map<String, dynamic> toJson() => {
         'chapterId': chapterId,
         'bookId': bookId,
@@ -39,14 +45,27 @@ class ReadingProgress {
         'bookTitle': bookTitle,
         'timestamp': timestamp.toIso8601String(),
         if (subjectIndex != null) 'subjectIndex': subjectIndex,
+        if (scrollOffset != null) 'scrollOffset': scrollOffset,
       };
 }
 
 class ReadingProgressStorage {
   static const _key = 'last_reading_progress';
 
-  ReadingProgress? load() {
-    final jsonString = sharedPrefs.getString(_key);
+  /// خانةٌ مستقلّة لكل كتاب إلى جانب الخانة العامة.
+  ///
+  /// الخانة العامة تحمل آخر ما قُرئ أياً كان كتابه؛ فلو فُتح فصلٌ من
+  /// السجادية بعد سورةٍ من القرآن، دهس موضعَها — وضاعت «إكمال القراءة»
+  /// الخاصة بالقرآن. لذا نحفظ نسخةً مفتاحُها رقمُ الكتاب أيضاً.
+  static String _bookKey(int bookId) => 'last_reading_progress_b$bookId';
+
+  ReadingProgress? load() => _read(_key);
+
+  /// آخر موضعٍ في كتابٍ بعينه (0 = القرآن، 1..5 كتب السجادية).
+  ReadingProgress? loadForBook(int bookId) => _read(_bookKey(bookId));
+
+  ReadingProgress? _read(String key) {
+    final jsonString = sharedPrefs.getString(key);
     if (jsonString == null) return null;
     return ReadingProgress.fromJson(
       json.decode(jsonString) as Map<String, dynamic>,
@@ -54,7 +73,9 @@ class ReadingProgressStorage {
   }
 
   Future<void> save(ReadingProgress progress) async {
-    await sharedPrefs.setString(_key, json.encode(progress.toJson()));
+    final encoded = json.encode(progress.toJson());
+    await sharedPrefs.setString(_key, encoded);
+    await sharedPrefs.setString(_bookKey(progress.bookId), encoded);
   }
 
   Future<void> clear() async {

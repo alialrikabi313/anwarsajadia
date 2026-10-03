@@ -9,6 +9,7 @@ import 'package:anwarsajadia/core/utils/helpers/hijri_calendar_provider.dart';
 import 'package:anwarsajadia/features/home/data/occasions_data.dart';
 import 'package:anwarsajadia/features/home/domain/entities/occasion.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 /// كاروسيل بوسترات (بطاقة بإطار فاتح والبطاقات الجانبية تطلّ من الأطراف) مع
 /// نقاط، وتحته بطاقة كريمية فيها التاريخ الهجري للمناسبة ووصفها. البيانات
@@ -87,7 +88,7 @@ class _OccasionsScreenState extends ConsumerState<OccasionsScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_forward_rounded),
+                    icon: const Icon(Icons.arrow_back_rounded),
                     onPressed: () => context.backOrHome(),
                     color: AppColors.primary,
                   ),
@@ -97,6 +98,7 @@ class _OccasionsScreenState extends ConsumerState<OccasionsScreen> {
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: AppColors.primary,
@@ -204,6 +206,7 @@ class _OccasionsScreenState extends ConsumerState<OccasionsScreen> {
                           textAlign: TextAlign.right,
                           style: const TextStyle(
                             fontFamily: 'Inter',
+                            fontFamilyFallback: kArabicFontFallback,
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
                             color: AppColors.primaryDark,
@@ -241,7 +244,8 @@ class _OccasionsScreenState extends ConsumerState<OccasionsScreen> {
                                 occ.name,
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(
-                                  fontFamily: 'NotoNaskhArabic',
+                                  fontFamily: 'Inter',
+                                  fontFamilyFallback: kArabicFontFallback,
                                   fontSize: 15.5,
                                   fontWeight: FontWeight.w700,
                                   height: 1.6,

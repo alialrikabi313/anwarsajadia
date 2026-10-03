@@ -6,9 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:anwarsajadia/core/utils/arabic_search.dart';
 import 'package:anwarsajadia/core/router/nav_extensions.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/core/theme/app_text_styles.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/core/utils/extensions/string_extensions.dart';
 import 'package:anwarsajadia/core/utils/helpers/share_helper.dart';
 import 'package:anwarsajadia/core/widgets/app_error_widget.dart';
@@ -25,11 +27,11 @@ import 'package:anwarsajadia/features/sajjad/presentation/providers/sajjad_provi
 
 /// عناوين الكتب لرأس القسم ولنسبة المحفوظة لكتابها.
 const _bookTitles = <int, String>{
-  1: 'الصحيفة السجّادية',
+  1: 'الصحيفة السجّادية الكاملة',
   2: 'رسالة الحقوق',
-  3: 'سيرة الإمام زين العابدين',
-  4: 'مسند الإمام زين العابدين',
-  5: 'مقامات الإمام زين العابدين',
+  3: 'سيرة الإمام زين العابدين (عليه السلام)',
+  4: 'مسند الإمام زين العابدين (عليه السلام)',
+  5: 'مقامات الإمام زين العابدين (عليه السلام)',
 };
 
 /// قراءة فصل واحد، بنفس أسلوب النص المتّصل اللي بشرح الصحيفة: رأس + عنوان
@@ -56,10 +58,46 @@ class _ChapterReadingScreenState extends ConsumerState<ChapterReadingScreen> {
   // آخر فصل/موضوع انحفظ تقدّمه — بيه نمنع إعادة الحفظ بكل إعادة بناء.
   String? _savedProgressKey;
 
+  // ── البحث داخل الفصل ──
+  final ScrollController _scroll = ScrollController();
+  final TextEditingController _searchCtrl = TextEditingController();
+  String _query = '';
+  int _matchIndex = 0;
+  // مفتاح لكل مطابقة، يُملأ أثناء بناء المتن، فنقفز إليها بالتنقّل.
+  final List<GlobalKey> _matchKeys = [];
+
   @override
   void initState() {
     super.initState();
     _currentSubjectIndex = widget.initialSubjectIndex;
+  }
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  /// عدد مرات ورود عبارة البحث في متن الفصل المعروض.
+  int _countMatches(String text) {
+    // مطابقة متسامحة مع التشكيل: النصّ مشكّل والمستخدم يكتب بلا تشكيل.
+    return arabicMatches(text, _query).length;
+  }
+
+  void _jumpTo(int i) {
+    if (_matchKeys.isEmpty) return;
+    final idx = i % _matchKeys.length;
+    setState(() => _matchIndex = idx);
+    final ctx = _matchKeys[idx].currentContext;
+    if (ctx != null) {
+      Scrollable.ensureVisible(
+        ctx,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+        alignment: 0.3,
+      );
+    }
   }
 
   void _goToSubject(int index, int maxIndex) {
@@ -153,28 +191,78 @@ class _ChapterReadingScreenState extends ConsumerState<ChapterReadingScreen> {
               children: [
                 const HomeHeader(dark: true),
                 _SectionTitle(title: bookTitle),
-                _SearchRow(onBack: () => context.backOrHome()),
+                _SearchRow(
+                  onBack: () => context.backOrHome(),
+                  controller: _searchCtrl,
+                  matchCount: _countMatches(
+                    phrases.isNotEmpty
+                        ? phrases.map((p) => p.content).join('\n')
+                        : chapter.content,
+                  ),
+                  current: _matchIndex,
+                  onChanged: (v) => setState(() {
+                    _query = v.trim();
+                    _matchIndex = 0;
+                  }),
+                  onPrev: () => _jumpTo(_matchIndex - 1),
+                  onNext: () => _jumpTo(_matchIndex + 1),
+                  isBookmarked: isBookmarked,
+                  onBookmark: () {
+                    ref.read(bookmarksProvider.notifier).toggle(
+                          BookmarkItem(
+                            chapterId: chapter.id,
+                            bookId: chapter.bookId,
+                            title: displayTitle,
+                            bookTitle: bookTitle,
+                            timestamp: DateTime.now(),
+                            subjectIndex: _currentSubjectIndex,
+                          ),
+                        );
+                  },
+                ),
                 Expanded(
                   child: SingleChildScrollView(
+                    controller: _scroll,
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         _HeaderCard(
                           title: displayTitle,
-                          count: phrases.isNotEmpty ? phrases.length : null,
+                          // الصحيفة السجادية (الفصل ١٠٠١): رقم الدعاء لا عدد
+                          // فقراته؛ غيرها يبقى بعدد الفقرات.
+                          meta: chapter.id == 1001 && isSubjectMode
+                              ? 'الدعاء ${(_currentSubjectIndex! + 1).toArabicNumeral()}'
+                              : (phrases.isNotEmpty
+                                  ? '${phrases.length.toArabicNumeral()} فقرة'
+                                  : null),
                         ),
                         const SizedBox(height: 12),
+                        // العبارة الفاصلة التي تتصدّر الدعاء بالمصدر — تُعرض
+                        // فوق المتن لأن العنوان صار مختصراً فضاع منه الظرف.
+                        if (currentSubject?.intro != null) ...[
+                          _DuaIntro(
+                            text: currentSubject!.intro!,
+                            fontSize: _fontSize,
+                          ),
+                          const SizedBox(height: 10),
+                        ],
                         if (phrases.isNotEmpty)
                           _ReadingBody(
                             phrases: phrases,
                             fontSize: _fontSize,
                             onPhraseTap: _showCommentary,
+                            query: _query,
+                            matchKeys: _matchKeys,
+                            activeMatch: _matchIndex,
                           )
                         else
                           _FlatBody(
                             content: chapter.content,
                             fontSize: _fontSize,
+                            query: _query,
+                            matchKeys: _matchKeys,
+                            activeMatch: _matchIndex,
                           ),
                       ],
                     ),
@@ -236,9 +324,13 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
+      // مع RTL أول عنصر بالصفّ = اليمين: فاصل قصير، العنوان، ثم الفاصل الطويل
+      // يمتدّ لليسار — فيلتصق العنوان باليمين لا يبعد عنه (كان الترتيب معكوساً
+      // فيسقط العنوان قرب اليسار).
       child: Row(
         children: [
-          Expanded(
+          SizedBox(
+            width: 12,
             child: Container(
               height: 0.6,
               color: AppColors.borderLight.withValues(alpha: 0.6),
@@ -249,13 +341,11 @@ class _SectionTitle extends StatelessWidget {
             title,
             style: AppTextStyles.headlineSmall.copyWith(
               color: AppColors.textPrimaryLight,
-              fontFamily: 'Amiri',
               fontWeight: FontWeight.w700,
             ),
           ),
           const SizedBox(width: 8),
-          SizedBox(
-            width: 12,
+          Expanded(
             child: Container(
               height: 0.6,
               color: AppColors.borderLight.withValues(alpha: 0.6),
@@ -267,11 +357,31 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
-// حبّة المفضلة + حقل البحث + سهم الرجوع — نفس شاشة قراءة الدعاء.
+// حبّة المفضلة + حقل البحث + سهم الرجوع. كان الحقل صورةً ساكنة (نصّ «بحث»
+// بلا TextField) وحبّة المفضلة كذلك — فصارا يعملان فعلاً: بحث داخل المتن
+// بإبراز وعدّاد وتنقّل، وحبّة تضيف الفصل للمفضلة.
 class _SearchRow extends StatelessWidget {
-  const _SearchRow({required this.onBack});
+  const _SearchRow({
+    required this.onBack,
+    required this.controller,
+    required this.matchCount,
+    required this.current,
+    required this.onChanged,
+    required this.onPrev,
+    required this.onNext,
+    required this.isBookmarked,
+    required this.onBookmark,
+  });
 
   final VoidCallback onBack;
+  final TextEditingController controller;
+  final int matchCount;
+  final int current;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onPrev;
+  final VoidCallback onNext;
+  final bool isBookmarked;
+  final VoidCallback onBookmark;
 
   @override
   Widget build(BuildContext context) {
@@ -279,30 +389,49 @@ class _SearchRow extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Row(
         children: [
-          Container(
-            width: 56,
-            height: 38,
-            decoration: BoxDecoration(
-              color: AppColors.creamDark,
-              borderRadius: BorderRadius.circular(50),
-              border: Border.all(
-                color: AppColors.borderLight.withValues(alpha: 0.4),
-                width: 0.8,
+          // سهم الرجوع بأقصى اليمين (أول عنصر مع RTL).
+          GestureDetector(
+            onTap: onBack,
+            child: const SizedBox(
+              width: 32,
+              height: 38,
+              child: Icon(
+                Icons.arrow_back_rounded,
+                size: 22,
+                color: AppColors.textPrimaryLight,
               ),
             ),
-            alignment: Alignment.center,
-            child: SvgPicture.asset(
-              'assets/images/icons/favorite_fill.svg',
-              width: 18,
-              height: 18,
-              colorFilter: const ColorFilter.mode(
-                AppColors.textPrimaryLight,
-                BlendMode.srcIn,
+          ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: onBookmark,
+            child: Container(
+              width: 56,
+              height: 38,
+              decoration: BoxDecoration(
+                color: isBookmarked
+                    ? AppColors.accentGold
+                    : AppColors.creamDark,
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(
+                  color: AppColors.borderLight.withValues(alpha: 0.4),
+                  width: 0.8,
+                ),
               ),
-              placeholderBuilder: (_) => const Icon(
-                Icons.favorite,
-                size: 18,
-                color: AppColors.textPrimaryLight,
+              alignment: Alignment.center,
+              child: SvgPicture.asset(
+                'assets/images/icons/favorite_fill.svg',
+                width: 18,
+                height: 18,
+                colorFilter: ColorFilter.mode(
+                  isBookmarked ? Colors.white : AppColors.textPrimaryLight,
+                  BlendMode.srcIn,
+                ),
+                placeholderBuilder: (_) => Icon(
+                  Icons.favorite,
+                  size: 18,
+                  color: isBookmarked ? Colors.white : AppColors.textPrimaryLight,
+                ),
               ),
             ),
           ),
@@ -336,26 +465,56 @@ class _SearchRow extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    'بحث',
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textMutedLight,
+                  Expanded(
+                    child: TextField(
+                      controller: controller,
+                      onChanged: onChanged,
+                      textAlign: TextAlign.right,
+                      textAlignVertical: TextAlignVertical.center,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textPrimaryLight,
+                      ),
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        filled: false,
+                        contentPadding: EdgeInsets.zero,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        hintText: 'بحث',
+                        hintStyle: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textMutedLight,
+                        ),
+                      ),
                     ),
                   ),
+                  if (controller.text.trim().isNotEmpty) ...[
+                    Text(
+                      matchCount == 0 ? 'لا نتائج' : '${current + 1}/$matchCount',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textSecondaryLight,
+                      ),
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.zero,
+                      constraints:
+                          const BoxConstraints(minWidth: 24, minHeight: 24),
+                      icon: const Icon(Icons.keyboard_arrow_up_rounded,
+                          size: 18),
+                      onPressed: matchCount == 0 ? null : onPrev,
+                    ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      padding: EdgeInsets.zero,
+                      constraints:
+                          const BoxConstraints(minWidth: 24, minHeight: 24),
+                      icon: const Icon(Icons.keyboard_arrow_down_rounded,
+                          size: 18),
+                      onPressed: matchCount == 0 ? null : onNext,
+                    ),
+                  ],
                 ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          GestureDetector(
-            onTap: onBack,
-            child: const SizedBox(
-              width: 32,
-              height: 38,
-              child: Icon(
-                Icons.arrow_forward_rounded,
-                size: 22,
-                color: AppColors.textPrimaryLight,
               ),
             ),
           ),
@@ -367,10 +526,11 @@ class _SearchRow extends StatelessWidget {
 
 // بطاقة ترويسة كريمية مستديرة تعلن الفصل/الموضوع الحالي.
 class _HeaderCard extends StatelessWidget {
-  const _HeaderCard({required this.title, this.count});
+  const _HeaderCard({required this.title, this.meta});
 
   final String title;
-  final int? count;
+  // نصّ الحقل الجانبي: رقم الدعاء بالصحيفة، أو عدد فقرات غيرها من الفصول.
+  final String? meta;
 
   @override
   Widget build(BuildContext context) {
@@ -414,17 +574,52 @@ class _HeaderCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (count != null) ...[
+          if (meta != null) ...[
             Container(width: 0.8, height: 16, color: AppColors.borderLight),
             const SizedBox(width: 8),
             Text(
-              '${count!.toArabicNumeral()} فقرة',
+              meta!,
               style: AppTextStyles.listItemMeta.copyWith(
                 color: AppColors.textSecondaryLight,
               ),
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// العبارة الفاصلة فوق متن الدعاء («وكان من دعاؤه (عليه السلام) إذا…»).
+///
+/// بخطّ المتن لا خطّ العناوين: هي من نصّ المصدر لا عنواناً من تأليفنا، وحجمها
+/// يتبع حجم خطّ القراءة حتى تتناسب مع المتن حين يكبّره القارئ.
+class _DuaIntro extends StatelessWidget {
+  const _DuaIntro({required this.text, required this.fontSize});
+
+  final String text;
+  final double fontSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.greenDeep.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        textDirection: TextDirection.rtl,
+        style: TextStyle(
+          fontFamily: 'Amiri',
+          fontSize: fontSize - 3,
+          height: 1.8,
+          fontWeight: FontWeight.w700,
+          color: AppColors.greenDeep,
+        ),
       ),
     );
   }
@@ -437,11 +632,17 @@ class _ReadingBody extends StatefulWidget {
     required this.phrases,
     required this.fontSize,
     required this.onPhraseTap,
+    required this.query,
+    required this.matchKeys,
+    required this.activeMatch,
   });
 
   final List<ChapterPhrase> phrases;
   final double fontSize;
   final void Function(ChapterPhrase) onPhraseTap;
+  final String query;
+  final List<GlobalKey> matchKeys;
+  final int activeMatch;
 
   @override
   State<_ReadingBody> createState() => _ReadingBodyState();
@@ -469,22 +670,29 @@ class _ReadingBodyState extends State<_ReadingBody> {
           .add(TapGestureRecognizer()..onTap = () => widget.onPhraseTap(phrase));
     }
 
+    // قائمة المفاتيح تُبنى من جديد بكل بناء، بترتيب ورود المطابقات في المتن.
+    widget.matchKeys.clear();
+
+    final base = TextStyle(
+      fontFamily: 'Amiri',
+      fontSize: widget.fontSize,
+      height: 2.0,
+      color: AppColors.textPrimaryLight,
+    );
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: RichText(
         textAlign: TextAlign.justify,
         textDirection: TextDirection.rtl,
         text: TextSpan(
-          style: TextStyle(
-            fontFamily: 'Amiri',
-            fontSize: widget.fontSize,
-            height: 1.95,
-            color: AppColors.textPrimaryLight,
-          ),
+          style: base,
           children: [
             for (var i = 0; i < widget.phrases.length; i++) ...[
-              _phraseSpan(widget.phrases[i], _recognizers[i]),
-              if (i < widget.phrases.length - 1) const TextSpan(text: '  '),
+              ..._phraseSpans(widget.phrases[i], _recognizers[i], base),
+              // سطر واحد بين كل عبارة والتي تليها — سطر فارغ كان يبعثرها.
+              if (i < widget.phrases.length - 1)
+                const TextSpan(text: '\n'),
             ],
           ],
         ),
@@ -492,13 +700,70 @@ class _ReadingBodyState extends State<_ReadingBody> {
     );
   }
 
-  TextSpan _phraseSpan(ChapterPhrase phrase, TapGestureRecognizer recognizer) {
+  /// يقسّم العبارة عند مواضع البحث: المطابق يُلفّ بـWidgetSpan بمفتاح ولون،
+  /// والباقي يبقى TextSpan عادياً محتفظاً بلمسة الشرح إن وُجدت.
+  List<InlineSpan> _phraseSpans(
+    ChapterPhrase phrase,
+    TapGestureRecognizer recognizer,
+    TextStyle base,
+  ) {
+    final q = widget.query.trim();
+    if (q.isEmpty) return [_phraseSpan(phrase, recognizer)];
+
+    final text = phrase.content;
+    final hits = arabicMatches(text, q);
+    if (hits.isEmpty) return [_phraseSpan(phrase, recognizer)];
+
+    final hasCommentary = (phrase.explanationContent ?? '').isNotEmpty;
+    final spans = <InlineSpan>[];
+    var cursor = 0;
+    for (final h in hits) {
+      if (h.start > cursor) {
+        spans.add(_phraseSpan(phrase, recognizer,
+            override: text.substring(cursor, h.start)));
+      }
+      final key = GlobalKey();
+      final isActive = widget.matchKeys.length == widget.activeMatch;
+      widget.matchKeys.add(key);
+      spans.add(WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: GestureDetector(
+          onTap: hasCommentary ? () => widget.onPhraseTap(phrase) : null,
+          child: Container(
+            key: key,
+            decoration: BoxDecoration(
+              color: AppColors.searchHighlight,
+              // المطابقة الحالية بالأصفر نفسه وإطار رفيع — تغيير اللون كان
+              // يجعل نتيجةً واحدة تبدو مختلفة عن أخواتها.
+              border: isActive
+                  ? Border.all(color: AppColors.accentGoldDark, width: 1.2)
+                  : null,
+              borderRadius: BorderRadius.circular(3),
+            ),
+            child: Text(text.substring(h.start, h.end), style: base),
+          ),
+        ),
+      ));
+      cursor = h.end;
+    }
+    if (cursor < text.length) {
+      spans.add(_phraseSpan(phrase, recognizer,
+          override: text.substring(cursor)));
+    }
+    return spans;
+  }
+
+  TextSpan _phraseSpan(
+    ChapterPhrase phrase,
+    TapGestureRecognizer recognizer, {
+    String? override,
+  }) {
     final hasCommentary = (phrase.explanationContent ?? '').isNotEmpty;
     if (!hasCommentary) {
-      return TextSpan(text: phrase.content);
+      return TextSpan(text: override ?? phrase.content);
     }
     return TextSpan(
-      text: phrase.content,
+      text: override ?? phrase.content,
       recognizer: recognizer,
       style: TextStyle(
         color: AppColors.greenDeep,
@@ -513,25 +778,78 @@ class _ReadingBodyState extends State<_ReadingBody> {
 
 // متن القراءة المسطّح (الكتب اللي بلا عبارات مهيكلة).
 class _FlatBody extends StatelessWidget {
-  const _FlatBody({required this.content, required this.fontSize});
+  const _FlatBody({
+    required this.content,
+    required this.fontSize,
+    required this.query,
+    required this.matchKeys,
+    required this.activeMatch,
+  });
 
   final String content;
   final double fontSize;
+  final String query;
+  final List<GlobalKey> matchKeys;
+  final int activeMatch;
 
   @override
   Widget build(BuildContext context) {
+    final style = TextStyle(
+      fontFamily: 'Amiri',
+      fontSize: fontSize,
+      height: 2.0,
+      color: AppColors.textPrimaryLight,
+    );
+    final q = query.trim();
+    if (q.isEmpty) {
+      matchKeys.clear();
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+        child: SelectableText(
+          content,
+          textAlign: TextAlign.justify,
+          textDirection: TextDirection.rtl,
+          style: style,
+        ),
+      );
+    }
+
+    matchKeys.clear();
+    final spans = <InlineSpan>[];
+    var cursor = 0;
+    for (final h in arabicMatches(content, q)) {
+      if (h.start > cursor) {
+        spans.add(TextSpan(text: content.substring(cursor, h.start)));
+      }
+      final key = GlobalKey();
+      final isActive = matchKeys.length == activeMatch;
+      matchKeys.add(key);
+      spans.add(WidgetSpan(
+        alignment: PlaceholderAlignment.middle,
+        child: Container(
+          key: key,
+          decoration: BoxDecoration(
+            color: AppColors.searchHighlight,
+            border: isActive
+                ? Border.all(color: AppColors.accentGoldDark, width: 1.2)
+                : null,
+            borderRadius: BorderRadius.circular(3),
+          ),
+          child: Text(content.substring(h.start, h.end), style: style),
+        ),
+      ));
+      cursor = h.end;
+    }
+    if (cursor < content.length) {
+      spans.add(TextSpan(text: content.substring(cursor)));
+    }
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-      child: SelectableText(
-        content,
+      child: Text.rich(
+        TextSpan(children: spans),
         textAlign: TextAlign.justify,
         textDirection: TextDirection.rtl,
-        style: TextStyle(
-          fontFamily: 'Amiri',
-          fontSize: fontSize,
-          height: 1.95,
-          color: AppColors.textPrimaryLight,
-        ),
+        style: style,
       ),
     );
   }
@@ -585,12 +903,12 @@ class _BottomActionBar extends StatelessWidget {
             _IconButton(icon: Icons.share_outlined, onTap: onShare),
             const Spacer(),
             _IconButton(
-              icon: Icons.chevron_right_rounded,
+              icon: Icons.chevron_left_rounded,
               onTap: onPrev,
               disabled: onPrev == null,
             ),
             _IconButton(
-              icon: Icons.chevron_left_rounded,
+              icon: Icons.chevron_right_rounded,
               onTap: onNext,
               disabled: onNext == null,
             ),
@@ -696,7 +1014,8 @@ class _CommentarySheet extends StatelessWidget {
               Text(
                 author,
                 style: const TextStyle(
-                  fontFamily: 'Amiri',
+                  fontFamily: 'Inter',
+                  fontFamilyFallback: kArabicFontFallback,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: AppColors.greenDeep,

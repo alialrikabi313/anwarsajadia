@@ -1,4 +1,4 @@
-package com.alialrikabi313.anwarsajadia
+package org.masaha.anwarsajjad
 
 import android.hardware.GeomagneticField
 import io.flutter.embedding.android.FlutterActivity

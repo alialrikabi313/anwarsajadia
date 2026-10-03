@@ -2,7 +2,6 @@
 // السجادية، المكتبة، والقبلة. كل قسم ويدجت مستقلة بهذا الملف، وترتيبها هنا
 // يطابق ترتيب إطار فيغما.
 
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,6 +17,8 @@ import 'package:anwarsajadia/features/bookmarks/presentation/providers/bookmarks
 import 'package:anwarsajadia/features/bookmarks/presentation/providers/reading_progress_provider.dart';
 import 'package:anwarsajadia/features/home/presentation/providers/occasions_provider.dart';
 import 'package:anwarsajadia/features/home/presentation/providers/rights_challenge_provider.dart';
+import 'package:anwarsajadia/features/home/data/daily_hadith_store.dart';
+import 'package:anwarsajadia/features/home/presentation/providers/daily_hadith_provider.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/martyrs/domain/entities/martyr.dart';
 import 'package:anwarsajadia/features/martyrs/presentation/providers/martyrs_provider.dart';
@@ -25,6 +26,7 @@ import 'package:anwarsajadia/features/sajjad/data/datasources/books_remote_datas
 import 'package:anwarsajadia/features/sajjad/presentation/providers/sajjad_list_providers.dart';
 import 'package:anwarsajadia/features/sajjad/presentation/providers/sajjad_providers.dart';
 import 'package:anwarsajadia/features/tools/presentation/providers/compass_providers.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // الفراغ العمودي بين الأقسام الكبيرة. فيغما 269:3629 itemSpacing = 21.
 const double _kSectionGap = 21;
@@ -83,14 +85,14 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
           const HomeHeader(green: true),
 
           const SizedBox(height: 12),
-          _HeroBiographyCard(
+          HeroBiographyCard(
             onTap: () => context.pushNamed(RouteNames.biography),
           ),
 
           // بطاقة الشهيد — جديدة بتصميم 2026. تعرض أول إدخال من
           // `martyrs.json`، والضغط يفتح القائمة الكاملة.
           const SizedBox(height: 12),
-          _FeaturedMartyrCard(
+          FeaturedMartyrCard(
             onTap: () => context.pushNamed(RouteNames.martyrs),
           ),
 
@@ -106,10 +108,12 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
             // «اكمال القراءة» يقفز لآخر سورة فتحها المستخدم. نستعمل goNamed
             // لا push: goNamed يبني المكدّس [قائمة السور، القراءة]، فيرجع زر
             // الرجوع لقائمة السور لا للرئيسية.
+            //
+            // ونقرأ موضع القرآن وحده لا الموضع العام: هذا الأخير يحمل آخر ما
+            // قُرئ أياً كان كتابه، فكان فتحُ فصلٍ من السجادية يدهسه فترجع
+            // البطاقة إلى الفهرس بدل السورة.
             onQuranAction: () {
-              final lastSurah = readingProgress?.bookId == 0
-                  ? readingProgress!.chapterId
-                  : null;
+              final lastSurah = ref.read(bookReadingProgressProvider(0))?.chapterId;
               if (lastSurah != null) {
                 context.goNamed(
                   RouteNames.surahReading,
@@ -171,237 +175,274 @@ class _HomeTabScreenState extends ConsumerState<HomeTabScreen> {
 // البطل — كاروسيل يتقدّم لحاله، خط عربي مع فقرة. فيغما 269:3683 (376×182)،
 // ومؤشّر النقاط يتبع الصفحة الحالية.
 // ═════════════════════════════════════════════════════════════════════
-class _HeroSlide {
-  const _HeroSlide({
-    required this.title,
-    required this.body,
-  });
-  final String title;
-  final String body;
+/// بطاقة الواجهة العلوية بتصميم `Frame 259`. عامّة (لا خاصّة) ليتمكّن
+/// اختبار التخطيط من بنائها على عدّة عروض شاشة والتأكّد من عدم الطفح.
+///
+/// بتصميم `Frame 259`: الخلفية رسمٌ للإمام (عليه
+/// السلام) وإلى يمينه مساحة نصّ، وأسفلها شريط الزرّ.
+///
+/// المحتوى صار **حكمة اليوم** من `GET /daily-hadiths/today` بدل شرائح السيرة
+/// المتقلّبة — نصّ واحد ثابت طوال اليوم يختاره الخادم أو يثبّته محرّر المؤسسة.
+class HeroBiographyCard extends ConsumerWidget {
+  const HeroBiographyCard({required this.onTap});
+
+  /// يفتح سيرة الإمام — وهي الآن وظيفة الزرّ السفلي.
+  final VoidCallback onTap;
+
+  static const _heroImage = 'assets/figma_assets/imam_hero.png';
+
+  /// نسبة رسم التصميم (1505×936) — نلتزمها حتى لا تُقصّ الخلفية ولا يبقى هامش.
+  static const _aspect = 1505 / 936;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hadithAsync = ref.watch(dailyHadithProvider);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: _kSideMargin),
+      child: AspectRatio(
+        aspectRatio: _aspect,
+        child: LayoutBuilder(
+          builder: (context, box) {
+            final h = box.maxHeight;
+            final w = box.maxWidth;
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  _heroImage,
+                  fit: BoxFit.fill,
+                  errorBuilder: (_, __, ___) =>
+                      Container(color: AppColors.greenDeep),
+                ),
+// مساحة النصّ: النصف الأيمن فوق شريط الزرّ، نازلةً عن الحافة
+                // العليا حتى لا تبدو محشورة في الزاوية.
+                Positioned(
+                  top: h * 0.14,
+                  bottom: h * 0.22,
+                  right: w * 0.035,
+                  width: w * 0.44,
+                  // الضغط على مربّع الحكمة يفتح أرشيف الحِكَم كاملاً.
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => context.pushNamed(RouteNames.hadithArchive),
+                    child: _HeroHadith(async: hadithAsync),
+                  ),
+                ),
+                // شريط الزرّين أسفل البطاقة: جميع الحِكَم يميناً والسيرة
+                // يساراً. النِّسَب مقيسةٌ من صورة التصميم: هامشٌ ٢٫٣٪ من عرض
+                // البطاقة على كل جانب، وفجوةٌ ١٫٩٪، والحصّتان ٣٥٪ و٦٥٪.
+                Positioned(
+                  left: w * 0.023,
+                  right: w * 0.023,
+                  bottom: h * 0.035,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 35,
+                        child: _AllHadithsButton(
+                          onTap: () =>
+                              context.pushNamed(RouteNames.hadithArchive),
+                        ),
+                      ),
+                      SizedBox(width: w * 0.019),
+                      Expanded(
+                        flex: 65,
+                        child: _BiographyButton(onTap: onTap),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 }
 
-class _HeroBiographyCard extends ConsumerStatefulWidget {
-  const _HeroBiographyCard({required this.onTap});
+/// نسبة مخطوطة «الإمام زين العابدين» كما وردت من التصميم (161×51).
+const double _kCalligraphyAspect = 161 / 51;
+
+/// مقاس متن الحكمة وتباعد أسطره — يستعملهما النمط وحسابُ عدد الأسطر معاً،
+/// فلا ينفصل الرقمان ويطفح النصّ.
+const double _kHeroBodySize = 13.5;
+const double _kHeroBodyLine = 1.6;
+
+/// نصّ الحكمة فوق الخلفية — بنفس أسلوب نصوص البطاقة السابق.
+class _HeroHadith extends StatelessWidget {
+  const _HeroHadith({required this.async});
+
+  final AsyncValue<StoredHadith?> async;
+
+  @override
+  Widget build(BuildContext context) {
+    const bodyStyle = TextStyle(
+      fontFamily: 'Inter',
+      fontFamilyFallback: kArabicFontFallback,
+      color: Colors.white,
+      height: _kHeroBodyLine,
+      fontSize: _kHeroBodySize,
+      fontWeight: FontWeight.w400,
+      shadows: [Shadow(blurRadius: 3, color: Colors.black54)],
+    );
+
+    // آخر محفوظة تُعرض فوراً أثناء الجلب، فلا تُستبدل البطاقة بدوّارة انتظار.
+    final hadith = async.valueOrNull ?? DailyHadithStore.latest();
+    final loading = async.isLoading && hadith == null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // المخطوطة بدل العنوان النصّي. عرضها كسر ثابت من عرض كتلة النصّ،
+        // ونسبتها الأصلية (161×51) محفوظة بـAspectRatio. وبما أن البطاقة كلّها
+        // AspectRatio، تقع المخطوطة في الموضع نفسه بالضبط على كل الأجهزة، ولا
+        // تخرج عن الصورة ولا يتغيّر حجمها النسبي.
+        FractionallySizedBox(
+          widthFactor: 0.88,
+          child: AspectRatio(
+            aspectRatio: _kCalligraphyAspect,
+            child: SvgPicture.asset(
+              'assets/figma_assets/hero_calligraphy.svg',
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, box) {
+              // عدد الأسطر يُحسب من الارتفاع الباقي فعلاً لا برقم ثابت: على
+              // شاشة ضيّقة تصغر البطاقة فيصغر معها المتاح، ورقم ثابت يطفح.
+              final lines = (box.maxHeight / (_kHeroBodySize * _kHeroBodyLine))
+                  .floor()
+                  .clamp(1, 6);
+              return Align(
+                alignment: Alignment.center,
+                child: loading
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.accentGoldLight,
+                        ),
+                      )
+                    // لا نصّ مخترع: إن لم تصل حكمة ولا وُجد أرشيف نشرح الحال.
+                    : Text(
+                        hadith?.content ??
+                            'حِكَم الإمام (عليه السلام) تصل تباعاً',
+                        textAlign: TextAlign.center,
+                        style: bodyStyle,
+                        maxLines: lines,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+              );
+            },
+          ),
+        ),
+        // لا تلميح هنا: زرّ «جميع الحِكَم» أسفل البطاقة صار هو المدخل المعلن.
+      ],
+    );
+  }
+}
+
+/// زرّ «جميع الحِكَم» بجوار زرّ السيرة — حشوٌ زيتونيّ مصمت بلا حدٍّ ولا ظلّ،
+/// بنصٍّ رمليّ فاتح، كما قيس من صورة التصميم.
+class _AllHadithsButton extends StatelessWidget {
+  const _AllHadithsButton({required this.onTap});
 
   final VoidCallback onTap;
 
   @override
-  ConsumerState<_HeroBiographyCard> createState() => _HeroBiographyCardState();
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          height: 42,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: AppColors.heroHikamFill,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                'جميع الحِكَم',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontFamilyFallback: kArabicFontFallback,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.heroHikamInk,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-class _HeroBiographyCardState extends ConsumerState<_HeroBiographyCard> {
-  // الشريحة 0 هي افتتاحية فيغما بنصّها الموثّق. والشرائح 1..N تنبني من
-  // مقالات السيرة الحقيقية بـimamzain.json (محتوى الناشر): عنوان المقالة
-  // يصير عنوان الشريحة، وأول ~140 محرفاً من متنها المجرّد يصير متنها.
-  // ما نخترع نصاً هنا أبداً؛ وإذا كان الملف فارغاً تبقى شريحة فيغما وحدها.
-  static const _figmaTitle = 'الإمام زين العابدين';
-  static const _figmaBody =
-      'وكان المسلمون يرون في سيرة الإمام زين العابدين(ع) '
-      'امتداداً حقيقياً لسيرة جده الرسول الكريم(ص)،';
+/// زرّ «سيرة الامام زين العابدين (عليه السلام)» — حشوٌ ذهبيّ مصمت بلا تدرّج
+/// ولا حدّ، بلونٍ مقيسٍ من صورة التصميم.
+class _BiographyButton extends StatelessWidget {
+  const _BiographyButton({required this.onTap});
 
-  // صورة البطل ثابتة — النص وحده هو اللي يتقلّب فوقها.
-  static const _heroImage = 'assets/figma_assets/imam_hero.png';
-
-  // أقصى عدد محارف من متن السيرة تنعرض بالشريحة.
-  static const _bodyMaxLen = 140;
-
-  // نبدأ بنص افتتاحية فيغما، ومقالات السيرة تضيف شرائح نصّية بعد ما تتحمّل.
-  late List<_HeroSlide> _slides = const [
-    _HeroSlide(title: _figmaTitle, body: _figmaBody),
-  ];
-  final PageController _controller = PageController();
-  int _index = 0;
-  Timer? _auto;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _restartAuto());
-  }
-
-  String _shortenBody(String html) {
-    // المستودع يجرّد الـHTML أصلاً، ومع ذلك نضغط الفراغ احتياطاً ثم نأخذ
-    // بادئة نظيفة.
-    final clean = html.replaceAll(RegExp(r'\s+'), ' ').trim();
-    if (clean.length <= _bodyMaxLen) return clean;
-    final cut = clean.substring(0, _bodyMaxLen);
-    // نقصّ عند آخر فراغ داخل النافذة حتى ما نقطع كلمة بنصّها.
-    final lastSpace = cut.lastIndexOf(' ');
-    final base = lastSpace > 60 ? cut.substring(0, lastSpace) : cut;
-    return '$base…';
-  }
-
-  void _restartAuto() {
-    _auto?.cancel();
-    if (_slides.length < 2) return; // nothing to cycle
-    _auto = Timer.periodic(const Duration(seconds: 5), (_) {
-      if (!mounted || !_controller.hasClients) return;
-      final next = (_index + 1) % _slides.length;
-      _controller.animateToPage(
-        next,
-        duration: const Duration(milliseconds: 450),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    _auto?.cancel();
-    _controller.dispose();
-    super.dispose();
-  }
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    // نسحب مقالات السيرة الحقيقية من imamzain.json عبر المستودع؛ كل مقالة
-    // شريحة بعنوانها الحقيقي وأول ~140 محرفاً من متنها، والصور تتناوب عليها.
-    final bioAsync = ref.watch(biographyProvider);
-    bioAsync.whenData((bios) {
-      if (bios.isEmpty) return;
-      if (_slides.length == bios.length && _slides.first.title == bios.first.title) {
-        return; // already in sync
-      }
-      // نؤجّل setState لما بعد إطار البناء الحالي — استدعاؤه جوّاه يرمي.
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        final fromAssets = [
-          for (var i = 0; i < bios.length; i++)
-            _HeroSlide(
-              title: bios[i].title,
-              body: _shortenBody(bios[i].content),
-            ),
-        ];
-        setState(() {
-          _slides = fromAssets;
-          if (_index >= _slides.length) _index = 0;
-        });
-        _restartAuto();
-      });
-    });
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: _kSideMargin),
-        height: 182,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.12),
-              blurRadius: 10,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // الصورة ثابتة والنص يتبدّل فوقها. الرسم نفسه يعتم من جهة
-            // اليمين (مكان النص)، فما نحتاج طبقة تعتيم زيادة.
-            Image.asset(
-              _heroImage,
-              fit: BoxFit.cover,
-              alignment: Alignment.centerLeft,
-              errorBuilder: (_, __, ___) =>
-                  Container(color: AppColors.greenDeep),
-            ),
-            // المتن وحده هو اللي ينزلق بين الصفحات؛ العنوان يقعد فوقه بطبقة
-            // ثابتة ويتلاشى تلاشياً متقاطعاً — لازم ما ينزلق مع الصفحة.
-            PageView.builder(
-              controller: _controller,
-              itemCount: _slides.length,
-              onPageChanged: (i) {
-                setState(() => _index = i);
-                _restartAuto();
-              },
-              itemBuilder: (context, i) {
-                final slide = _slides[i];
-                return Align(
-                  alignment: Alignment.centerRight,
-                  child: SizedBox(
-                    width: 200,
-                    child: Padding(
-                      // إزاحة علوية تترك مجالاً لطبقة العنوان الثابتة.
-                      padding: const EdgeInsets.fromLTRB(8, 52, 14, 28),
-                      child: Align(
-                        alignment: Alignment.topRight,
-                        child: Text(
-                          slide.body,
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(
-                            fontFamily: 'Inter',
-                            color: Colors.white,
-                            height: 1.57, // Figma lh22 / size14
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            shadows: [
-                              Shadow(blurRadius: 3, color: Colors.black54),
-                            ],
-                          ),
-                          maxLines: 5,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-            // العنوان الثابت يتلاشى ويظهر بعنوان الشريحة الجديدة بدل ما
-            // ينزلق مع الكاروسيل.
-            Positioned(
-              top: 18,
-              right: 14,
-              width: 178,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 400),
-                child: Text(
-                  _slides[_index].title,
-                  key: ValueKey(_slides[_index].title),
-                  textAlign: TextAlign.right,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          height: 42,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: AppColors.heroBioFill,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              textBaseline: TextBaseline.alphabetic,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              children: [
+                Text(
+                  'سيرة الامام زين العابدين',
+                  style: TextStyle(
                     fontFamily: 'Inter',
+                    fontFamilyFallback: kArabicFontFallback,
+                    fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                    height: 1.2,
-                    color: AppColors.accentGoldLight,
-                    shadows: [
-                      Shadow(blurRadius: 4, color: Colors.black54),
-                    ],
+                    color: AppColors.heroBioInk,
                   ),
                 ),
-              ),
+                const SizedBox(width: 6),
+                Text(
+                  '( عليه السلام )',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontFamilyFallback: kArabicFontFallback,
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.heroBioInk,
+                  ),
+                ),
+              ],
             ),
-            // مؤشّر النقاط — ما ينعرض إلا إذا كان بيه أكثر من شريحة.
-            if (_slides.length > 1)
-              Positioned(
-                bottom: 10,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    _slides.length,
-                    (i) => AnimatedContainer(
-                      duration: const Duration(milliseconds: 220),
-                      width: i == _index ? 12 : 5,
-                      height: 5,
-                      margin: const EdgeInsets.symmetric(horizontal: 3),
-                      decoration: BoxDecoration(
-                        color: i == _index
-                            ? AppColors.accentGoldLight
-                            : Colors.white.withValues(alpha: 0.45),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
+          ),
         ),
       ),
     );
@@ -487,6 +528,7 @@ class _RightsInnerCard extends ConsumerWidget {
                   'حفظ رسالة الحقوق',
                   style: TextStyle(
                     fontFamily: 'Inter',
+                    fontFamilyFallback: kArabicFontFallback,
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                     color: AppColors.inkSoft,
@@ -525,6 +567,7 @@ class _RightsInnerCard extends ConsumerWidget {
                 textAlign: TextAlign.right,
                 style: TextStyle(
                   fontFamily: 'Inter',
+                  fontFamilyFallback: kArabicFontFallback,
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   height: 1.4,
@@ -558,6 +601,7 @@ class _RightsInnerCard extends ConsumerWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: AppColors.inkSoft,
@@ -566,11 +610,7 @@ class _RightsInnerCard extends ConsumerWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Container(
-                  width: 0.8,
-                  height: 11,
-                  color: AppColors.primary,
-                ),
+                Container(width: 0.8, height: 11, color: AppColors.primary),
                 Expanded(
                   child: Text(
                     'تاريخ الانتهاء : '
@@ -578,6 +618,7 @@ class _RightsInnerCard extends ConsumerWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: AppColors.inkSoft,
@@ -657,6 +698,7 @@ class _CompetitionsInnerCard extends ConsumerWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontFamily: 'Inter',
+                fontFamilyFallback: kArabicFontFallback,
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
                 color: AppColors.primary,
@@ -684,11 +726,7 @@ class _BulletDiamondStrip extends StatelessWidget {
           if (i == 2)
             Transform.rotate(
               angle: math.pi / 4,
-              child: Container(
-                width: 8,
-                height: 8,
-                color: AppColors.parchment,
-              ),
+              child: Container(width: 8, height: 8, color: AppColors.parchment),
             )
           else
             Container(
@@ -725,12 +763,7 @@ class _SajjadSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const labels = [
-      'الصحيفة',
-      'رسالة الحقوق',
-      'مسند الإمام',
-      'شرح الصحيفة',
-    ];
+    const labels = ['الصحيفة', 'رسالة الحقوق', 'مسند الإمام', 'شرح الصحيفة'];
     final itemsAsync = ref.watch(sajjadTabItemsProvider(selectedTab));
     final bookmarks = ref.watch(bookmarksProvider);
 
@@ -773,7 +806,7 @@ class _SajjadSection extends ConsumerWidget {
                       BlendMode.srcIn,
                     ),
                     placeholderBuilder: (_) => const Icon(
-                      Icons.chevron_left_rounded,
+                      Icons.chevron_right_rounded,
                       size: 22,
                       color: AppColors.primary,
                     ),
@@ -811,7 +844,11 @@ class _SajjadSection extends ConsumerWidget {
                 for (final item in preview)
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
-                        _kSideMargin, 0, _kSideMargin, 6),
+                      _kSideMargin,
+                      0,
+                      _kSideMargin,
+                      6,
+                    ),
                     child: _HomeListRow(
                       title: item.title,
                       meta: item.subtitle,
@@ -824,14 +861,16 @@ class _SajjadSection extends ConsumerWidget {
                       ),
                       onFavoriteTap: () => ref
                           .read(bookmarksProvider.notifier)
-                          .toggle(BookmarkItem(
-                            chapterId: item.chapterId,
-                            bookId: item.bookId,
-                            title: item.title,
-                            bookTitle: sajjadBookTitle(item.bookId),
-                            timestamp: DateTime.now(),
-                            subjectIndex: item.subjectIndex,
-                          )),
+                          .toggle(
+                            BookmarkItem(
+                              chapterId: item.chapterId,
+                              bookId: item.bookId,
+                              title: item.title,
+                              bookTitle: sajjadBookTitle(item.bookId),
+                              timestamp: DateTime.now(),
+                              subjectIndex: item.subjectIndex,
+                            ),
+                          ),
                     ),
                   ),
               ],
@@ -873,6 +912,7 @@ class _SajjadTabPill extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: selected ? Colors.white : AppColors.primary,
@@ -927,7 +967,10 @@ class _HomeListRow extends StatelessWidget {
                 'assets/images/icons/book_open_duotone.svg',
                 width: 22,
                 height: 22,
-                colorFilter: ColorFilter.mode(AppColors.charcoalDeep, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                  AppColors.charcoalDeep,
+                  BlendMode.srcIn,
+                ),
                 placeholderBuilder: (_) => Icon(
                   Icons.menu_book_outlined,
                   size: 20,
@@ -949,11 +992,7 @@ class _HomeListRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Container(
-                width: 0.6,
-                height: 18,
-                color: AppColors.borderLight,
-              ),
+              Container(width: 0.6, height: 18, color: AppColors.borderLight),
               const SizedBox(width: 8),
               Text(
                 meta,
@@ -964,11 +1003,7 @@ class _HomeListRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Container(
-                width: 0.6,
-                height: 18,
-                color: AppColors.borderLight,
-              ),
+              Container(width: 0.6, height: 18, color: AppColors.borderLight),
               const SizedBox(width: 8),
               GestureDetector(
                 onTap: onFavoriteTap,
@@ -1110,28 +1145,40 @@ class _OccasionInnerCard extends StatelessWidget {
           // خط Inter/20/w600.
           Text(
             title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 20,
               fontWeight: FontWeight.w600,
               color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 6),
-          // خط Inter/12/w500.
+          // خط Inter/12/w500. عدد الأسطر يُحسب من المساحة الباقية فعلاً حتى
+          // لا ينقصّ النص إذا طال العنوان (مثل: النبي الأعظم صلى الله عليه
+          // وآله وسلم) وأخذ سطرين.
           Expanded(
-            child: Text(
-              body,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                height: 1.5,
-                color: AppColors.primary,
-              ),
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
+            child: LayoutBuilder(
+              builder: (context, box) {
+                const lineHeight = 12 * 1.5;
+                final lines = (box.maxHeight / lineHeight).floor().clamp(1, 5);
+                return Text(
+                  body,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontFamilyFallback: kArabicFontFallback,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    height: 1.5,
+                    color: AppColors.primary,
+                  ),
+                  maxLines: lines,
+                  overflow: TextOverflow.ellipsis,
+                );
+              },
             ),
           ),
           const SizedBox(height: 4),
@@ -1160,72 +1207,73 @@ class _QuranInnerCard extends StatelessWidget {
       onTap: onCardTap,
       borderRadius: BorderRadius.circular(17.8),
       child: Container(
-      decoration: BoxDecoration(
-        color: AppColors.readingSand,
-        borderRadius: BorderRadius.circular(17.8),
-      ),
-      padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // بصرياً: أيقونة كتاب | فراغ | «القرآن الكريم»؛ ومع RTL نكتبهم
-          // بالعكس. العنوان Inter/16/w600 والأيقونة 21×21.
-          Row(
-            children: [
-              const Text(
-                'القرآن الكريم',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
+        decoration: BoxDecoration(
+          color: AppColors.readingSand,
+          borderRadius: BorderRadius.circular(17.8),
+        ),
+        padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // بصرياً: أيقونة كتاب | فراغ | «القرآن الكريم»؛ ومع RTL نكتبهم
+            // بالعكس. العنوان Inter/16/w600 والأيقونة 21×21.
+            Row(
+              children: [
+                const Text(
+                  'القرآن الكريم',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontFamilyFallback: kArabicFontFallback,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              SvgPicture.asset(
-                'assets/images/icons/book_open_alt_duotone.svg',
-                width: 21,
-                height: 21,
-                colorFilter: const ColorFilter.mode(
-                  _kBrandGreen,
-                  BlendMode.srcIn,
+                const Spacer(),
+                SvgPicture.asset(
+                  'assets/images/icons/book_open_alt_duotone.svg',
+                  width: 21,
+                  height: 21,
+                  colorFilter: const ColorFilter.mode(
+                    _kBrandGreen,
+                    BlendMode.srcIn,
+                  ),
+                  placeholderBuilder: (_) => const Icon(
+                    Icons.menu_book_outlined,
+                    size: 21,
+                    color: _kBrandGreen,
+                  ),
                 ),
-                placeholderBuilder: (_) => const Icon(
-                  Icons.menu_book_outlined,
-                  size: 21,
-                  color: _kBrandGreen,
+              ],
+            ),
+            const SizedBox(height: 4),
+            // نص الآية Inter/12/w400.
+            const Expanded(
+              child: Center(
+                child: Text(
+                  'الَّذِينَ آمَنُوا وَتَطْمَئِنُّ قُلُوبُهُم بِذِكْرِ '
+                  'اللَّهِ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ '
+                  'الْقُلُوبُ',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Amiri',
+                    fontSize: 12,
+                    height: 1.7,
+                    color: AppColors.surfaceNearBlack,
+                  ),
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          // نص الآية Inter/12/w400.
-          const Expanded(
-            child: Center(
-              child: Text(
-                'الَّذِينَ آمَنُوا وَتَطْمَئِنُّ قُلُوبُهُم بِذِكْرِ '
-                'اللَّهِ أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ '
-                'الْقُلُوبُ',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Amiri',
-                  fontSize: 12,
-                  height: 1.7,
-                  color: AppColors.surfaceNearBlack,
-                ),
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
-          ),
-          const SizedBox(height: 4),
-          _InnerActionPill(
-            iconAsset: 'assets/images/icons/bookmark_fill.svg',
-            label: 'اكمال القراءة',
-            onTap: onAction,
-          ),
-        ],
-      ),
+            const SizedBox(height: 4),
+            _InnerActionPill(
+              iconAsset: 'assets/images/icons/bookmark_fill.svg',
+              label: 'اكمال القراءة',
+              onTap: onAction,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1265,6 +1313,7 @@ class _InnerActionPill extends StatelessWidget {
               label,
               style: const TextStyle(
                 fontFamily: 'Inter',
+                fontFamilyFallback: kArabicFontFallback,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: AppColors.labelGrayHome,
@@ -1287,11 +1336,7 @@ class _InnerActionPill extends StatelessWidget {
                 ),
               )
             else
-              Icon(
-                icon,
-                size: 14,
-                color: AppColors.labelGrayHome,
-              ),
+              Icon(icon, size: 14, color: AppColors.labelGrayHome),
           ],
         ),
       ),
@@ -1339,10 +1384,9 @@ class _LibrarySection extends ConsumerWidget {
                   child: _LibraryTabPill(
                     label: 'اصدارات المؤسسة',
                     selected: selectedTab == 1,
-                    // يفتح شاشة الإصدارات كاملة بـgoNamed: المسار يعيش بفرع
-                    // تراث الإمام، والدفع عبر الفروع يكسر المكدّس.
-                    onTap: () =>
-                        context.goNamed(RouteNames.publications),
+                    // يبدّل العرض بمكانه مثل «المفضلة» تماماً — والصفحة
+                    // الكاملة تُفتح من رابط «عرض الكل» تحت الشبكة.
+                    onTap: () => onTabChanged(1),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -1359,8 +1403,32 @@ class _LibrarySection extends ConsumerWidget {
             // المتن: بيانات حقيقية لكل تبويب.
             if (selectedTab == 0)
               const _FavoritesPreview()
-            else
+            else ...[
               const _PublicationsPreview(),
+              const SizedBox(height: 4),
+              // المدخل الوحيد للصفحة الكاملة — ملاحظة 15.
+              Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: TextButton(
+                  onPressed: () => context.goNamed(RouteNames.publications),
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.primary,
+                    visualDensity: VisualDensity.compact,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                  ),
+                  child: const Text(
+                    'عرض الكل',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -1392,6 +1460,7 @@ class _FavoritesPreview extends ConsumerWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Inter',
+                fontFamilyFallback: kArabicFontFallback,
                 fontSize: 12,
                 color: AppColors.textSecondaryLight,
               ),
@@ -1402,6 +1471,7 @@ class _FavoritesPreview extends ConsumerWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'Inter',
+                fontFamilyFallback: kArabicFontFallback,
                 fontSize: 10,
                 color: AppColors.textMutedLight,
               ),
@@ -1461,7 +1531,6 @@ class _FavoritesPreview extends ConsumerWidget {
 /// [booksProvider] لا مكتوبة هنا.
 class _PublicationsPreview extends ConsumerWidget {
   const _PublicationsPreview();
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1531,6 +1600,7 @@ class _PublicationsPreview extends ConsumerWidget {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: AppColors.bookCoverInk,
@@ -1574,11 +1644,7 @@ class _CoverFallback extends StatelessWidget {
               size: 26,
             ),
             const SizedBox(height: 6),
-            Container(
-              width: 26,
-              height: 1.2,
-              color: AppColors.bookCoverGold,
-            ),
+            Container(width: 26, height: 1.2, color: AppColors.bookCoverGold),
             if (title != null && title!.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
@@ -1587,7 +1653,8 @@ class _CoverFallback extends StatelessWidget {
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontFamily: 'NotoNaskhArabic',
+                  fontFamily: 'Inter',
+                  fontFamilyFallback: kArabicFontFallback,
                   fontSize: 9,
                   height: 1.35,
                   fontWeight: FontWeight.w600,
@@ -1631,6 +1698,7 @@ class _LibraryTabPill extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
             fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
             fontSize: 13,
             fontWeight: FontWeight.w600,
             color: selected ? Colors.white : AppColors.primary,
@@ -1648,9 +1716,9 @@ class _LibraryTabPill extends StatelessWidget {
 class _QiblaDir {
   const _QiblaDir(this.direction, this.visit, this.image, this.lat, this.lng);
   final String direction; // e.g. "اتجاه المدينة المنورة"
-  final String visit;     // e.g. "زيارة النبي محمد"
-  final String image;     // shrine artwork asset
-  final double lat;       // shrine coordinates — the live needle target
+  final String visit; // e.g. "زيارة النبي محمد"
+  final String image; // shrine artwork asset
+  final double lat; // shrine coordinates — the live needle target
   final double lng;
 }
 
@@ -1674,24 +1742,69 @@ class _QiblaCardState extends State<_QiblaCard> {
   // تستعمله اللوحة، فتذوب بيها بلا حافة.
   static const _shrineDir = 'assets/figma_assets/shrines';
   static const _dirs = <_QiblaDir>[
-    _QiblaDir('اتجاه الكعبة المشرفة', 'زيارة النبي محمد',
-        '$_shrineDir/kaaba.png', 21.4225, 39.8262),
-    _QiblaDir('اتجاه المدينة المنورة', 'زيارة النبي محمد',
-        '$_shrineDir/medina.png', 24.4672, 39.6112),
-    _QiblaDir('اتجاه البقيع', 'زيارة البقيع',
-        '$_shrineDir/baqi.png', 24.4674, 39.6134),
-    _QiblaDir('اتجاه النجف الاشرف', 'زيارة الامام علي',
-        '$_shrineDir/najaf.png', 32.0075, 44.3148),
-    _QiblaDir('اتجاه كربلاء', 'زيارة الامام الحسين',
-        '$_shrineDir/karbala_husayn.png', 32.6165, 44.0235),
-    _QiblaDir('اتجاه كربلاء', 'زيارة الامام العباس',
-        '$_shrineDir/karbala_abbas.png', 32.6167, 44.0316),
-    _QiblaDir('اتجاه سامراء', 'زيارة العسكريين',
-        '$_shrineDir/samarra.png', 34.1982, 43.8715),
-    _QiblaDir('اتجاه الكاظمية بغداد', 'زيارة الكاظمين',
-        '$_shrineDir/kadhimiya.png', 33.3811, 44.3399),
-    _QiblaDir('اتجاه مشهد المقدسة', 'زيارة الامام الرضا',
-        '$_shrineDir/ridha.png', 36.2882, 59.6157),
+    _QiblaDir(
+      'اتجاه الكعبة المشرفة',
+      'زيارة النبي محمد',
+      '$_shrineDir/kaaba.png',
+      21.4225,
+      39.8262,
+    ),
+    _QiblaDir(
+      'اتجاه المدينة المنورة',
+      'زيارة النبي محمد',
+      '$_shrineDir/medina.png',
+      24.4672,
+      39.6112,
+    ),
+    _QiblaDir(
+      'اتجاه البقيع',
+      'زيارة البقيع',
+      '$_shrineDir/baqi.png',
+      24.4674,
+      39.6134,
+    ),
+    _QiblaDir(
+      'اتجاه النجف الاشرف',
+      'زيارة الإمام علي (عليه السلام)',
+      '$_shrineDir/najaf.png',
+      32.0075,
+      44.3148,
+    ),
+    _QiblaDir(
+      'اتجاه كربلاء',
+      'زيارة الإمام الحسين (عليه السلام)',
+      '$_shrineDir/karbala_husayn.png',
+      32.6165,
+      44.0235,
+    ),
+    _QiblaDir(
+      'اتجاه كربلاء',
+      'زيارة العباس',
+      '$_shrineDir/karbala_abbas.png',
+      32.6167,
+      44.0316,
+    ),
+    _QiblaDir(
+      'اتجاه سامراء',
+      'زيارة العسكريين',
+      '$_shrineDir/samarra.png',
+      34.1982,
+      43.8715,
+    ),
+    _QiblaDir(
+      'اتجاه الكاظمية بغداد',
+      'زيارة الكاظمين',
+      '$_shrineDir/kadhimiya.png',
+      33.3811,
+      44.3399,
+    ),
+    _QiblaDir(
+      'اتجاه مشهد المقدسة',
+      'زيارة الإمام الرضا (عليه السلام)',
+      '$_shrineDir/ridha.png',
+      36.2882,
+      59.6157,
+    ),
   ];
   static const _initial = 0;
 
@@ -1736,7 +1849,6 @@ class _QiblaCardState extends State<_QiblaCard> {
             ),
           ],
         ),
-
       ),
     );
   }
@@ -1756,8 +1868,9 @@ class _CompassTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final needleAngle =
-        ref.watch(homeNeedleToTargetProvider((lat: lat, lng: lng)));
+    final needleAngle = ref.watch(
+      homeNeedleToTargetProvider((lat: lat, lng: lng)),
+    );
     return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -1883,104 +1996,109 @@ class _QiblaSlide extends StatelessWidget {
     // كبيراً يملأ النصف الأيسر، وحبّة «زيارة …» يميناً بمنتصف الارتفاع.
     // مقاسات التصميم مبنية على لوحة 240، وتتقلّص على الأجهزة الأضيق حتى ما
     // ينهار التخطيط.
-    return LayoutBuilder(builder: (context, box) {
-      final w = box.maxWidth;
-      final pillW = w >= 240 ? 127.0 : (w * 0.53).clamp(80.0, 127.0);
-      final ruleW = w >= 240 ? 120.0 : (w * 0.5).clamp(70.0, 120.0);
-      return Stack(
-        children: [
-          // عنوان الاتجاه، أعلى اليمين.
-          Positioned(
-            top: 8,
-            right: 12,
-            left: 12,
-            child: Text(
-              dir.direction,
-              textAlign: TextAlign.right,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                letterSpacing: -0.1,
-                color: AppColors.inkSoft,
-              ),
-            ),
-          ),
-          // خط رفيع تحت العنوان (النصف الأيمن من اللوحة).
-          Positioned(
-            top: 32,
-            right: 12,
-            child: Container(
-              width: ruleW,
-              height: 0.8,
-              color: AppColors.inkSoft.withValues(alpha: 0.55),
-            ),
-          ),
-          // رسم المرقد — يملأ النصف الأيسر بكامل الارتفاع.
-          Positioned(
-            left: 8,
-            top: 16,
-            bottom: 14,
-            right: pillW + 18,
-            child: Image.asset(
-              dir.image,
-              fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => const Icon(
-                Icons.mosque_rounded,
-                color: AppColors.visitPillGreen,
-                size: 40,
-              ),
-            ),
-          ),
-          // حبّة «زيارة …» (127×34، نصف قطر 8.3).
-          Positioned(
-            right: 9,
-            top: 50,
-            child: Container(
-              width: pillW,
-              height: 34,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColors.primaryLight,
-                borderRadius: BorderRadius.circular(8.3),
-              ),
+    return LayoutBuilder(
+      builder: (context, box) {
+        final w = box.maxWidth;
+        final pillW = w >= 240 ? 127.0 : (w * 0.53).clamp(80.0, 127.0);
+        final ruleW = w >= 240 ? 120.0 : (w * 0.5).clamp(70.0, 120.0);
+        return Stack(
+          children: [
+            // عنوان الاتجاه، أعلى اليمين.
+            Positioned(
+              top: 8,
+              right: 12,
+              left: 12,
               child: Text(
-                dir.visit,
-                textAlign: TextAlign.center,
+                dir.direction,
+                textAlign: TextAlign.right,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontFamily: 'Inter',
+                  fontFamilyFallback: kArabicFontFallback,
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                   letterSpacing: -0.1,
-                  color: AppColors.nearWhite,
+                  color: AppColors.inkSoft,
                 ),
               ),
             ),
-          ),
-        ],
-      );
-    });
+            // خط رفيع تحت العنوان (النصف الأيمن من اللوحة).
+            Positioned(
+              top: 32,
+              right: 12,
+              child: Container(
+                width: ruleW,
+                height: 0.8,
+                color: AppColors.inkSoft.withValues(alpha: 0.55),
+              ),
+            ),
+            // رسم المرقد — يملأ النصف الأيسر بكامل الارتفاع.
+            Positioned(
+              left: 8,
+              top: 16,
+              bottom: 14,
+              right: pillW + 18,
+              child: Image.asset(
+                dir.image,
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => const Icon(
+                  Icons.mosque_rounded,
+                  color: AppColors.visitPillGreen,
+                  size: 40,
+                ),
+              ),
+            ),
+            // حبّة «زيارة …» (127×34، نصف قطر 8.3).
+            Positioned(
+              right: 9,
+              top: 50,
+              child: Container(
+                width: pillW,
+                height: 34,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryLight,
+                  borderRadius: BorderRadius.circular(8.3),
+                ),
+                child: Text(
+                  dir.visit,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontFamilyFallback: kArabicFontFallback,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.1,
+                    color: AppColors.nearWhite,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
 // ═════════════════════════════════════════════════════════════════════
-// بطاقة الشهيد — أول إدخال من martyrs.json، والنقر يفتح القائمة الكاملة.
+// بطاقة الشهيد: إن صادف اليوم ذكرى استشهاد أحدهم عُرض هو والنقر يفتح سيرته،
+// وإلا فاللافتة العامة والنقر يفتح قائمة الشهداء.
 // ═════════════════════════════════════════════════════════════════════
-class _FeaturedMartyrCard extends ConsumerStatefulWidget {
-  const _FeaturedMartyrCard({required this.onTap});
+class FeaturedMartyrCard extends ConsumerStatefulWidget {
+  const FeaturedMartyrCard({required this.onTap, super.key});
 
   final VoidCallback onTap;
 
   @override
-  ConsumerState<_FeaturedMartyrCard> createState() =>
-      _FeaturedMartyrCardState();
+  ConsumerState<FeaturedMartyrCard> createState() =>
+      FeaturedMartyrCardState();
 }
 
-class _FeaturedMartyrCardState extends ConsumerState<_FeaturedMartyrCard> {
+class FeaturedMartyrCardState extends ConsumerState<FeaturedMartyrCard> {
   @override
   Widget build(BuildContext context) {
     // نعرض الشهيد اللي ذكرى استشهاده اليوم؛ وإذا ما بيه أحد نعرض لافتة بديلة.
@@ -2015,19 +2133,26 @@ class _FeaturedMartyrCardState extends ConsumerState<_FeaturedMartyrCard> {
           clipBehavior: Clip.antiAlias,
           child: Image.asset(
             'assets/figma_assets/martyrs_fallback.png',
-            fit: BoxFit.cover,
+            // contain لا cover: البطاقة بنسبة الصورة نفسها، والقصّ كان
+            // يزيح المحتوى ويقطع عمود الصور (ملاحظة 12).
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
             width: double.infinity,
             errorBuilder: (_, __, ___) => const Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.brightness_5_rounded,
-                      color: AppColors.cardOliveMuted, size: 34),
+                  Icon(
+                    Icons.brightness_5_rounded,
+                    color: AppColors.cardOliveMuted,
+                    size: 34,
+                  ),
                   SizedBox(height: 8),
                   Text(
                     'شهداء الفتوى المقدّسة',
                     style: TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color: AppColors.cardOliveMuted,
@@ -2048,7 +2173,16 @@ class _FeaturedMartyrCardState extends ConsumerState<_FeaturedMartyrCard> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: widget.onTap,
+        // الصورة صورةُ شهيدٍ بعينه، فالنقر يفتح سيرته لا القائمة. ومعرّفٌ
+        // غير صالح يرجع بنا إلى القائمة بدل شاشةٍ فارغة.
+        onTap: martyr.id > 0
+            ? () => context.pushNamed(
+                  RouteNames.martyrDetail,
+                  pathParameters: {'martyrId': '${martyr.id}'},
+                  // نعلن المصدر كي يعرف سهمُ الرجوع أن القائمة ليست تحته.
+                  queryParameters: const {'from': 'home'},
+                )
+            : widget.onTap,
         borderRadius: BorderRadius.circular(18),
         child: Container(
           height: 127,
@@ -2123,7 +2257,8 @@ class _FeaturedMartyrPhoto extends StatelessWidget {
           ? Image.asset(
               photo,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const _FeaturedMartyrPhotoFallback(),
+              errorBuilder: (_, __, ___) =>
+                  const _FeaturedMartyrPhotoFallback(),
             )
           : const _FeaturedMartyrPhotoFallback(),
     );
@@ -2168,6 +2303,7 @@ class _FeaturedMartyrText extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
             fontSize: 17,
             fontWeight: FontWeight.w800,
             color: ink,
@@ -2184,6 +2320,7 @@ class _FeaturedMartyrText extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(
             fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
             fontSize: 13,
             fontWeight: FontWeight.w700,
             color: ink,
@@ -2200,6 +2337,7 @@ class _FeaturedMartyrText extends StatelessWidget {
               'الاستشهاد',
               style: TextStyle(
                 fontFamily: 'Inter',
+                fontFamilyFallback: kArabicFontFallback,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: ink,
@@ -2221,6 +2359,7 @@ class _FeaturedMartyrText extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontFamily: 'Inter',
+                  fontFamilyFallback: kArabicFontFallback,
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   height: 1.3,

@@ -14,8 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Surah {
 
- int get id; String get nameArabic; int get ayahCount; String get revelationType;// 'meccan' | 'medinan'
- int get orderInMushaf; String? get audioUrl;
+ int get id; String get nameArabic; int get ayahCount;// 'meccan' أو 'medinan' — نص لا enum لأنه يوصل هكذا من ملف الأصول.
+ String get revelationType; int get orderInMushaf; String? get audioUrl;
 /// Create a copy of Surah
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -218,8 +218,8 @@ class _Surah implements Surah {
 @override final  int id;
 @override final  String nameArabic;
 @override final  int ayahCount;
+// 'meccan' أو 'medinan' — نص لا enum لأنه يوصل هكذا من ملف الأصول.
 @override final  String revelationType;
-// 'meccan' | 'medinan'
 @override final  int orderInMushaf;
 @override final  String? audioUrl;
 

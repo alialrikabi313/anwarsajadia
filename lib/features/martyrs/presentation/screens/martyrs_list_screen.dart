@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:anwarsajadia/core/utils/arabic_search.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/martyrs/domain/entities/martyr.dart';
 import 'package:anwarsajadia/features/martyrs/presentation/providers/martyrs_provider.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 /// مبنية على إطار فيغما `الشهداء`.
 class MartyrsListScreen extends ConsumerStatefulWidget {
@@ -37,7 +39,7 @@ class _MartyrsListScreenState extends ConsumerState<MartyrsListScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_forward_rounded),
+                    icon: const Icon(Icons.arrow_back_rounded),
                     color: AppColors.primary,
                     onPressed: () => Navigator.of(context).maybePop(),
                   ),
@@ -47,6 +49,7 @@ class _MartyrsListScreenState extends ConsumerState<MartyrsListScreen> {
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                         color: AppColors.primary,
@@ -115,7 +118,7 @@ class _MartyrsListScreenState extends ConsumerState<MartyrsListScreen> {
                 data: (all) {
                   final martyrs = _query.isEmpty
                       ? all
-                      : all.where((m) => m.name.contains(_query)).toList();
+                      : all.where((m) => arabicContains(m.name, _query)).toList();
                   if (martyrs.isEmpty) {
                     return Center(
                       child: Text(
@@ -213,6 +216,7 @@ class _MartyrRow extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: 'Inter',
+                                fontFamilyFallback: kArabicFontFallback,
                                 fontSize: 18,
                                 fontWeight: FontWeight.w800,
                                 letterSpacing: -0.2,
@@ -228,6 +232,7 @@ class _MartyrRow extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   fontFamily: 'Inter',
+                                  fontFamilyFallback: kArabicFontFallback,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
                                   color: _ink,
@@ -285,6 +290,7 @@ class _MartyrDateRow extends StatelessWidget {
   Widget build(BuildContext context) {
     const dateStyle = TextStyle(
       fontFamily: 'Inter',
+      fontFamilyFallback: kArabicFontFallback,
       fontSize: 12,
       fontWeight: FontWeight.w500,
       height: 1.5,
@@ -298,6 +304,7 @@ class _MartyrDateRow extends StatelessWidget {
           'الاستشهاد',
           style: TextStyle(
             fontFamily: 'Inter',
+            fontFamilyFallback: kArabicFontFallback,
             fontSize: 12.5,
             fontWeight: FontWeight.w600,
             color: _ink,

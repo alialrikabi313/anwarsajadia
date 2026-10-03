@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 /// شاشة «المكتبة» مثل القسم الرابع بالتصميم: رأس، ثم العنوان، ثم بطاقات
 /// رقّية (المكتبة التخصصية / اصدارات المؤسسة) بنفس أسلوب بطاقات تراث الإمام —
@@ -38,12 +39,15 @@ class LibraryScreen extends StatelessWidget {
           children: [
             const HomeHeader(dark: true),
             const SizedBox(height: 6),
-            // العنوان بشرطتين جانبيتين، مثل تراث الإمام.
+            // العنوان بشرطتين جانبيتين، مثل تراث الإمام. مع RTL أول عنصر
+            // بالصفّ = اليمين: فاصل قصير، العنوان، ثم الفاصل الطويل يمتدّ
+            // لليسار — فيلتصق العنوان باليمين لا يبعد عنه.
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
               child: Row(
                 children: [
-                  Expanded(
+                  SizedBox(
+                    width: 12,
                     child: Container(
                       height: 0.6,
                       color: AppColors.borderLight.withValues(alpha: 0.6),
@@ -54,14 +58,14 @@ class LibraryScreen extends StatelessWidget {
                     'المكتبة',
                     style: TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primary,
                     ),
                   ),
                   const SizedBox(width: 8),
-                  SizedBox(
-                    width: 12,
+                  Expanded(
                     child: Container(
                       height: 0.6,
                       color: AppColors.borderLight.withValues(alpha: 0.6),
@@ -142,6 +146,7 @@ class _LibraryCard extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 17,
                       fontWeight: FontWeight.w700,
                       letterSpacing: -0.2,

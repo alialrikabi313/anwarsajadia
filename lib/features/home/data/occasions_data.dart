@@ -29,8 +29,8 @@ const allOccasions = <AhlulBaytOccasion>[
 
   // ── صفر ──
   AhlulBaytOccasion(
-    name: 'النبي محمد ﷺ',
-    title: 'وفاة النبي الأعظم ﷺ',
+    name: 'النبي محمد (صلى الله عليه وآله وسلم)',
+    title: 'وفاة النبي الأعظم (صلى الله عليه وآله وسلم)',
     hijriMonth: 2,
     hijriDay: 28,
     type: OccasionType.martyrdom,
@@ -60,8 +60,8 @@ const allOccasions = <AhlulBaytOccasion>[
 
   // ── ربيع الأول ──
   AhlulBaytOccasion(
-    name: 'النبي محمد ﷺ',
-    title: 'ولادة النبي الأعظم ﷺ',
+    name: 'النبي محمد (صلى الله عليه وآله وسلم)',
+    title: 'ولادة النبي الأعظم (صلى الله عليه وآله وسلم)',
     hijriMonth: 3,
     hijriDay: 17,
     type: OccasionType.birth,

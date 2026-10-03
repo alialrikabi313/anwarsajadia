@@ -5,9 +5,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:anwarsajadia/core/utils/arabic_search.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/core/theme/app_decorations.dart';
 import 'package:anwarsajadia/core/theme/app_text_styles.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // ─────────────────────────────────────────────────────────────────────
 // رقاقات تبويب (مثل: الصحيفة | رسالة الحقوق)
@@ -89,7 +91,9 @@ Widget highlightedText(
   TextAlign textAlign = TextAlign.start,
 }) {
   final q = query?.trim() ?? '';
-  if (q.isEmpty || !text.contains(q)) {
+  // المطابقة تتجاهل التشكيل، والإبراز يقع على النصّ الأصلي كما هو.
+  final hits = q.isEmpty ? const <ArabicMatch>[] : arabicMatches(text, q);
+  if (hits.isEmpty) {
     return Text(text,
         style: style,
         maxLines: maxLines,
@@ -98,22 +102,24 @@ Widget highlightedText(
   }
   final spans = <TextSpan>[];
   var start = 0;
-  while (true) {
-    final i = text.indexOf(q, start);
-    if (i < 0) {
+  for (var k = 0; k <= hits.length; k++) {
+    if (k == hits.length) {
       spans.add(TextSpan(text: text.substring(start)));
       break;
     }
+    final i = hits[k].start;
     if (i > start) spans.add(TextSpan(text: text.substring(start, i)));
     spans.add(TextSpan(
-      text: text.substring(i, i + q.length),
+      text: text.substring(i, hits[k].end),
       style: const TextStyle(
         backgroundColor: AppColors.searchHighlight,
         color: Colors.black,
         fontWeight: FontWeight.w700,
       ),
     ));
-    start = i + q.length;
+    // نهاية المطابقة بحدود النصّ الأصلي (تشمل تشكيل آخر حرف)، لا طول
+    // الاستعلام المطويّ — وإلا تكرّرت حروف أو ابتُلعت.
+    start = hits[k].end;
   }
   return Text.rich(
     TextSpan(style: style, children: spans),
@@ -185,6 +191,7 @@ class FigmaListItem extends StatelessWidget {
                     highlight,
                     const TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: Colors.black,
@@ -202,6 +209,7 @@ class FigmaListItem extends StatelessWidget {
                     subtitle!,
                     style: const TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: Colors.black,
@@ -835,6 +843,18 @@ class _FigmaBottomNavState extends State<FigmaBottomNav>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant FigmaBottomNav oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // القشرة تبقي هذا العنصر نفسه حياً عبر تبديل التبويبات (نفس الموضع
+    // بالشجرة)، فلا يُعاد بناؤه من الصفر — فيبقى مرفوعاً على التبويب الجديد
+    // إن كان مرفوعاً على القديم. ننزله عند أي تبديل تبويبٍ فعلي.
+    if (_expanded && widget.selectedIndex != oldWidget.selectedIndex) {
+      _expanded = false;
+      _controller.reverse();
+    }
   }
 
   void _toggle() {

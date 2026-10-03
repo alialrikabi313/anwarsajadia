@@ -10,6 +10,8 @@ import 'package:anwarsajadia/core/utils/helpers/url_helper.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/sajjad/data/datasources/books_remote_datasource.dart';
 import 'package:anwarsajadia/features/sajjad/presentation/widgets/api_book_card.dart';
+import 'package:anwarsajadia/features/sajjad/presentation/widgets/book_parts_sheet.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // شاشة «اصدارات المؤسسة»: تصنيف «الإصدارات» من الباك إند. قائمة كتب مسطّحة،
 // كل كتاب يفتح أو ينزّل ملفه.
@@ -34,7 +36,7 @@ class PublicationsScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.arrow_forward_rounded),
+                    icon: const Icon(Icons.arrow_back_rounded),
                     onPressed: () => Navigator.of(context).pop(),
                     color: AppColors.primary,
                   ),
@@ -44,6 +46,7 @@ class PublicationsScreen extends ConsumerWidget {
                       textAlign: TextAlign.right,
                       style: TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                         color: AppColors.primary,
@@ -67,7 +70,10 @@ class PublicationsScreen extends ConsumerWidget {
                     child: Text(
                       'تعذّر تحميل الكتب: $e',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontFamily: 'Inter'),
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
+                      ),
                     ),
                   ),
                 ),
@@ -78,7 +84,9 @@ class PublicationsScreen extends ConsumerWidget {
                       child: Text(
                         'لا توجد إصدارات',
                         style: TextStyle(
-                            fontFamily: 'Inter', color: AppColors.primary),
+                            fontFamily: 'Inter',
+                            fontFamilyFallback: kArabicFontFallback,
+                            color: AppColors.primary),
                       ),
                     );
                   }
@@ -90,12 +98,21 @@ class PublicationsScreen extends ConsumerWidget {
                       final b = books[i];
                       return ApiBookCard(
                         book: b,
-                        onRead: () => context.pushNamed(
-                          RouteNames.pdfReader,
-                          extra: {'url': b.pdfUrl ?? '', 'title': b.title},
-                        ),
-                        onDownload: () =>
-                            UrlHelper.downloadPdf(context, b.pdfUrl, b.title),
+                        // كتابٌ مقسَّم لا يحمل ملفاً على مستواه؛ أجزاؤه هي
+                        // التي تحمل الملفات، فيُعرض عنوانه وحده بالقائمة
+                        // وتُفتح أجزاؤه بورقة عند الضغط بدل فتح رابطٍ فارغ.
+                        onRead: b.hasParts
+                            ? () => showBookPartsSheet(context,
+                                book: b, download: false)
+                            : () => context.pushNamed(
+                                  RouteNames.pdfReader,
+                                  extra: {'url': b.pdfUrl ?? '', 'title': b.title},
+                                ),
+                        onDownload: b.hasParts
+                            ? () => showBookPartsSheet(context,
+                                book: b, download: true)
+                            : () => UrlHelper.downloadPdf(
+                                context, b.pdfUrl, b.title),
                       );
                     },
                   );

@@ -5,8 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:anwarsajadia/core/router/nav_extensions.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 import 'package:anwarsajadia/core/widgets/app_error_widget.dart';
 import 'package:anwarsajadia/core/widgets/loading_indicator.dart';
+import 'package:anwarsajadia/core/widgets/scroll_to_top_fab.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/sajjad/presentation/providers/sajjad_providers.dart';
 
@@ -19,6 +21,48 @@ class BiographyScreen extends ConsumerStatefulWidget {
 
 class _BiographyScreenState extends ConsumerState<BiographyScreen> {
   final List<GlobalKey> _sectionKeys = [];
+
+  /// حجم متن السيرة — يضبطه القارئ كما في شاشات قراءة الكتب.
+  double _fontSize = 18;
+  final ScrollController _scroll = ScrollController();
+  // مفتاح بطاقة الفهرس: رابط «العودة إلى الفهرس» يقفز إليها لا لرأس الصفحة.
+  final GlobalKey _indexKey = GlobalKey();
+  List<String> _titles = const [];
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  void _toTop() => _scroll.animateTo(
+        0,
+        duration: const Duration(milliseconds: 450),
+        curve: Curves.easeOutCubic,
+      );
+
+  void _scrollToIndexCard() {
+    final ctx = _indexKey.currentContext;
+    if (ctx == null) {
+      _toTop();
+      return;
+    }
+    Scrollable.ensureVisible(
+      ctx,
+      duration: const Duration(milliseconds: 420),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _openIndexSheet() {
+    if (_titles.isEmpty) return;
+    showSectionIndexSheet(
+      context,
+      titles: _titles,
+      onSelect: _scrollToSection,
+      onTop: _toTop,
+    );
+  }
 
   void _scrollToSection(int index) {
     if (index < _sectionKeys.length) {
@@ -41,32 +85,38 @@ class _BiographyScreenState extends ConsumerState<BiographyScreen> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
+        // زر عائم: يفتح الفهرس للقفز بين الأقسام، أو يرجع لأعلى الصفحة.
+        floatingActionButton: ScrollToTopFab(
+          controller: _scroll,
+          onOpenIndex: _openIndexSheet,
+        ),
         body: Column(
           children: [
             const HomeHeader(),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              // سهم الرجوع باليسار (آخر عنصر مع RTL) مثل بقية شاشات القراءة.
+              // سهم الرجوع بأقصى اليمين (أول عنصر مع RTL) — موحّد بكل الشاشات.
               child: Row(
                 children: [
-                  const SizedBox(width: 48),
-                  const Expanded(
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back_rounded),
+                    onPressed: () => context.backOrHome(),
+                    color: AppColors.textPrimaryLight,
+                  ),
+                  Expanded(
                     child: Text(
-                      'سيرة الإمام السجاد (ع)',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'Amiri',
+                      'سيرة الإمام زين العابدين (عليه السلام)',
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                         color: AppColors.textPrimaryLight,
                       ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward_rounded),
-                    onPressed: () => context.backOrHome(),
-                    color: AppColors.textPrimaryLight,
-                  ),
+                  const SizedBox(width: 48),
                 ],
               ),
             ),
@@ -90,8 +140,10 @@ class _BiographyScreenState extends ConsumerState<BiographyScreen> {
             while (_sectionKeys.length < biographies.length) {
               _sectionKeys.add(GlobalKey());
             }
+            _titles = [for (final b in biographies) b.title];
 
             return SingleChildScrollView(
+              controller: _scroll,
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,10 +172,15 @@ class _BiographyScreenState extends ConsumerState<BiographyScreen> {
                         ),
                         const SizedBox(height: 8),
                         const Text(
+                          // شارةٌ زخرفية (أيقونة فوق اسم) لا عنوان صفحة، فتبقى
+                          // متمركزة كبقية حالات الأيقونة+النصّ المتمركزة
+                          // بالتطبيق (الحالات الفارغة مثلاً) — العنوان الفعلي
+                          // لهذه الشاشة هو الذي أعلاها بجانب سهم الرجوع.
                           'الإمام زين العابدين (عليه السلام)',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'Amiri',
+                            fontFamily: 'Inter',
+                            fontFamilyFallback: kArabicFontFallback,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -136,6 +193,7 @@ class _BiographyScreenState extends ConsumerState<BiographyScreen> {
 
                   // فهرس المحتويات — كامل بلا طيّ
                   Container(
+                    key: _indexKey,
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -151,7 +209,8 @@ class _BiographyScreenState extends ConsumerState<BiographyScreen> {
                         const Text(
                           'الفهرس',
                           style: TextStyle(
-                            fontFamily: 'Amiri',
+                            fontFamily: 'Inter',
+                            fontFamilyFallback: kArabicFontFallback,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primaryGreen,
@@ -196,7 +255,8 @@ class _BiographyScreenState extends ConsumerState<BiographyScreen> {
                                     child: Text(
                                       bio.title,
                                       style: TextStyle(
-                                        fontFamily: 'Amiri',
+                                        fontFamily: 'Inter',
+                                        fontFamilyFallback: kArabicFontFallback,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         color: AppColors.primaryGreen,
@@ -228,43 +288,41 @@ class _BiographyScreenState extends ConsumerState<BiographyScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // عنوان القسم
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal: 16,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryGreen
-                                  .withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border(
-                                right: BorderSide(
-                                  color: AppColors.accentGold,
-                                  width: 4,
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              bio.title,
-                              style: TextStyle(
-                                fontFamily: 'Amiri',
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primaryGreen,
-                              ),
-                            ),
+                          // حبّة العنوان ثم المتن على بطاقة بيضاء — نفس
+                          // هيئة شاشة قراءة الكتب (الصحيفة والفصول)، فلا
+                          // تبدو السيرة نصّاً سائباً على الخلفية.
+                          _SectionTitleChip(
+                            title: bio.title,
+                            index: index + 1,
                           ),
                           const SizedBox(height: 12),
-                          // متن القسم
-                          SelectableText(
-                            bio.content,
-                            style: TextStyle(
-                              fontFamily: 'Amiri',
-                              fontSize: 18,
-                              height: 1.8,
-                              color: AppColors.textPrimaryLight,
+                          _SectionBodyCard(
+                            content: bio.content,
+                            fontSize: _fontSize,
+                          ),
+                          const SizedBox(height: 6),
+                          // رابط رجوع للفهرس بنهاية كل قسم.
+                          Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: TextButton.icon(
+                              onPressed: _scrollToIndexCard,
+                              icon: const Icon(
+                                Icons.keyboard_arrow_up_rounded,
+                                size: 18,
+                              ),
+                              label: const Text(
+                                'العودة إلى الفهرس',
+                                style: TextStyle(
+                                  fontFamily: 'NotoNaskhArabic',
+                                  fontSize: 12.5,
+                                ),
+                              ),
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppColors.primaryGreen,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                visualDensity: VisualDensity.compact,
+                              ),
                             ),
                           ),
                         ],
@@ -277,6 +335,165 @@ class _BiographyScreenState extends ConsumerState<BiographyScreen> {
           },
         ),
       ),
+            _FontSizeBar(
+              onIncrease:
+                  _fontSize < 32 ? () => setState(() => _fontSize += 2) : null,
+              onDecrease:
+                  _fontSize > 14 ? () => setState(() => _fontSize -= 2) : null,
+              onIndex: _openIndexSheet,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// حبّة عنوان القسم — بهيئة بطاقة رأس الفصل في شاشات قراءة الكتب.
+class _SectionTitleChip extends StatelessWidget {
+  const _SectionTitleChip({required this.title, required this.index});
+
+  final String title;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 44,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: AppColors.cardLight,
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(
+          color: AppColors.borderLight.withValues(alpha: 0.4),
+          width: 0.8,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 24,
+            height: 24,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              color: AppColors.accentGoldDark,
+              shape: BoxShape.circle,
+            ),
+            child: Text(
+              '$index',
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(width: 0.8, height: 16, color: AppColors.borderLight),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontFamilyFallback: kArabicFontFallback,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimaryLight,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// متن القسم على بطاقة بيضاء — نفس بطاقة المتن في شاشات قراءة الكتب.
+class _SectionBodyCard extends StatelessWidget {
+  const _SectionBodyCard({required this.content, required this.fontSize});
+
+  final String content;
+  final double fontSize;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: AppColors.primaryLight.withValues(alpha: 0.5),
+          width: 0.8,
+        ),
+      ),
+      child: SelectableText(
+        content,
+        textAlign: TextAlign.justify,
+        style: TextStyle(
+          fontFamily: 'Amiri',
+          fontSize: fontSize,
+          height: 2.0,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+}
+
+/// شريط سفلي داكن: حجم الخطّ والفهرس — كشريط شاشات قراءة الكتب.
+class _FontSizeBar extends StatelessWidget {
+  const _FontSizeBar({
+    required this.onIncrease,
+    required this.onDecrease,
+    required this.onIndex,
+  });
+
+  final VoidCallback? onIncrease;
+  final VoidCallback? onDecrease;
+  final VoidCallback onIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget button(IconData icon, VoidCallback? onTap) => Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(50),
+            child: SizedBox(
+              width: 38,
+              height: 38,
+              child: Icon(
+                icon,
+                size: 22,
+                color: onTap == null
+                    ? Colors.white.withValues(alpha: 0.25)
+                    : AppColors.accentGoldLight,
+              ),
+            ),
+          ),
+        );
+
+    return SafeArea(
+      top: false,
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(16, 6, 16, 12),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.charcoalDeep,
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Row(
+          children: [
+            button(Icons.text_decrease_rounded, onDecrease),
+            button(Icons.text_increase_rounded, onIncrease),
+            const Spacer(),
+            button(Icons.list_rounded, onIndex),
           ],
         ),
       ),

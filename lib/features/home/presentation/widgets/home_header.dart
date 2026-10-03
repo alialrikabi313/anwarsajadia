@@ -7,11 +7,12 @@ import 'package:go_router/go_router.dart';
 
 import 'package:anwarsajadia/core/router/route_names.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
+import 'package:anwarsajadia/features/multimedia/presentation/widgets/playback_sheet.dart';
 import 'package:anwarsajadia/core/utils/extensions/string_extensions.dart'
     show IntArabicExtension;
 import 'package:anwarsajadia/core/utils/helpers/hijri_calendar_provider.dart';
-import 'package:anwarsajadia/features/multimedia/presentation/widgets/playback_sheet.dart';
 import 'package:anwarsajadia/features/notifications/presentation/providers/notifications_provider.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // حبّة شاشات التفصيل (الصحيفة، المكتبة، القرآن…).
 const Color _kBrandCharcoal = AppColors.primary;
@@ -33,9 +34,9 @@ class HomeHeader extends ConsumerWidget {
   });
 
   final VoidCallback? onMenuTap;
-  final VoidCallback? onAudioTap;
   // لمّا ما يكون null يتجاوز حالة «غير مقروء» المكتشَفة تلقائياً. خلّيه null
   // حتى تجي النقطة من مخزن الإشعارات نفسه.
+  final VoidCallback? onAudioTap;
   final bool? hasNotification;
   // نسخة فحمية داكنة لشاشات التفصيل.
   final bool dark;
@@ -144,7 +145,15 @@ class HomeHeader extends ConsumerWidget {
                 onTap: onAudioTap ?? () => showPlaybackSheet(context),
               ),
               const SizedBox(width: 6),
-              const _GoldDotRow(),
+              // النقاط الذهبية (الـnotch) مقبض يفتح لوحة المشغّل — ملاحظة 22.
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => showPlaybackSheet(context),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 14),
+                  child: _GoldDotRow(),
+                ),
+              ),
               const SizedBox(width: 4),
               Expanded(
                 child: Center(
@@ -153,6 +162,7 @@ class HomeHeader extends ConsumerWidget {
                     formatted,
                     style: TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 13,
                       fontWeight: olive ? FontWeight.w700 : FontWeight.w500,
                       color: textColor,

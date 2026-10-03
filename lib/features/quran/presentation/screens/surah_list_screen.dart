@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:anwarsajadia/core/utils/arabic_search.dart';
 import 'package:anwarsajadia/core/router/route_names.dart';
+import 'package:anwarsajadia/core/router/nav_extensions.dart';
 import 'package:anwarsajadia/core/theme/app_colors.dart';
 import 'package:anwarsajadia/core/utils/extensions/string_extensions.dart';
 import 'package:anwarsajadia/core/widgets/figma_widgets.dart';
@@ -14,6 +16,7 @@ import 'package:anwarsajadia/features/bookmarks/data/bookmarks_storage.dart';
 import 'package:anwarsajadia/features/bookmarks/presentation/providers/bookmarks_provider.dart';
 import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart';
 import 'package:anwarsajadia/features/quran/presentation/providers/quran_providers.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // فهرس القرآن.
 
@@ -64,7 +67,7 @@ class _SurahListScreenState extends ConsumerState<SurahListScreen> {
             final filtered = _query.isEmpty
                 ? surahs
                 : surahs
-                    .where((s) => s.nameArabic.contains(_query))
+                    .where((s) => arabicContains(s.nameArabic, _query))
                     .toList();
 
             return Column(
@@ -146,18 +149,20 @@ class _SectionTitle extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 6),
       child: Row(
         children: [
-          SizedBox(
-            width: 12,
-            child: Container(
-              height: 0.6,
-              color: AppColors.borderLight.withValues(alpha: 0.6),
-            ),
+          // فهرس السور جذرُ تبويب، فلا شيء يُطوى تحته — والرجوع يعود
+          // بنا إلى الرئيسية كي لا يبقى المستخدم حبيسَ التبويب.
+          IconButton(
+            icon: const Icon(Icons.arrow_back_rounded,
+                color: AppColors.primary),
+            visualDensity: VisualDensity.compact,
+            onPressed: () => context.backOrHome(),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 4),
           Text(
             title,
             style: const TextStyle(
               fontFamily: 'Inter',
+              fontFamilyFallback: kArabicFontFallback,
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.primary,
@@ -235,6 +240,7 @@ class _SearchRow extends StatelessWidget {
                         hintText: 'بحث',
                         hintStyle: TextStyle(
                           fontFamily: 'Inter',
+                          fontFamilyFallback: kArabicFontFallback,
                           fontSize: 12.5,
                           fontWeight: FontWeight.w600,
                           color: Colors.black,
@@ -242,6 +248,7 @@ class _SearchRow extends StatelessWidget {
                       ),
                       style: const TextStyle(
                         fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 12.5,
                         fontWeight: FontWeight.w600,
                         color: Colors.black,
@@ -271,6 +278,7 @@ class _SearchRow extends StatelessWidget {
                     'المفضلة',
                     style: TextStyle(
                       fontFamily: 'Inter',
+                      fontFamilyFallback: kArabicFontFallback,
                       fontSize: 12.5,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,

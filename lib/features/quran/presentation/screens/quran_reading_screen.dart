@@ -19,6 +19,7 @@ import 'package:anwarsajadia/features/home/presentation/widgets/home_header.dart
 import 'package:anwarsajadia/features/quran/domain/entities/ayah.dart';
 import 'package:anwarsajadia/features/quran/domain/entities/tafsir_entry.dart';
 import 'package:anwarsajadia/features/quran/presentation/providers/quran_providers.dart';
+import 'package:anwarsajadia/core/theme/font_fallback.dart';
 
 // شاشة تلاوة سورة.
 
@@ -75,6 +76,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   // تتسرّب مع كل إعادة بناء.
   final List<TapGestureRecognizer> _ayahRecognizers = [];
 
+  /// السورة تُعرض تدفّقاً متّصلاً لا قائمةَ آيات، فموضعُ القراءة موضعُ تمرير.
+  final ScrollController _scroll = ScrollController();
+
+  /// الموضع المحفوظ سابقاً؛ يُستعاد بعد أول رسم ثم يُصفَّر فلا يُعاد القفز.
+  double? _restoreOffset;
+
   void _disposeAyahRecognizers() {
     for (final r in _ayahRecognizers) {
       r.dispose();
@@ -84,6 +91,9 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
 
   @override
   void dispose() {
+    _scroll
+      ..removeListener(_saveProgress)
+      ..dispose();
     _disposeAyahRecognizers();
     super.dispose();
   }
@@ -214,6 +224,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                             textAlign: TextAlign.right,
                             style: TextStyle(
                               fontFamily: 'Inter',
+                              fontFamilyFallback: kArabicFontFallback,
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
                               color: AppColors.quranBrownGold,
@@ -268,20 +279,43 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
   @override
   void initState() {
     super.initState();
+    // موضع هذه السورة بالذات؛ فتحُ سورةٍ أخرى لا يستأنف من موضع سابقتها.
+    final saved = ref.read(bookReadingProgressProvider(0));
+    if (saved != null && saved.chapterId == widget.surahId) {
+      _restoreOffset = saved.scrollOffset;
+    }
+    _scroll.addListener(_saveProgress);
     // نحفظ موضع القراءة حتى تكمل منه بطاقة «اكمال القراءة» بالرئيسية.
     // bookId=0 اصطلاحنا للقرآن (كتب السجادية تأخذ 1..5).
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.read(readingProgressProvider.notifier).saveProgress(
-            ReadingProgress(
-              chapterId: widget.surahId,
-              bookId: 0,
-              chapterTitle: 'سورة ${widget.surahId}',
-              bookTitle: 'القرآن الكريم',
-              timestamp: DateTime.now(),
-            ),
-          );
+      _saveProgress();
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant QuranReadingScreen old) {
+    super.didUpdateWidget(old);
+    // درج الفهرس يبدّل السورة داخل الشاشة نفسها، فنبدأ الجديدة من رأسها.
+    if (old.surahId != widget.surahId && _scroll.hasClients) {
+      _scroll.jumpTo(0);
+    }
+  }
+
+  /// يحفظ السورة وموضع التمرير معاً. يُنادى مع كل تمرير — والكتابة على
+  /// SharedPreferences رخيصة، والقيمة الأخيرة هي التي تبقى.
+  void _saveProgress() {
+    if (!mounted) return;
+    ref.read(readingProgressProvider.notifier).saveProgress(
+          ReadingProgress(
+            chapterId: widget.surahId,
+            bookId: 0,
+            chapterTitle: 'سورة ${widget.surahId}',
+            bookTitle: 'القرآن الكريم',
+            timestamp: DateTime.now(),
+            scrollOffset: _scroll.hasClients ? _scroll.offset : null,
+          ),
+        );
   }
 
   /// البسملة كما تُعرض، مشكَّلة.
@@ -413,6 +447,12 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             child: Row(
               children: [
                 IconButton(
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  tooltip: 'رجوع',
+                  onPressed: () => context.backOrHome(),
+                  color: AppColors.textPrimaryLight,
+                ),
+                IconButton(
                   icon: const Icon(Icons.menu_book_rounded),
                   tooltip: 'فهرس السور',
                   onPressed: () =>
@@ -439,6 +479,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontFamily: 'Inter',
+                              fontFamilyFallback: kArabicFontFallback,
                               fontSize: 15,
                               fontWeight: FontWeight.w400,
                               color: Colors.black,
@@ -451,6 +492,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                           'جزء ${_surahStartJuz(widget.surahId).toArabicNumeral()}',
                           style: const TextStyle(
                             fontFamily: 'Inter',
+                            fontFamilyFallback: kArabicFontFallback,
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
@@ -468,6 +510,7 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                               n > 0 ? 'آياتها ${n.toArabicNumeral()}' : '…',
                               style: const TextStyle(
                                 fontFamily: 'Inter',
+                                fontFamilyFallback: kArabicFontFallback,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.black,
@@ -494,12 +537,6 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                   color: isBookmarked
                       ? AppColors.accentGold
                       : AppColors.textPrimaryLight,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward_rounded),
-                  tooltip: 'رجوع',
-                  onPressed: () => context.backOrHome(),
-                  color: AppColors.textPrimaryLight,
                 ),
               ],
             ),
@@ -550,7 +587,19 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
             }
           }
 
+          // بعد أول رسمٍ للمتن نقفز إلى الموضع المحفوظ مرّةً واحدة.
+          final restore = _restoreOffset;
+          if (restore != null && restore > 0) {
+            _restoreOffset = null;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted || !_scroll.hasClients) return;
+              _scroll.jumpTo(
+                restore.clamp(0, _scroll.position.maxScrollExtent),
+              );
+            });
+          }
           return SingleChildScrollView(
+            controller: _scroll,
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
@@ -579,7 +628,8 @@ class _QuranReadingScreenState extends ConsumerState<QuranReadingScreen> {
                           surahName,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            fontFamily: 'Amiri',
+                            fontFamily: 'Inter',
+                            fontFamilyFallback: kArabicFontFallback,
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                             color: AppColors.ink,
@@ -690,6 +740,7 @@ class _QuranPlayerPanel extends StatelessWidget {
   static const _dim = AppColors.grayWarm;
   static const _timeStyle = TextStyle(
     fontFamily: 'Inter',
+    fontFamilyFallback: kArabicFontFallback,
     fontSize: 11,
     fontWeight: FontWeight.w500,
     color: _dim,
@@ -845,6 +896,7 @@ class _QuranOption extends StatelessWidget {
                         text!,
                         style: TextStyle(
                           fontFamily: 'Inter',
+                          fontFamilyFallback: kArabicFontFallback,
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: color,
@@ -1168,7 +1220,8 @@ class _SurahIndexDrawer extends ConsumerWidget {
                       'الفهرس',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'Amiri',
+                        fontFamily: 'Inter',
+                        fontFamilyFallback: kArabicFontFallback,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                         color: AppColors.textPrimaryLight,
@@ -1235,6 +1288,7 @@ class _SurahIndexDrawer extends ConsumerWidget {
                                 '${s.id.toArabicNumeral()}.',
                                 style: TextStyle(
                                   fontFamily: 'Inter',
+                                  fontFamilyFallback: kArabicFontFallback,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   color: isCurrent
@@ -1248,7 +1302,8 @@ class _SurahIndexDrawer extends ConsumerWidget {
                                 s.nameArabic,
                                 textAlign: TextAlign.right,
                                 style: TextStyle(
-                                  fontFamily: 'Amiri',
+                                  fontFamily: 'Inter',
+                                  fontFamilyFallback: kArabicFontFallback,
                                   fontSize: 15,
                                   fontWeight: isCurrent
                                       ? FontWeight.w700
